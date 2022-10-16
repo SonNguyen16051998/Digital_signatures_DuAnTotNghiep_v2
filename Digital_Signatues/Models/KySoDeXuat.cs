@@ -21,6 +21,9 @@ namespace Digital_Signatues.Models
         public string inputFile { get; set; }
         public DateTime NgayDeXuat { get; set; }
         public bool TrangThai { get; set; }
+        public bool IsDaDuyet { get; set; }
+        public int CurentOrder { get; set; }
+        public ICollection<KySoBuocDuyet> KySoBuocDuyets { get; set; }
         public NguoiDung NguoiDung { get; set;}
     }
 }

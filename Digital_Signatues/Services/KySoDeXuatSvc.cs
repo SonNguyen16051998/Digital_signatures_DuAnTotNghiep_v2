@@ -12,10 +12,10 @@ namespace Digital_Signatues.Services
     {
         Task<int> PostDeXuatAsync(PostKySoDeXuat kySoDeXuat);
         Task<bool> PutDeXuatAsync(PutKySoDeXuat kySoDeXuat);
-        Task<bool> DeleteDeXuatAsync(int ma_dexuat);
+        Task<bool> DeleteDeXuatAsync(int ma_dexuat);//xoa de xuat
         Task<List<KySoDeXuat>> GetDeXuatsByNguoiDeXuatAsync(int ma_nguoidexuat);
-        Task<List<KySoDeXuat>> GetDeXuatsAsync();
-        Task<KySoDeXuat> GetDeXuatAsync(int ma_dexuat);
+        Task<List<KySoDeXuat>> GetDeXuatsAsync();//hien thi toan bo de xuat
+        Task<KySoDeXuat> GetDeXuatAsync(int ma_dexuat);//hien thi chi tiet de xuat hien tai
         Task<bool> CheckDeleteAsync(int ma_dexuat);
         Task<bool> ChuyenDuyetAsync(int ma_dexuat);
     }
@@ -40,7 +40,8 @@ namespace Digital_Signatues.Services
                     GhiChu = kySoDeXuat.GhiChu,
                     inputFile = kySoDeXuat.inputFile,
                     NgayDeXuat = System.DateTime.Now,
-                    TrangThai = false
+                    TrangThai = false,
+                    CurentOrder = 0
                 };
                 await _context.kySoDeXuats.AddAsync(postdexuat);
                 await _context.SaveChangesAsync();
@@ -84,15 +85,19 @@ namespace Digital_Signatues.Services
         }
         public async Task<List<KySoDeXuat>> GetDeXuatsByNguoiDeXuatAsync(int ma_nguoidexuat)
         {
-            return await _context.kySoDeXuats.Where(x=>x.Ma_NguoiDeXuat==ma_nguoidexuat).ToListAsync();
+            return await _context.kySoDeXuats.Where(x=>x.Ma_NguoiDeXuat==ma_nguoidexuat)
+                .Include(x=>x.KySoBuocDuyets)
+                .ToListAsync();
         }
         public async Task<List<KySoDeXuat>> GetDeXuatsAsync()
         {
-            return await _context.kySoDeXuats.ToListAsync();
+            return await _context.kySoDeXuats.Include(x => x.KySoBuocDuyets).ToListAsync();
         }
         public async Task<KySoDeXuat> GetDeXuatAsync(int ma_dexuat)
         {
-            return await _context.kySoDeXuats.Where(x => x.Ma_KySoDeXuat == ma_dexuat).FirstOrDefaultAsync();
+            return await _context.kySoDeXuats.Where(x => x.Ma_KySoDeXuat == ma_dexuat)
+                .Include(x => x.KySoBuocDuyets)
+                .FirstOrDefaultAsync();
         }
         public async Task<bool> CheckDeleteAsync(int ma_dexuat)
         {

@@ -135,32 +135,6 @@ namespace Digital_Signatues.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "kySoBuocDuyets",
-                columns: table => new
-                {
-                    Ma_BuocDuyet = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Ten_Buoc = table.Column<string>(type: "nvarchar(255)", nullable: true),
-                    Ma_NguoiKy = table.Column<int>(type: "int", nullable: false),
-                    Ma_KySoDeXuat = table.Column<int>(type: "int", nullable: false),
-                    Order = table.Column<int>(type: "int", nullable: false),
-                    FileDaKy = table.Column<string>(type: "nvarchar(255)", nullable: true),
-                    NgayKy = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsDaKy = table.Column<bool>(type: "bit", nullable: false),
-                    IsTuChoi = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_kySoBuocDuyets", x => x.Ma_BuocDuyet);
-                    table.ForeignKey(
-                        name: "FK_kySoBuocDuyets_NguoiDungs_Ma_NguoiKy",
-                        column: x => x.Ma_NguoiKy,
-                        principalTable: "NguoiDungs",
-                        principalColumn: "Ma_NguoiDung",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "kySoDeXuats",
                 columns: table => new
                 {
@@ -172,7 +146,8 @@ namespace Digital_Signatues.Migrations
                     GhiChu = table.Column<string>(type: "nvarchar(500)", nullable: true),
                     inputFile = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     NgayDeXuat = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    TrangThai = table.Column<bool>(type: "bit", nullable: false)
+                    TrangThai = table.Column<bool>(type: "bit", nullable: false),
+                    IsDaDuyet = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -317,6 +292,45 @@ namespace Digital_Signatues.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "kySoBuocDuyets",
+                columns: table => new
+                {
+                    Ma_BuocDuyet = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Ten_Buoc = table.Column<string>(type: "nvarchar(255)", nullable: true),
+                    Ma_NguoiKy = table.Column<int>(type: "int", nullable: false),
+                    Ma_KySoDeXuat = table.Column<int>(type: "int", nullable: false),
+                    Order = table.Column<int>(type: "int", nullable: false),
+                    FileDaKy = table.Column<string>(type: "nvarchar(255)", nullable: true),
+                    NgayKy = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDaKy = table.Column<bool>(type: "bit", nullable: false),
+                    IsTuChoi = table.Column<bool>(type: "bit", nullable: false),
+                    CurentOrder = table.Column<int>(type: "int", nullable: false),
+                    KySoDeXuatMa_KySoDeXuat = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_kySoBuocDuyets", x => x.Ma_BuocDuyet);
+                    table.ForeignKey(
+                        name: "FK_kySoBuocDuyets_kySoDeXuats_KySoDeXuatMa_KySoDeXuat",
+                        column: x => x.KySoDeXuatMa_KySoDeXuat,
+                        principalTable: "kySoDeXuats",
+                        principalColumn: "Ma_KySoDeXuat",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_kySoBuocDuyets_NguoiDungs_Ma_NguoiKy",
+                        column: x => x.Ma_NguoiKy,
+                        principalTable: "NguoiDungs",
+                        principalColumn: "Ma_NguoiDung",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_kySoBuocDuyets_KySoDeXuatMa_KySoDeXuat",
+                table: "kySoBuocDuyets",
+                column: "KySoDeXuatMa_KySoDeXuat");
+
             migrationBuilder.CreateIndex(
                 name: "IX_kySoBuocDuyets_Ma_NguoiKy",
                 table: "kySoBuocDuyets",
@@ -364,9 +378,6 @@ namespace Digital_Signatues.Migrations
                 name: "kySoBuocDuyets");
 
             migrationBuilder.DropTable(
-                name: "kySoDeXuats");
-
-            migrationBuilder.DropTable(
                 name: "KySoTests");
 
             migrationBuilder.DropTable(
@@ -388,16 +399,19 @@ namespace Digital_Signatues.Migrations
                 name: "Role_Quyens");
 
             migrationBuilder.DropTable(
-                name: "PhongBans");
+                name: "kySoDeXuats");
 
             migrationBuilder.DropTable(
-                name: "NguoiDungs");
+                name: "PhongBans");
 
             migrationBuilder.DropTable(
                 name: "Quyens");
 
             migrationBuilder.DropTable(
                 name: "Roles");
+
+            migrationBuilder.DropTable(
+                name: "NguoiDungs");
 
             migrationBuilder.DropTable(
                 name: "ChucDanhs");
