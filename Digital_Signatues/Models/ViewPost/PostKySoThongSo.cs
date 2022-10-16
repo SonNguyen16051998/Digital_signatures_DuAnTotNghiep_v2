@@ -9,6 +9,7 @@ namespace Digital_Signatues.Models.ViewPost
         public int Ma_NguoiDung { get; set; }
         public string Hinh1 { get; set; }
         public string Hinh2 { get; set; }
+        public string Hinh3 { get; set; }
         public string LyDoMacDinh { get; set; }
         [Column(TypeName = "nvarchar(55)")]
         public string PassCode { get; set; }

@@ -20,6 +20,7 @@ namespace Digital_Signatues.Services
         Task<bool> CheckExistAsync(int ma_nguoidung);//kiểm tra người dùng đã có thông số hay chưa
         Task<string> CheckSubjectFileAsync(int ma_nguoidung);//kiểm tra subject của người dùng có trùng không
         Task<bool> DeleteThongSoAsync(int ma_nguoidung);//xóa thông số người dùng
+        Task<List<NguoiDung>> GetNguoiDuyetsAsync();//danh sach nguoi dung co quyen duyet ki so
     }
     public class KySoThongSoSvc:IKySoThongSo
     {
@@ -38,12 +39,13 @@ namespace Digital_Signatues.Services
                     Ma_NguoiDung = PostKySoThongSo.Ma_NguoiDung,
                     Hinh1 = PostKySoThongSo.Hinh1,
                     Hinh2 = PostKySoThongSo.Hinh2,
+                    Hinh3 = PostKySoThongSo.Hinh3,
                     LyDoMacDinh = PostKySoThongSo.LyDoMacDinh,
                     PassCode = PostKySoThongSo.PassCode,
                     Ma_NguoiCapNhatCuoi = PostKySoThongSo.Ma_NguoiCapNhatCuoi,
                     NgayCapNhatCuoi = System.DateTime.Now,
                     TrangThai = PostKySoThongSo.TrangThai,
-                    LoaiChuKy = false,
+                    LoaiChuKy = true,
                     NgayChuKyHetHan = PostKySoThongSo.NgayChuKyHetHan,
                     Serial = null,
                     Subject = null,
@@ -51,9 +53,6 @@ namespace Digital_Signatues.Services
                     PasscodeFilePfx =null
                 };
                 await _context.KySoThongSos.AddAsync(thongso);
-                var nguoidung = await _context.NguoiDungs.Where(x => x.Ma_NguoiDung == PostKySoThongSo.Ma_NguoiDung).FirstOrDefaultAsync();
-                nguoidung.IsThongSo = true;
-                _context.NguoiDungs.Update(nguoidung);
                 await _context.SaveChangesAsync();
                 ret = PostKySoThongSo.Ma_NguoiDung;
             }
@@ -80,6 +79,7 @@ namespace Digital_Signatues.Services
                     .Where(x => x.Ma_NguoiDung == PutThongSo.Ma_NguoiDung).FirstOrDefaultAsync();
                 capnhatthongso.Hinh1 = PutThongSo.Hinh1;
                 capnhatthongso.Hinh2 = PutThongSo.Hinh2;
+                capnhatthongso.Hinh3 = PutThongSo.Hinh3;
                 capnhatthongso.LyDoMacDinh = PutThongSo.LyDoMacDinh;
                 capnhatthongso.Ma_NguoiCapNhatCuoi = PutThongSo.Ma_NguoiCapNhatCuoi;
                 capnhatthongso.NgayCapNhatCuoi = System.DateTime.Now;
@@ -144,6 +144,9 @@ namespace Digital_Signatues.Services
                     .Where(x => x.Ma_NguoiDung == ThongSofilePfx.Ma_NguoiDung).FirstOrDefaultAsync();
                 thongso.Subject = ThongSofilePfx.Subject;
                 thongso.Serial = ThongSofilePfx.Serial;
+                var nguoidung = await _context.NguoiDungs.Where(x => x.Ma_NguoiDung == ThongSofilePfx.Ma_NguoiDung).FirstOrDefaultAsync();
+                nguoidung.IsThongSo = true;
+                _context.NguoiDungs.Update(nguoidung);
                 _context.KySoThongSos.Update(thongso);
                 await _context.SaveChangesAsync();
                 result = true;
@@ -189,6 +192,22 @@ namespace Digital_Signatues.Services
                 result = false;
             }
             return result;
+        }
+        public async Task<List<NguoiDung>> GetNguoiDuyetsAsync()
+        {
+            var nguoidungs= await _context.NguoiDungs.ToListAsync();
+            List<NguoiDung> nguoidung_duyet=new List<NguoiDung>();
+            foreach (var item in nguoidungs)
+            {
+                var quyen = await _context.NguoiDung_Quyens
+                    .Where(x => x.Ma_NguoiDung == item.Ma_NguoiDung && x.Ma_Quyen==4)
+                    .FirstOrDefaultAsync();
+                if(quyen!=null)
+                {
+                    nguoidung_duyet.Add(item);
+                }
+            }
+            return nguoidung_duyet;
         }
     }
 }

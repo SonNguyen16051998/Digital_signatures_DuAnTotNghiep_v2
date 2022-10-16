@@ -61,7 +61,7 @@ namespace Digital_Signatues.Services
             bool ret = false;
             try
             {
-                NguoiDung nguoiDung = await _context.NguoiDungs.Where(x => x.Email == email && x.PassWord == pass)
+                NguoiDung nguoiDung = await _context.NguoiDungs.Where(x => x.Email == email && x.PassWord == MaHoaHelper.Mahoa(pass))
                     .FirstOrDefaultAsync();
                 if (nguoiDung != null)
                 {

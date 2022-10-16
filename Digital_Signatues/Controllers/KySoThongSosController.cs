@@ -190,5 +190,19 @@ namespace Digital_Signatues.Controllers
                 data = ""
             });
         }
+        /// <summary>
+        /// lấy danh sách người dùng có quyền duyệt kí số
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet,ActionName("nguoidungduyet")]
+        public async Task<IActionResult> GetNguoiDungDuyetAsync()
+        {
+            return Ok(new
+            {
+                retCode = 1,
+                retText = "Lấy danh sách người duyệt thành công",
+                data = await _thongso.GetNguoiDuyetsAsync()
+            });
+        }
     }
 }
