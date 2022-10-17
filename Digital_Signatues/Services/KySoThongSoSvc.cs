@@ -204,6 +204,7 @@ namespace Digital_Signatues.Services
                     .FirstOrDefaultAsync();
                 if(quyen!=null)
                 {
+                    item.PassWord = string.Empty;
                     nguoidung_duyet.Add(item);
                 }
             }

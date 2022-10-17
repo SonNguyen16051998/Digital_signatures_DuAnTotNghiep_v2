@@ -20,9 +20,9 @@ namespace Digital_Signatues.Models
         public string GhiChu { get; set; }
         public string inputFile { get; set; }
         public DateTime NgayDeXuat { get; set; }
-        public bool TrangThai { get; set; }
-        public bool IsDaDuyet { get; set; }
-        public int CurentOrder { get; set; }
+        public bool TrangThai { get; set; }//đã chuyển duyệt hay chưa
+        public bool IsDaDuyet { get; set; }//đã ký xong hay chưa
+        public int CurentOrder { get; set; }//bước duyệt hiện tại
         public ICollection<KySoBuocDuyet> KySoBuocDuyets { get; set; }
         public NguoiDung NguoiDung { get; set;}
     }

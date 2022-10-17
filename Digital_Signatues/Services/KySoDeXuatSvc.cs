@@ -18,6 +18,10 @@ namespace Digital_Signatues.Services
         Task<KySoDeXuat> GetDeXuatAsync(int ma_dexuat);//hien thi chi tiet de xuat hien tai
         Task<bool> CheckDeleteAsync(int ma_dexuat);
         Task<bool> ChuyenDuyetAsync(int ma_dexuat);
+        Task<List<KySoDeXuat>> GetKySoChuaDeXuatAsync(int ma_nguoidung);
+        Task<List<KySoDeXuat>> GetKySoChoDuyetAsync(int ma_nguoidung);
+        Task<List<KySoDeXuat>> GetKySoDaDuyetAsync(int ma_nguoidung);
+        Task<List<KySoDeXuat>> GetKySoTuChoiAsync(int ma_nguoidung);
     }
     public class KySoDeXuatSvc:IKySoDeXuat
     {
@@ -132,6 +136,36 @@ namespace Digital_Signatues.Services
             }
             return ret;
             
+        }
+        public async Task<List<KySoDeXuat>> GetKySoChuaDeXuatAsync(int ma_nguoidung)
+        {
+            return await _context.kySoDeXuats
+                .Where(x=>x.TrangThai==false && x.Ma_NguoiDeXuat==ma_nguoidung).ToListAsync();
+        }
+        public async Task<List<KySoDeXuat>> GetKySoChoDuyetAsync(int ma_nguoidung)
+        {
+            return await _context.kySoDeXuats
+                .Where(x=>x.TrangThai==true && x.Ma_NguoiDeXuat == ma_nguoidung).ToListAsync();
+        }
+        public async Task<List<KySoDeXuat>> GetKySoDaDuyetAsync(int ma_nguoidung)
+        {
+            return await _context.kySoDeXuats
+                .Where(x => x.IsDaDuyet == true && x.Ma_NguoiDeXuat == ma_nguoidung).ToListAsync();
+        }
+        public async Task<List<KySoDeXuat>> GetKySoTuChoiAsync(int ma_nguoidung)
+        {
+            var dexuat= await _context.kySoDeXuats.Where(x => x.Ma_NguoiDeXuat == ma_nguoidung).ToListAsync();
+            List<KySoDeXuat> danhsachtuchoi= new List<KySoDeXuat>();
+            foreach(var item in dexuat)
+            {
+                var tuchoi=await _context.kySoBuocDuyets
+                    .Where(x=> x.Ma_KySoDeXuat==item.Ma_KySoDeXuat && x.IsTuChoi==true ).ToListAsync();
+                if(tuchoi!=null)
+                {
+                    danhsachtuchoi.Add(item);
+                }
+            }
+            return danhsachtuchoi;
         }
     }
 }

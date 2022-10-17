@@ -167,5 +167,65 @@ namespace Digital_Signatues.Controllers
                 data = await _dexuat.GetDeXuatAsync(id)
             });
         }
+        /// <summary>
+        /// lấy danh sách ký số chưa đề xuất của người dùng đang đăng nhập
+        /// </summary>
+        /// <param name="id">mã người dùng</param>
+        /// <returns></returns>
+        [HttpGet("{id}"),ActionName("chuadexuat")]
+        public async Task<IActionResult> GetChuaDeXuatAsync(int id)
+        {
+            return Ok(new
+            {
+                retCode = 1,
+                retText = "Lấy danh sách ký số chưa đề xuất thành công",
+                data = await _dexuat.GetKySoChuaDeXuatAsync(id)
+            });
+        }
+        /// <summary>
+        /// lấy danh sách ký số chờ duyệt của người dùng đang đăng nhập
+        /// </summary>
+        /// <param name="id">mã người dùng</param>
+        /// <returns></returns>
+        [HttpGet("{id}"), ActionName("choduyet")]
+        public async Task<IActionResult> GetChoDuyetAsync(int id)
+        {
+            return Ok(new
+            {
+                retCode = 1,
+                retText = "Lấy danh sách ký số chờ duyệt thành công",
+                data = await _dexuat.GetKySoChoDuyetAsync(id)
+            });
+        }
+        /// <summary>
+        /// lấy danh sách ký số đã duyệt của người dùng đang đăng nhập
+        /// </summary>
+        /// <param name="id">mã người dùng</param>
+        /// <returns></returns>
+        [HttpGet("{id}"), ActionName("daduyet")]
+        public async Task<IActionResult> GetDaDuyetAsync(int id)
+        {
+            return Ok(new
+            {
+                retCode = 1,
+                retText = "Lấy danh sách ký số đã duyệt thành công",
+                data = await _dexuat.GetKySoDaDuyetAsync(id)
+            });
+        }
+        /// <summary>
+        /// lấy danh sách ký số đề xuất từ chối của người dùng đang đăng nhập
+        /// </summary>
+        /// <param name="id">mã người dùng</param>
+        /// <returns></returns>
+        [HttpGet("{id}"), ActionName("tuchoi")]
+        public async Task<IActionResult> GetTuChoiAsync(int id)
+        {
+            return Ok(new
+            {
+                retCode = 1,
+                retText = "Lấy danh sách ký số từ chối thành công",
+                data = await _dexuat.GetKySoTuChoiAsync(id)
+            });
+        }
     }
 }
