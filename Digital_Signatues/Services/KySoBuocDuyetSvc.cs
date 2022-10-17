@@ -15,9 +15,9 @@ namespace Digital_Signatues.Services
         Task<bool> DeleteBuocDuyetAsync(int ma_BuocDuyet);
         Task<KySoBuocDuyet> GetBuocDuyetAsync(int ma_BuocDuyet);
         Task<List<KySoBuocDuyet>> GetAllBuocDuyetAsync(int ma_dexuat);
-        Task<bool> CheckDeleteAsync(int ma_BuocDuyet);
+        Task<bool> CheckDeleteAsync(int ma_buocduyet);
     }
-    public class KySoBuocDuyetSvc
+    public class KySoBuocDuyetSvc:IKySoBuocDuyet
     {
         private readonly DataContext _context;
         public KySoBuocDuyetSvc(DataContext context)
@@ -31,7 +31,7 @@ namespace Digital_Signatues.Services
             {
                 var buocduyet = await _context.kySoBuocDuyets
                     .Where(x => x.Ma_KySoDeXuat == kySoBuocDuyet.Ma_KySoDeXuat)
-                    .OrderBy(x => x.Order).Take(1).FirstOrDefaultAsync() ;
+                    .OrderByDescending(x => x.Order).Take(1).FirstOrDefaultAsync() ;
                 int order = buocduyet!=null ? buocduyet.Order+1 : 1;
                 var post = new KySoBuocDuyet()
                 {
@@ -52,7 +52,8 @@ namespace Digital_Signatues.Services
                     _context.kySoDeXuats.Update(dexuat);
                 }
                 await _context.kySoBuocDuyets.AddAsync(post);
-                await _context.SaveChangesAsync();  
+                await _context.SaveChangesAsync();
+                ret = post.Ma_BuocDuyet;
             }
             catch { }
             return ret;
@@ -80,9 +81,48 @@ namespace Digital_Signatues.Services
             {
                 var delete = await _context.kySoBuocDuyets.Where(x => x.Ma_BuocDuyet == ma_BuocDuyet)
                     .FirstOrDefaultAsync();
+
+                var buocduyet = await _context.kySoBuocDuyets
+                    .Where(x=>x.Ma_KySoDeXuat==delete.Ma_KySoDeXuat).ToListAsync();
+
+                var dexuat=await _context.kySoDeXuats
+                    .Where(x=>x.Ma_KySoDeXuat==delete.Ma_KySoDeXuat).FirstOrDefaultAsync();
+
+                if(dexuat.CurentOrder==delete.Order && buocduyet.Count>1)
+                {
+                    dexuat.CurentOrder= delete.Order+1;
+                    _context.kySoDeXuats.Update(dexuat);
+                }
+                if(buocduyet.Count==1)
+                {
+                    dexuat.CurentOrder = 0;
+                    _context.kySoDeXuats.Update(dexuat);
+                }
                 _context.kySoBuocDuyets.Remove(delete);
                 await _context.SaveChangesAsync();
                 ret = true;
+            }
+            catch { }
+            return ret;
+        }
+        public async Task<KySoBuocDuyet> GetBuocDuyetAsync(int ma_BuocDuyet)
+        {
+            return await _context.kySoBuocDuyets
+                .Where(x => x.Ma_BuocDuyet == ma_BuocDuyet).FirstOrDefaultAsync();
+        }
+        public async Task<List<KySoBuocDuyet>> GetAllBuocDuyetAsync(int ma_dexuat)
+        {
+            return await _context.kySoBuocDuyets
+                .Where(x=>x.Ma_KySoDeXuat==ma_dexuat).ToListAsync();
+        }
+        public async Task<bool> CheckDeleteAsync(int ma_buocduyet)
+        {
+            bool ret = false;
+            try
+            {
+                var buocduyet = await _context.kySoBuocDuyets.Where(x => x.Ma_BuocDuyet == ma_buocduyet).FirstOrDefaultAsync(); 
+                var dexuat= await _context.kySoDeXuats.Where(x=>x.Ma_KySoDeXuat==buocduyet.Ma_KySoDeXuat).FirstOrDefaultAsync();
+                ret = dexuat.TrangThai == true ? false : true;
             }
             catch { }
             return ret;

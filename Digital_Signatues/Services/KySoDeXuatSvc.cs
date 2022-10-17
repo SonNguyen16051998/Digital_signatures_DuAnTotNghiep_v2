@@ -78,6 +78,13 @@ namespace Digital_Signatues.Services
                 .Where(x => x.Ma_KySoDeXuat == ma_dexuat).FirstOrDefaultAsync();
                 _context.kySoDeXuats.Remove(delete);
                 await _context.SaveChangesAsync();
+                var buocduyet = await _context.kySoBuocDuyets
+                    .Where(x => x.Ma_KySoDeXuat == ma_dexuat).ToListAsync();
+                foreach(var item in buocduyet)
+                {
+                    _context.kySoBuocDuyets.Remove(item);
+                }
+                await _context.SaveChangesAsync();
                 ret = true;
             }
             catch { }

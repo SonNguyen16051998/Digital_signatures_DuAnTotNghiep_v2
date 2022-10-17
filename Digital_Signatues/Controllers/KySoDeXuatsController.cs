@@ -67,7 +67,7 @@ namespace Digital_Signatues.Controllers
         /// <param name="dexuat"></param>
         /// <returns></returns>
         [HttpPost, ActionName("dexuat")]
-        public async Task<IActionResult> PostChucDanhAsync([FromBody] PostKySoDeXuat dexuat)
+        public async Task<IActionResult> PostDeXuatAsync([FromBody] PostKySoDeXuat dexuat)
         {
             if (ModelState.IsValid)
             {
@@ -95,7 +95,7 @@ namespace Digital_Signatues.Controllers
         /// <param name="kySoDeXuat"></param>
         /// <returns></returns>
         [HttpPut, ActionName("dexuat")]
-        public async Task<IActionResult> PutChucDanhAsync([FromBody] PutKySoDeXuat kySoDeXuat)
+        public async Task<IActionResult> PutDeXuatAsync([FromBody] PutKySoDeXuat kySoDeXuat)
         {
             if (ModelState.IsValid)
             {
@@ -122,7 +122,7 @@ namespace Digital_Signatues.Controllers
         /// <param name="id">mã đề xuất</param>
         /// <returns></returns>
         [HttpDelete("{id}"), ActionName("dexuat")]
-        public async Task<IActionResult> DeleteChucDanhAsync(int id)
+        public async Task<IActionResult> DeleteDeXuatAsync(int id)
         {
             if(await _dexuat.CheckDeleteAsync(id))
             {
