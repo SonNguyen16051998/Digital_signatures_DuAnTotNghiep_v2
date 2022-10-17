@@ -51,9 +51,6 @@ namespace Digital_Signatues.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("CurentOrder")
-                        .HasColumnType("int");
-
                     b.Property<string>("FileDaKy")
                         .HasColumnType("nvarchar(255)");
 
@@ -96,6 +93,9 @@ namespace Digital_Signatues.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CurentOrder")
+                        .HasColumnType("int");
 
                     b.Property<string>("GhiChu")
                         .HasColumnType("nvarchar(500)");

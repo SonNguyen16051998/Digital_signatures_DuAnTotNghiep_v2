@@ -147,7 +147,8 @@ namespace Digital_Signatues.Migrations
                     inputFile = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     NgayDeXuat = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TrangThai = table.Column<bool>(type: "bit", nullable: false),
-                    IsDaDuyet = table.Column<bool>(type: "bit", nullable: false)
+                    IsDaDuyet = table.Column<bool>(type: "bit", nullable: false),
+                    CurentOrder = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -306,7 +307,6 @@ namespace Digital_Signatues.Migrations
                     NgayKy = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsDaKy = table.Column<bool>(type: "bit", nullable: false),
                     IsTuChoi = table.Column<bool>(type: "bit", nullable: false),
-                    CurentOrder = table.Column<int>(type: "int", nullable: false),
                     KySoDeXuatMa_KySoDeXuat = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
