@@ -210,5 +210,19 @@ namespace Digital_Signatues.Controllers
                 data = ""
             });
         }
+        /// <summary>
+        /// lấy bước duyệt hiện tại thuộc người dùng nào
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet,ActionName("buocduyet")]
+        public async Task<IActionResult> GetBuocDuyetHienTai()
+        {
+            return Ok(new
+            {
+                retCode = 1,
+                retText = "Lấy bước duyệt hiện tại thành công",
+                data = await _kyso.GetBuocDuyetHienTai()
+            });
+        }
     }
 }

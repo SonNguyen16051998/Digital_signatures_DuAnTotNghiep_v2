@@ -306,24 +306,23 @@ namespace Digital_Signatues.Migrations
                     FileDaKy = table.Column<string>(type: "nvarchar(255)", nullable: true),
                     NgayKy = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsDaKy = table.Column<bool>(type: "bit", nullable: false),
-                    IsTuChoi = table.Column<bool>(type: "bit", nullable: false),
-                    KySoDeXuatMa_KySoDeXuat = table.Column<int>(type: "int", nullable: true)
+                    IsTuChoi = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_kySoBuocDuyets", x => x.Ma_BuocDuyet);
                     table.ForeignKey(
-                        name: "FK_kySoBuocDuyets_kySoDeXuats_KySoDeXuatMa_KySoDeXuat",
-                        column: x => x.KySoDeXuatMa_KySoDeXuat,
+                        name: "FK_kySoBuocDuyets_kySoDeXuats_Ma_KySoDeXuat",
+                        column: x => x.Ma_KySoDeXuat,
                         principalTable: "kySoDeXuats",
                         principalColumn: "Ma_KySoDeXuat",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_kySoBuocDuyets_NguoiDungs_Ma_NguoiKy",
                         column: x => x.Ma_NguoiKy,
                         principalTable: "NguoiDungs",
                         principalColumn: "Ma_NguoiDung",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateTable(
@@ -356,9 +355,9 @@ namespace Digital_Signatues.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_kySoBuocDuyets_KySoDeXuatMa_KySoDeXuat",
+                name: "IX_kySoBuocDuyets_Ma_KySoDeXuat",
                 table: "kySoBuocDuyets",
-                column: "KySoDeXuatMa_KySoDeXuat");
+                column: "Ma_KySoDeXuat");
 
             migrationBuilder.CreateIndex(
                 name: "IX_kySoBuocDuyets_Ma_NguoiKy",

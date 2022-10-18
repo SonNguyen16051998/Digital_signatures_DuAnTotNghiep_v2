@@ -60,9 +60,6 @@ namespace Digital_Signatues.Migrations
                     b.Property<bool>("IsTuChoi")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("KySoDeXuatMa_KySoDeXuat")
-                        .HasColumnType("int");
-
                     b.Property<int>("Ma_KySoDeXuat")
                         .HasColumnType("int");
 
@@ -80,7 +77,7 @@ namespace Digital_Signatues.Migrations
 
                     b.HasKey("Ma_BuocDuyet");
 
-                    b.HasIndex("KySoDeXuatMa_KySoDeXuat");
+                    b.HasIndex("Ma_KySoDeXuat");
 
                     b.HasIndex("Ma_NguoiKy");
 
@@ -463,7 +460,9 @@ namespace Digital_Signatues.Migrations
                 {
                     b.HasOne("Digital_Signatues.Models.KySoDeXuat", "KySoDeXuat")
                         .WithMany("KySoBuocDuyets")
-                        .HasForeignKey("KySoDeXuatMa_KySoDeXuat");
+                        .HasForeignKey("Ma_KySoDeXuat")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Digital_Signatues.Models.NguoiDung", "NguoiDung")
                         .WithMany("kySoBuocDuyets")

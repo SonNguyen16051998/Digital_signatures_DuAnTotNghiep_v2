@@ -11,7 +11,8 @@ namespace Digital_Signatues.Services
         Task<int> AddKySoTest (KySoTest kySotest);
         Task<bool> Sign(int ma_buocduyet,string filedaky);
         Task<bool> CheckPassCode(int ma_nguoiky,string passcode);
-        Task<int> GetIndexBuocDuyet(int ma_buocduyet);  
+        Task<int> GetIndexBuocDuyet(int ma_buocduyet);
+        Task<List<KySoBuocDuyet>> GetBuocDuyetHienTai();
     }
     public class KySoSvc:IKySo 
     {
@@ -94,6 +95,24 @@ namespace Digital_Signatues.Services
                     .ToListAsync();
             int index = toanbobuocduyet.IndexOf(buocduyet);
             return index+1;
+        }
+        public async Task<List<KySoBuocDuyet>> GetBuocDuyetHienTai()
+        {
+            var dexuat = await _context.kySoDeXuats.Where(x => x.IsDaDuyet==false).ToListAsync();
+            List<KySoBuocDuyet> buocduyets = new List<KySoBuocDuyet>();
+            foreach(var item in dexuat)
+            {
+                var buocduyet = await _context.kySoBuocDuyets
+                    .Where(x => x.Ma_KySoDeXuat == item.Ma_KySoDeXuat && x.Order == item.CurentOrder)
+                    .Include(x => x.KySoDeXuat)
+                    .Include(x => x.NguoiDung)
+                    .FirstOrDefaultAsync();
+                if(buocduyet!=null)
+                {
+                    buocduyets.Add(buocduyet);
+                }
+            }
+            return buocduyets;
         }
     }
 }

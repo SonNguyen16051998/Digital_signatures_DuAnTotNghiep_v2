@@ -13,6 +13,7 @@ namespace Digital_Signatues.Models
         public string Ten_Buoc { get; set; }
         [ForeignKey("NguoiDung")]
         public int Ma_NguoiKy { get; set; }
+        [ForeignKey("KySoDeXuat")]
         public int Ma_KySoDeXuat { get; set; }
         public int Order { get; set; }
         [Column(TypeName = "nvarchar(255)")]
