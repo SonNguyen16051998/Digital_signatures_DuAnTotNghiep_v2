@@ -140,7 +140,8 @@ namespace Digital_Signatues.Services
         public async Task<List<KySoDeXuat>> GetKySoChoDuyetAsync(int ma_nguoidung)
         {
             return await _context.kySoDeXuats
-                .Where(x=>x.TrangThai==true && x.Ma_NguoiDeXuat == ma_nguoidung).ToListAsync();
+                .Where(x=>x.TrangThai==true && x.Ma_NguoiDeXuat == ma_nguoidung && x.IsDaDuyet==false)
+                .ToListAsync();
         }
         public async Task<List<KySoDeXuat>> GetKySoDaDuyetAsync(int ma_nguoidung)
         {
@@ -149,15 +150,20 @@ namespace Digital_Signatues.Services
         }
         public async Task<List<KySoDeXuat>> GetKySoTuChoiAsync(int ma_nguoidung)
         {
-            var dexuat= await _context.kySoDeXuats.Where(x => x.Ma_NguoiDeXuat == ma_nguoidung).ToListAsync();
+            var dexuat= await _context.kySoDeXuats.Where(x => x.Ma_NguoiDeXuat == ma_nguoidung)
+                .Include(x=>x.KySoBuocDuyets)
+                .ToListAsync();
             List<KySoDeXuat> danhsachtuchoi= new List<KySoDeXuat>();
             foreach(var item in dexuat)
             {
-                var tuchoi=await _context.kySoBuocDuyets
-                    .Where(x=> x.Ma_KySoDeXuat==item.Ma_KySoDeXuat && x.IsTuChoi==true ).ToListAsync();
-                if(tuchoi!=null)
+                if(item.KySoBuocDuyets.Count>0)
                 {
-                    danhsachtuchoi.Add(item);
+                    var tuchoi = await _context.kySoBuocDuyets
+                    .Where(x => x.Ma_KySoDeXuat == item.Ma_KySoDeXuat && x.IsTuChoi == true).FirstOrDefaultAsync();
+                    if (tuchoi != null)
+                    {
+                        danhsachtuchoi.Add(item);
+                    }
                 }
             }
             return danhsachtuchoi;
