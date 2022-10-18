@@ -25,5 +25,6 @@ namespace Digital_Signatues.Models
         public int CurentOrder { get; set; }//bước duyệt hiện tại
         public ICollection<KySoBuocDuyet> KySoBuocDuyets { get; set; }
         public NguoiDung NguoiDung { get; set;}
+        public ICollection<Message> Messages { get; set; }
     }
 }

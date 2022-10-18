@@ -64,11 +64,16 @@ namespace Digital_Signatues.Services
         }
         public async Task<KySoThongSo> GetThongSoNguoiDungAsync(int ma_nguoidung)
         {
-            return await _context.KySoThongSos.Where(x => x.Ma_NguoiDung == ma_nguoidung).FirstOrDefaultAsync();
+            return await _context.KySoThongSos.Where(x => x.Ma_NguoiDung == ma_nguoidung)
+                .Include(x=>x.NguoiDung)
+                .Include(x=>x.NguoiDung.ChucDanh)
+                .FirstOrDefaultAsync();
         }
         public async Task<List<KySoThongSo>> GetThongSoNguoiDungsAsync()
         {
-            return await _context.KySoThongSos.ToListAsync();
+            return await _context.KySoThongSos.Include(x => x.NguoiDung)
+                .Include(x => x.NguoiDung.ChucDanh)
+                .ToListAsync();
         }
         public async Task<int> UpdateThongSoAsync(PutThongSo PutThongSo)
         {
@@ -195,7 +200,9 @@ namespace Digital_Signatues.Services
         }
         public async Task<List<NguoiDung>> GetNguoiDuyetsAsync()
         {
-            var nguoidungs= await _context.NguoiDungs.ToListAsync();
+            var nguoidungs= await _context.NguoiDungs
+                .Include(x=>x.NguoiDung_Quyens)
+                .ToListAsync();
             List<NguoiDung> nguoidung_duyet=new List<NguoiDung>();
             foreach (var item in nguoidungs)
             {

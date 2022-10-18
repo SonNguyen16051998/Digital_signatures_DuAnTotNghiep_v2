@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Digital_Signatues.Migrations
 {
-    public partial class digital_signatures : Migration
+    public partial class digital : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -326,6 +326,35 @@ namespace Digital_Signatues.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Messages",
+                columns: table => new
+                {
+                    Ma_Message = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Ma_NguoiDung = table.Column<int>(type: "int", nullable: false),
+                    Y_Kien = table.Column<string>(type: "nvarchar(255)", nullable: false),
+                    ThoiGian = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    FileDinhKem = table.Column<string>(type: "nvarchar(255)", nullable: true),
+                    Ma_DeXuat = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Messages", x => x.Ma_Message);
+                    table.ForeignKey(
+                        name: "FK_Messages_kySoDeXuats_Ma_DeXuat",
+                        column: x => x.Ma_DeXuat,
+                        principalTable: "kySoDeXuats",
+                        principalColumn: "Ma_KySoDeXuat",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Messages_NguoiDungs_Ma_NguoiDung",
+                        column: x => x.Ma_NguoiDung,
+                        principalTable: "NguoiDungs",
+                        principalColumn: "Ma_NguoiDung",
+                        onDelete: ReferentialAction.NoAction);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_kySoBuocDuyets_KySoDeXuatMa_KySoDeXuat",
                 table: "kySoBuocDuyets",
@@ -345,6 +374,16 @@ namespace Digital_Signatues.Migrations
                 name: "IX_KySoTests_Id_NguoiDung",
                 table: "KySoTests",
                 column: "Id_NguoiDung");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Messages_Ma_DeXuat",
+                table: "Messages",
+                column: "Ma_DeXuat");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Messages_Ma_NguoiDung",
+                table: "Messages",
+                column: "Ma_NguoiDung");
 
             migrationBuilder.CreateIndex(
                 name: "IX_NguoiDung_PhongBans_Ma_PhongBan",
@@ -382,6 +421,9 @@ namespace Digital_Signatues.Migrations
 
             migrationBuilder.DropTable(
                 name: "KySoThongSos");
+
+            migrationBuilder.DropTable(
+                name: "Messages");
 
             migrationBuilder.DropTable(
                 name: "NguoiDung_PhongBans");

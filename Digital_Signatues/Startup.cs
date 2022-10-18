@@ -64,6 +64,7 @@ namespace Digital_Signatues
             services.AddTransient<IKySoThongSo, KySoThongSoSvc>();
             services.AddTransient<IKySoDeXuat, KySoDeXuatSvc>();
             services.AddTransient<IKySoBuocDuyet, KySoBuocDuyetSvc>();
+            services.AddTransient<IMessage, MessageSvc>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>

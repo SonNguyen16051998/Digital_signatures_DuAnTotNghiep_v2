@@ -58,5 +58,6 @@ namespace Digital_Signatues.Models
         public KySoThongSo KySoNguoiDung { get; set; }
         public ICollection<KySoDeXuat> kySoDeXuats { get; set; }
         public ICollection<KySoBuocDuyet> kySoBuocDuyets { get; set; }
+        public ICollection<Message> Messages { get; set; }
     }
 }

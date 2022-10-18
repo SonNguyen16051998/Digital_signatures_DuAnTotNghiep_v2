@@ -39,5 +39,6 @@ namespace Digital_Signatues.Models
         public DbSet<KySoThongSo> KySoThongSos { get; set; }
         public DbSet<KySoDeXuat> kySoDeXuats { get; set; }
         public DbSet<KySoBuocDuyet> kySoBuocDuyets { get; set; }
+        public DbSet<Message> Messages { get; set; }
     }
 }
