@@ -9,6 +9,9 @@ namespace Digital_Signatues.Services
     public interface IKySo
     {
         Task<int> AddKySoTest (KySoTest kySotest);
+        Task<bool> Sign(int ma_buocduyet,string filedaky);
+        Task<bool> CheckPassCode(int ma_nguoiky,string passcode);
+        Task<int> GetIndexBuocDuyet(int ma_buocduyet);  
     }
     public class KySoSvc:IKySo 
     {
@@ -31,6 +34,66 @@ namespace Digital_Signatues.Services
                 ret = 0;
             }
             return ret;
+        }
+        public async Task<bool> Sign(int ma_buocduyet,string filedaky)
+        {
+            bool ret = false;
+            try
+            {
+                var buocduyet = await _context.kySoBuocDuyets
+                    .Where(x => x.Ma_BuocDuyet == ma_buocduyet).FirstOrDefaultAsync();
+                buocduyet.FileDaKy=filedaky;
+                buocduyet.IsDaKy=true;
+                buocduyet.NgayKy = System.DateTime.Now;
+                _context.kySoBuocDuyets.Update(buocduyet);
+                await _context.SaveChangesAsync();
+                var toanbobuocduyet = await _context.kySoBuocDuyets
+                    .Where(x => x.Ma_KySoDeXuat == buocduyet.Ma_KySoDeXuat)
+                    .OrderBy(x=>x.Order)
+                    .ToListAsync();
+                int index = toanbobuocduyet.IndexOf(buocduyet);
+                var buocduyettieptheo = toanbobuocduyet.Skip(index+1).Take(1).FirstOrDefault();
+                var kysodexuat = await _context.kySoDeXuats
+                    .Where(x => x.Ma_KySoDeXuat == buocduyet.Ma_KySoDeXuat).FirstOrDefaultAsync();
+                if (toanbobuocduyet.Count != index + 1)
+                {
+                    kysodexuat.CurentOrder = buocduyettieptheo.Order;
+                }
+                if(toanbobuocduyet.Count==index+1)
+                {
+
+                    kysodexuat.IsDaDuyet = true;
+                }
+                _context.kySoDeXuats.Update(kysodexuat);
+                await _context.SaveChangesAsync();
+                
+                ret=true;
+            }
+            catch { }
+            return ret;
+        }
+        public async Task<bool> CheckPassCode(int ma_nguoiky,string passcode)
+        {
+            bool ret=false;
+            try
+            {
+                var check = await _context.KySoThongSos.Where(x => x.Ma_NguoiDung == ma_nguoiky && x.PassCode == passcode)
+                    .FirstOrDefaultAsync();
+                ret = check == null ? false : true;
+            }
+            catch { }
+            return ret;
+        }
+        public async Task<int> GetIndexBuocDuyet(int ma_buocduyet)
+        {
+            var buocduyet = await _context.kySoBuocDuyets
+                    .Where(x => x.Ma_BuocDuyet == ma_buocduyet).FirstOrDefaultAsync();
+            var toanbobuocduyet = await _context.kySoBuocDuyets
+                    .Where(x => x.Ma_KySoDeXuat == buocduyet.Ma_KySoDeXuat)
+                    .OrderBy(x => x.Order)
+                    .ToListAsync();
+            int index = toanbobuocduyet.IndexOf(buocduyet);
+            return index+1;
         }
     }
 }

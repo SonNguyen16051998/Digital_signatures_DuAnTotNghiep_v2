@@ -113,13 +113,8 @@ namespace Digital_Signatues.Services
         public async Task<bool> CheckDeleteAsync(int ma_dexuat)
         {
             var check = await _context.kySoDeXuats
-                .Where(x => x.Ma_NguoiDeXuat == ma_dexuat && x.TrangThai == false).FirstOrDefaultAsync();
-            if (check != null)
-            {
-                return true;
-            }
-            else
-                return false;
+                .Where(x => x.Ma_KySoDeXuat == ma_dexuat && x.TrangThai == false).FirstOrDefaultAsync();
+            return check == null ? false : true;
         }
         public async Task<bool> ChuyenDuyetAsync(int ma_dexuat)
         {

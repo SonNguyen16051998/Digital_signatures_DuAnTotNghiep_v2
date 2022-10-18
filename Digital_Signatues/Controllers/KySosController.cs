@@ -15,7 +15,7 @@ using System.util;
 namespace Digital_Signatues.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     public class KySosController : Controller
     {
         private readonly IKySo _kyso;
@@ -32,7 +32,7 @@ namespace Digital_Signatues.Controllers
         /// </summary>
         /// <param name="signs"></param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpPost,ActionName("signtest")]
         public async Task<IActionResult> SignTest([FromBody] PostSign signs)
         {
             if (ModelState.IsValid)
@@ -102,6 +102,111 @@ namespace Digital_Signatues.Controllers
             {
                 retCode = 0,
                 retText = "Ky test thất bại",
+                data = ""
+            });
+        }
+        /// <summary>
+        /// ký thật
+        /// </summary>
+        /// <param name="signs"></param>
+        /// <returns></returns>
+        [HttpPost,ActionName("sign")]
+        public async Task<IActionResult> SignBuocDuyet([FromBody] PostSignBuocDuyet signs)
+        {
+            if (ModelState.IsValid)
+            {
+                string fileName = "";
+                string name = Path.GetFileNameWithoutExtension(signs.inputFile);
+                string outputFile = "";
+                string inputNewFile = "";
+                string fieldName = "filedName_0";
+                if (await _kyso.CheckPassCode(signs.Id_NguoiDung,signs.passcode))
+                {
+                    if(await _kyso.GetIndexBuocDuyet(signs.Ma_BuocDuyet)>1)
+                    {
+                        for (int i = 0; i < 1000; i++)
+                        {
+                            fileName = name + "_" + i + "_daky.pdf";
+                            fieldName = "filedName_" + i;
+                            outputFile = Path.Combine(_environment.WebRootPath, "Filedaky") + @"\" + name + "_" + i + "_daky.pdf";
+                            if (!System.IO.File.Exists(outputFile))
+                            {
+                                inputNewFile = Path.Combine(_environment.WebRootPath, "Filedaky") + @"\" + name + "_" + (i - 1) + "_daky.pdf";
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        fileName = name + "_" + 0 + "_daky.pdf";
+                        outputFile = Path.Combine(_environment.WebRootPath, "Filedaky") + @"\" + name + "_" + 0 + "_daky.pdf";
+                    }
+                    foreach (var item in signs.PostPositionSigns)
+                    {
+                        string fontPath = Path.Combine(_environment.WebRootPath, "Font", "ARIALUNI.TTF");
+                        var thongso = await _thongso.GetThongSoNguoiDungAsync(signs.Id_NguoiDung);
+                        Certicate myCert = new Certicate(thongso.FilePfx, thongso.PasscodeFilePfx);
+                        PDFSigner pdfs = new PDFSigner();
+                       
+                        if (System.IO.File.Exists(inputNewFile))
+                        {
+                            pdfs = new PDFSigner(inputNewFile, outputFile, myCert, fontPath);
+                        }
+                        else
+                        {
+                            pdfs = new PDFSigner(signs.inputFile, outputFile, myCert, fontPath);
+                        }
+                        if (!string.IsNullOrEmpty(item.textSign))
+                        {
+                            var rectangle = new iTextSharp.text.Rectangle((int)item.x, (int)item.y);
+                            pdfs.SignText(thongso.LyDoMacDinh, "", "", item.textSign, rectangle, item.pageSign, fieldName);
+                        }
+                        else
+                        {
+                            var recJ = new RectangleJ((int)item.x, (int)item.y, (int)item.img_w, (int)item.img_h);
+
+                            string inputImg = item.imgSign;
+                            var rectangle = new iTextSharp.text.Rectangle(recJ);
+                            pdfs.SignImage(thongso.LyDoMacDinh, "", "", inputImg, rectangle, item.pageSign, fieldName, false);
+                        }
+                    }
+                    string fileReturn = Path.Combine("Filedaky", fileName);
+                    string filedaky = Path.Combine("wwwroot\\Filedaky", fileName);
+                    if (await _kyso.Sign(signs.Ma_BuocDuyet, filedaky))
+                    {
+                        return Ok(new
+                        {
+                            retCode = 1,
+                            retText = "Ký thành công",
+                            data = fileReturn
+                        });
+                    }
+                    else
+                    {
+                        System.IO.File.Delete(filedaky);
+                        return Ok(new
+                        {
+                            retCode = 0,
+                            retText = "Ký thất bại",
+                            data = ""
+                        });  
+                    }  
+                }
+                else
+                {
+                    return Ok(new
+                    {
+                        retCode = 0,
+                        retText = "Passcode không chính xác",
+                        data = ""
+                    });
+                }
+                
+            }
+            return Ok(new
+            {
+                retCode = 0,
+                retText = "Dữ liệu không hợp lệ",
                 data = ""
             });
         }
