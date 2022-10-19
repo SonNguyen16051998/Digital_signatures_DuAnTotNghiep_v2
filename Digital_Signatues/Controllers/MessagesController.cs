@@ -7,11 +7,13 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System;
 using Digital_Signatues.Models.ViewPost;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Digital_Signatues.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
+    [Authorize]
     public class MessagesController : Controller
     {
         private readonly IMessage _message;

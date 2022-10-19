@@ -8,11 +8,13 @@ using System.Collections.Generic;
 using System;
 using Digital_Signatues.Models.ViewPost;
 using Digital_Signatues.Models.ViewPut;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Digital_Signatues.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
+    [Authorize]
     public class PhongBansController : Controller
     {
         private readonly IPhongBan _phongBan;

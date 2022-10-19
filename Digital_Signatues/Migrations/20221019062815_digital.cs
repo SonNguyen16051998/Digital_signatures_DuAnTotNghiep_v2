@@ -220,6 +220,27 @@ namespace Digital_Signatues.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Logs",
+                columns: table => new
+                {
+                    Ma_Log = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Ten_Log = table.Column<string>(type: "nvarchar(255)", nullable: true),
+                    Ma_NguoiThucHien = table.Column<int>(type: "int", nullable: false),
+                    ThoiGianThucHien = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Logs", x => x.Ma_Log);
+                    table.ForeignKey(
+                        name: "FK_Logs_NguoiDungs_Ma_NguoiThucHien",
+                        column: x => x.Ma_NguoiThucHien,
+                        principalTable: "NguoiDungs",
+                        principalColumn: "Ma_NguoiDung",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "NguoiDung_PhongBans",
                 columns: table => new
                 {
@@ -375,6 +396,11 @@ namespace Digital_Signatues.Migrations
                 column: "Id_NguoiDung");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Logs_Ma_NguoiThucHien",
+                table: "Logs",
+                column: "Ma_NguoiThucHien");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Messages_Ma_DeXuat",
                 table: "Messages",
                 column: "Ma_DeXuat");
@@ -420,6 +446,9 @@ namespace Digital_Signatues.Migrations
 
             migrationBuilder.DropTable(
                 name: "KySoThongSos");
+
+            migrationBuilder.DropTable(
+                name: "Logs");
 
             migrationBuilder.DropTable(
                 name: "Messages");

@@ -2,11 +2,13 @@
 using Digital_Signatues.Models;
 using Digital_Signatues.Models.ViewPost;
 using Digital_Signatues.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,13 +18,19 @@ namespace Digital_Signatues.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
+    [Authorize]
     public class KySosController : Controller
     {
         private readonly IKySo _kyso;
         private readonly IKySoThongSo _thongso;
         private readonly IHostingEnvironment _environment;
-        public KySosController(IKySo kyso, IHostingEnvironment environment, IKySoThongSo thongso)
+        private readonly ILog _log;
+        private readonly IKySoBuocDuyet _buocduyet;
+        public KySosController(
+            IKySo kyso, IHostingEnvironment environment, IKySoThongSo thongso,ILog log, IKySoBuocDuyet buocduyet)
         {
+            _buocduyet=buocduyet;
+            _log = log;
             _kyso = kyso;
             _environment = environment;
             _thongso = thongso;
@@ -91,6 +99,15 @@ namespace Digital_Signatues.Controllers
                         pdfs.SignImage(thongso.LyDoMacDinh, "", "", inputImg, rectangle, item.pageSign, fieldName, false);
                     }
                 }
+                var nguoidung = await _thongso.GetThongSoNguoiDungAsync(signs.Id_NguoiDung);
+                var id = User.FindFirstValue("Id");
+                var postlog = new PostLog()
+                {
+                    Ten_Log = "Kí thử trên tài khoản " + nguoidung.NguoiDung.HoTen +  " thành công",
+                    Ma_NguoiThucHien = int.Parse(id)
+                };
+                if (await _log.PostLogAsync(postlog) > 0)
+                { }
                 return Ok(new
                 {
                     retCode = 1,
@@ -174,6 +191,16 @@ namespace Digital_Signatues.Controllers
                     string filedaky = Path.Combine("wwwroot\\Filedaky", fileName);
                     if (await _kyso.Sign(signs.Ma_BuocDuyet, filedaky))
                     {
+                        var id = User.FindFirstValue("Id");
+                        var nguoidung = await _thongso.GetThongSoNguoiDungAsync(int.Parse(id));
+                        var buoc = await _buocduyet.GetBuocDuyetAsync(signs.Ma_BuocDuyet);
+                        var postlog = new PostLog()
+                        {
+                            Ten_Log = nguoidung.NguoiDung.HoTen + " đã kí " + buoc.Ten_Buoc + " của đề xuất có mã số " + buoc.KySoDeXuat.Ma_KySoDeXuat + " thành công",
+                            Ma_NguoiThucHien = int.Parse(id)
+                        };
+                        if (await _log.PostLogAsync(postlog) > 0)
+                        { }
                         return Ok(new
                         {
                             retCode = 1,

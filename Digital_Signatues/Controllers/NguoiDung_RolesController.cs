@@ -1,19 +1,25 @@
 ﻿using Digital_Signatues.Models;
 using Digital_Signatues.Models.ViewModel;
+using Digital_Signatues.Models.ViewPost;
 using Digital_Signatues.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Digital_Signatues.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
+    [Authorize]
     public class NguoiDung_RolesController : Controller
     {
         private readonly INguoiDung_Role _nguoiDung_Role;
-        public NguoiDung_RolesController(INguoiDung_Role nguoiDung_Role)
+        private readonly ILog _log;
+        public NguoiDung_RolesController(INguoiDung_Role nguoiDung_Role,ILog log)
         {
+            _log=log;
             _nguoiDung_Role= nguoiDung_Role;
         }
 
@@ -31,11 +37,20 @@ namespace Digital_Signatues.Controllers
                 {
                     if(await _nguoiDung_Role.AddOrUpdateNguoiDung_RoleAsync(nguoiDung_Roles))
                     {
+                        var data = await _nguoiDung_Role.GetNguoiDung_RolesAsync(nguoiDung_Roles.Id_NguoiDung);
+                        var id = User.FindFirstValue("Id");
+                        var postlog = new PostLog()
+                        {
+                            Ten_Log = "Cập nhật role cho người dùng " + data[0].NguoiDung.HoTen + "có mã số " + data[0].Ma_NguoiDung + " thành công",
+                            Ma_NguoiThucHien = int.Parse(id)
+                        };
+                        if (await _log.PostLogAsync(postlog) > 0)
+                        { }
                         return Ok(new
                         {
                             retCode = 1,
                             retText = "Cập nhật role cho người dùng thành công",
-                            data = await _nguoiDung_Role.GetNguoiDung_RolesAsync(nguoiDung_Roles.Id_NguoiDung)
+                            data = data
                         });
                     }
                 }

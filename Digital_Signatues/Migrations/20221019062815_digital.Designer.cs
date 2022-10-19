@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Digital_Signatues.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20221018092739_digital")]
+    [Migration("20221019062815_digital")]
     partial class digital
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -222,6 +222,29 @@ namespace Digital_Signatues.Migrations
                     b.HasKey("Ma_NguoiDung");
 
                     b.ToTable("KySoThongSos");
+                });
+
+            modelBuilder.Entity("Digital_Signatues.Models.Log", b =>
+                {
+                    b.Property<int>("Ma_Log")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Ma_NguoiThucHien")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Ten_Log")
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime>("ThoiGianThucHien")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Ma_Log");
+
+                    b.HasIndex("Ma_NguoiThucHien");
+
+                    b.ToTable("Logs");
                 });
 
             modelBuilder.Entity("Digital_Signatues.Models.Message", b =>
@@ -510,6 +533,17 @@ namespace Digital_Signatues.Migrations
                     b.Navigation("NguoiDung");
                 });
 
+            modelBuilder.Entity("Digital_Signatues.Models.Log", b =>
+                {
+                    b.HasOne("Digital_Signatues.Models.NguoiDung", "NguoiDung")
+                        .WithMany("Logs")
+                        .HasForeignKey("Ma_NguoiThucHien")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("NguoiDung");
+                });
+
             modelBuilder.Entity("Digital_Signatues.Models.Message", b =>
                 {
                     b.HasOne("Digital_Signatues.Models.KySoDeXuat", "KySoDeXuat")
@@ -637,6 +671,8 @@ namespace Digital_Signatues.Migrations
                     b.Navigation("KySoNguoiDung");
 
                     b.Navigation("kySoTests");
+
+                    b.Navigation("Logs");
 
                     b.Navigation("Messages");
 

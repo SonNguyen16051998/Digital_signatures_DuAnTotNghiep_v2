@@ -1,19 +1,25 @@
 ﻿using Digital_Signatues.Models;
 using Digital_Signatues.Models.ViewModel;
+using Digital_Signatues.Models.ViewPost;
 using Digital_Signatues.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Digital_Signatues.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
+    [Authorize]
     public class NguoiDung_PhongBansController : Controller
     {
         private readonly INguoiDung_PhongBan _nguoiDung_PhongBan;
-        public NguoiDung_PhongBansController(INguoiDung_PhongBan nguoiDung_PhongBan)
+        private readonly ILog _log;
+        public NguoiDung_PhongBansController(INguoiDung_PhongBan nguoiDung_PhongBan,ILog log)
         {
+            _log=log; 
             _nguoiDung_PhongBan = nguoiDung_PhongBan;
         }
 
@@ -31,11 +37,20 @@ namespace Digital_Signatues.Controllers
                 {
                     if (await _nguoiDung_PhongBan.AddOrUpdateNguoiDung_PhongBanAsync(NguoiDung_PhongBans))
                     {
+                        var data = await _nguoiDung_PhongBan.GetNguoiDung_PhongBansAsync(NguoiDung_PhongBans.Id_NguoiDung);
+                        var id = User.FindFirstValue("Id");
+                        var postlog = new PostLog()
+                        {
+                            Ten_Log = "Cập nhật phòng ban cho người dùng " + data[0].Ten_NguoiDung + " có mã số " + data[0].Ma_NguoiDung + " thành công",
+                            Ma_NguoiThucHien = int.Parse(id)
+                        };
+                        if (await _log.PostLogAsync(postlog) > 0)
+                        { }
                         return Ok(new
                         {
                             retCode = 1,
                             retText = "Cập nhật phòng ban cho người dùng thành công",
-                            data = await _nguoiDung_PhongBan.GetNguoiDung_PhongBansAsync(NguoiDung_PhongBans.Id_NguoiDung)
+                            data = data
                         });
                     }
                 }

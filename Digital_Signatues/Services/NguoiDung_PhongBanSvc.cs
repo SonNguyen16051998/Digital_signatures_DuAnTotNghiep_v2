@@ -75,7 +75,8 @@ namespace Digital_Signatues.Services
         {
             List<NguoiDung_PhongBan> nguoiDung_phongbans = new List<NguoiDung_PhongBan>();
             nguoiDung_phongbans = await _context.NguoiDung_PhongBans.Where(x => x.Ma_NguoiDung == id_nguoiDung)
-                            .Include(x => x.PhongBan).ToListAsync();
+                            .Include(x => x.PhongBan)
+                            .ToListAsync();
             return nguoiDung_phongbans;
         }
 

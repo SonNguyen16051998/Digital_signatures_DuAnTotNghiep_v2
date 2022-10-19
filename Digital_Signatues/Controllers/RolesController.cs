@@ -2,6 +2,7 @@
 using Digital_Signatues.Models.ViewPost;
 using Digital_Signatues.Models.ViewPut;
 using Digital_Signatues.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ namespace Digital_Signatues.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class RolesController : Controller
     {
         private readonly IRole _role;

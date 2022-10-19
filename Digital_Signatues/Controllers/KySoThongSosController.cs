@@ -8,16 +8,21 @@ using System.Collections.Generic;
 using System;
 using Digital_Signatues.Models.ViewPost;
 using Digital_Signatues.Models.ViewPut;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Digital_Signatues.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
+    [Authorize]
     public class KySoThongSosController : Controller
     {
+        private readonly ILog _log;
         private readonly IKySoThongSo _thongso;
-        public KySoThongSosController(IKySoThongSo thongso)
+        public KySoThongSosController(IKySoThongSo thongso,ILog log)
         {
+            _log = log;
             _thongso = thongso;
         }
         /// <summary>
@@ -63,11 +68,20 @@ namespace Digital_Signatues.Controllers
                 {
                     if (await _thongso.AddThongSoNguoiDungAsync(thongSo) > 0)
                     {
+                        var data = await _thongso.GetThongSoNguoiDungAsync(thongSo.Ma_NguoiDung);
+                        var id = User.FindFirstValue("Id");
+                        var postlog = new PostLog()
+                        {
+                            Ten_Log = "Thêm thông số cho người dùng " + data.NguoiDung.HoTen +  " thành công",
+                            Ma_NguoiThucHien = int.Parse(id)
+                        };
+                        if (await _log.PostLogAsync(postlog) > 0)
+                        { }
                         return Ok(new
                         {
                             retCode = 1,
                             retText = "Thêm thông số người dùng thành công",
-                            data = await _thongso.GetThongSoNguoiDungAsync(thongSo.Ma_NguoiDung)
+                            data = data
                         });
                     }
                 }
@@ -97,11 +111,20 @@ namespace Digital_Signatues.Controllers
             {
                 if(await _thongso.UpdateThongSoAsync(putThongSo) > 0)
                 {
+                    var data = await _thongso.GetThongSoNguoiDungAsync(putThongSo.Ma_NguoiDung);
+                    var id = User.FindFirstValue("Id");
+                    var postlog = new PostLog()
+                    {
+                        Ten_Log = "Cập nhật thông số cho người dùng " + data.NguoiDung.HoTen + " thành công",
+                        Ma_NguoiThucHien = int.Parse(id)
+                    };
+                    if (await _log.PostLogAsync(postlog) > 0)
+                    { }
                     return Ok(new
                     {
                         retCode = 1,
                         retText = "Cập nhật thông số người dùng thành công",
-                        data = await _thongso.GetThongSoNguoiDungAsync(putThongSo.Ma_NguoiDung)
+                        data = data
                     });
                 }
             }
@@ -124,11 +147,20 @@ namespace Digital_Signatues.Controllers
             {
                 if(await _thongso.ChangePasscode(putPasscode))
                 {
+                    var data = await _thongso.GetThongSoNguoiDungAsync(putPasscode.Ma_NguoiDung);
+                    var id = User.FindFirstValue("Id");
+                    var postlog = new PostLog()
+                    {
+                        Ten_Log = "Cập nhật passcode cho người dùng " + data.NguoiDung.HoTen + " thành công",
+                        Ma_NguoiThucHien = int.Parse(id)
+                    };
+                    if (await _log.PostLogAsync(postlog) > 0)
+                    { }
                     return Ok(new
                     {
                         retCode = 1,
                         retText = "Cập nhật passcode thành công",
-                        data = putPasscode.PassCode
+                        data = data
                     });
                 }
             }
@@ -151,6 +183,15 @@ namespace Digital_Signatues.Controllers
             {
                 if(await _thongso.CauHinhChuKyAsync(fileChuKy))
                 {
+                    var data = await _thongso.GetThongSoNguoiDungAsync(fileChuKy.Ma_NguoiDung);
+                    var id = User.FindFirstValue("Id");
+                    var postlog = new PostLog()
+                    {
+                        Ten_Log = "Cấu hình file chữ ký cho người dùng " + data.NguoiDung.HoTen + " thành công",
+                        Ma_NguoiThucHien = int.Parse(id)
+                    };
+                    if (await _log.PostLogAsync(postlog) > 0)
+                    { }
                     return Ok(new
                     {
                         retCode = 1,
@@ -174,8 +215,18 @@ namespace Digital_Signatues.Controllers
         [HttpDelete("{id}"),ActionName("thongso")]
         public async Task<IActionResult> DeleteThongSoAsync(int id)
         {
-            if(await _thongso.DeleteThongSoAsync(id))
+            var data = await _thongso.GetThongSoNguoiDungAsync(id);
+            string ten = data.NguoiDung.HoTen;
+            if (await _thongso.DeleteThongSoAsync(id))
             {
+                var mauser = User.FindFirstValue("Id");
+                var postlog = new PostLog()
+                {
+                    Ten_Log = "Xóa thông số người dùng " + ten + " thành công",
+                    Ma_NguoiThucHien = int.Parse(mauser)
+                };
+                if (await _log.PostLogAsync(postlog) > 0)
+                { }
                 return Ok(new
                 {
                     retCode=1,

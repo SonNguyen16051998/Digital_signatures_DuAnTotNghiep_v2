@@ -1,5 +1,6 @@
 ﻿using Digital_Signatues.Models.ViewModel;
 using Digital_Signatues.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -13,6 +14,7 @@ namespace Digital_Signatues.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [AllowAnonymous]
     public class TokenController : Controller
     {
         private IConfiguration _config;

@@ -139,9 +139,24 @@ namespace Digital_Signatues.Services
         }
         public async Task<List<KySoDeXuat>> GetKySoChoDuyetAsync(int ma_nguoidung)
         {
-            return await _context.kySoDeXuats
-                .Where(x=>x.TrangThai==true && x.Ma_NguoiDeXuat == ma_nguoidung && x.IsDaDuyet==false)
+            var dexuat = await _context.kySoDeXuats
+                .Where(x => x.TrangThai == true && x.Ma_NguoiDeXuat == ma_nguoidung && x.IsDaDuyet == false)
+                .Include(x => x.KySoBuocDuyets)
                 .ToListAsync();
+            List<KySoDeXuat> danhsachchoduyet = new List<KySoDeXuat>();
+            foreach (var item in dexuat)
+            {
+                if (item.KySoBuocDuyets.Count > 0)
+                {
+                    var tuchoi = await _context.kySoBuocDuyets
+                    .Where(x => x.Ma_KySoDeXuat == item.Ma_KySoDeXuat && x.IsTuChoi == true).FirstOrDefaultAsync();
+                    if (tuchoi == null)
+                    {
+                        danhsachchoduyet.Add(item);
+                    }
+                }
+            }
+            return danhsachchoduyet;
         }
         public async Task<List<KySoDeXuat>> GetKySoDaDuyetAsync(int ma_nguoidung)
         {

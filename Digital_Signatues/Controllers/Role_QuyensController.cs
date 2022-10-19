@@ -1,6 +1,7 @@
 ﻿using Digital_Signatues.Models;
 using Digital_Signatues.Models.ViewModel;
 using Digital_Signatues.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ namespace Digital_Signatues.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
+    [Authorize]
     public class Role_QuyensController : Controller
     {
         private readonly IRole_Quyen _role_Quyen;

@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="DotNetEnv" Version="2.3.0" />
+    <PackageReference Include="Microsoft.IdentityModel" Version="7.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
 	  <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.17" />
 	  <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.2.0" />

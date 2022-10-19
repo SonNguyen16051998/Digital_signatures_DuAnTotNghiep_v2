@@ -8,16 +8,21 @@ using System.Collections.Generic;
 using System;
 using Digital_Signatues.Models.ViewPost;
 using Digital_Signatues.Models.ViewPut;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Digital_Signatues.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
+    [Authorize]
     public class NguoiDungsController : Controller
     {
+        private readonly ILog _log;
         private readonly INguoiDung _nguoiDung;
-        public NguoiDungsController(INguoiDung nguoiDung)
+        public NguoiDungsController(INguoiDung nguoiDung,ILog log)
         {
+            _log = log;
             _nguoiDung=nguoiDung;
         }
         /// <summary>
@@ -88,6 +93,14 @@ namespace Digital_Signatues.Controllers
                     int id_NguoiDung = await _nguoiDung.AddNguoiDungAsync(addNguoiDung);
                     if (id_NguoiDung > 0)
                     {
+                        var id = User.FindFirstValue("Id");
+                        var postlog = new PostLog()
+                        {
+                            Ten_Log = "Thêm người dùng " + addNguoiDung.HoTen + " có mã số " + id_NguoiDung + " thành công",
+                            Ma_NguoiThucHien = int.Parse(id)
+                        };
+                        if (await _log.PostLogAsync(postlog) > 0)
+                        { }
                         return Ok(new
                         {
                             retCode = 1,
@@ -117,6 +130,14 @@ namespace Digital_Signatues.Controllers
                 int id_nguoiDung = await _nguoiDung.UpdateNguoiDungAsync(putNguoiDung);
                 if (id_nguoiDung>0)
                 {
+                    var id = User.FindFirstValue("Id");
+                    var postlog = new PostLog()
+                    {
+                        Ten_Log = "Cập nhật thông tin người dùng có mã số " + id_nguoiDung + " thành công",
+                        Ma_NguoiThucHien = int.Parse(id)
+                    };
+                    if (await _log.PostLogAsync(postlog) > 0)
+                    { }
                     return Ok(new
                     {
                         retCode = 1,
@@ -178,6 +199,7 @@ namespace Digital_Signatues.Controllers
         /// <param name="quenMatKhau"></param>
         /// <returns></returns>
         [HttpPut,ActionName("quenmatkhau")]
+        [AllowAnonymous]
         public async Task<IActionResult> QuenMatKhauAsync([FromBody]ViewQuenMatKhau quenMatKhau)
         {
             //xác nhận mã OTP thành công cho qua trang cập nhật mật khẩu mới
@@ -210,6 +232,7 @@ namespace Digital_Signatues.Controllers
         /// <param name="maOTP"></param>
         /// <returns></returns>
         [HttpPut,ActionName("maotp")]
+        [AllowAnonymous]
         public async Task<IActionResult> CreateOrUpdateOTPAsync(PostOTP maOTP)//truyền về email,mặc định(otp=null,isuse=false)
         { 
             if (ModelState.IsValid)
@@ -257,9 +280,10 @@ namespace Digital_Signatues.Controllers
         /// <summary>
         /// chức năng xác nhận mã OTP
         /// </summary>
-        /// <param name="maOTP">truyền về object OTP gồm email, mã otp, còn lại có thể để null</param>
+        /// <param name="maOTP"></param>
         /// <returns></returns>
         [HttpPut,ActionName("xacnhanotp")]
+        [AllowAnonymous]
         public async Task<IActionResult> XacNhanOTP(PutOTP maOTP)//truyền về email và mã otp ,mặc định isuse=false
         {
             if(ModelState.IsValid)
@@ -302,6 +326,14 @@ namespace Digital_Signatues.Controllers
             {
                 if(await _nguoiDung.DeleteNguoiDungAsync(id))
                 {
+                    var mauser = User.FindFirstValue("Id");
+                    var postlog = new PostLog()
+                    {
+                        Ten_Log = "Xóa người dùng có mã số " + id + " thành công",
+                        Ma_NguoiThucHien = int.Parse(mauser)
+                    };
+                    if (await _log.PostLogAsync(postlog) > 0)
+                    { }
                     return Ok(new
                     {
                         retCode = 1,

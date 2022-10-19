@@ -100,6 +100,7 @@ namespace Digital_Signatues.Services
         public async Task<List<NguoiDung_Role>> GetNguoiDung_RolesAsync(int id_nguoiDung)
         {
             var nguoiDung_Roles=await _context.NguoiDung_Roles.Where(x=>x.Ma_NguoiDung==id_nguoiDung)
+                            .Include(x=>x.NguoiDung)
                             .Include(x=>x.Role).ToListAsync();
             return nguoiDung_Roles;
         }

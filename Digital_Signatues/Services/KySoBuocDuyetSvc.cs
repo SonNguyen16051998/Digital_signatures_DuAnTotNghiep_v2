@@ -16,6 +16,7 @@ namespace Digital_Signatues.Services
         Task<KySoBuocDuyet> GetBuocDuyetAsync(int ma_BuocDuyet);
         Task<List<KySoBuocDuyet>> GetAllBuocDuyetAsync(int ma_dexuat);
         Task<bool> CheckDeleteAsync(int ma_buocduyet);
+        Task<bool> TuChoiDuyetAsync(int ma_buocduyet);
     }
     public class KySoBuocDuyetSvc:IKySoBuocDuyet
     {
@@ -108,7 +109,9 @@ namespace Digital_Signatues.Services
         public async Task<KySoBuocDuyet> GetBuocDuyetAsync(int ma_BuocDuyet)
         {
             return await _context.kySoBuocDuyets
-                .Where(x => x.Ma_BuocDuyet == ma_BuocDuyet).FirstOrDefaultAsync();
+                .Where(x => x.Ma_BuocDuyet == ma_BuocDuyet)
+                .Include(x=>x.KySoDeXuat)
+                .FirstOrDefaultAsync();
         }
         public async Task<List<KySoBuocDuyet>> GetAllBuocDuyetAsync(int ma_dexuat)
         {
@@ -123,6 +126,20 @@ namespace Digital_Signatues.Services
                 var buocduyet = await _context.kySoBuocDuyets.Where(x => x.Ma_BuocDuyet == ma_buocduyet).FirstOrDefaultAsync(); 
                 var dexuat= await _context.kySoDeXuats.Where(x=>x.Ma_KySoDeXuat==buocduyet.Ma_KySoDeXuat).FirstOrDefaultAsync();
                 ret = dexuat.TrangThai == true ? false : true;
+            }
+            catch { }
+            return ret;
+        }
+        public async Task<bool> TuChoiDuyetAsync(int ma_buocduyet)
+        {
+            bool ret = false;
+            try
+            {
+                var buocduyet = await _context.kySoBuocDuyets.Where(x => x.Ma_BuocDuyet == ma_buocduyet).FirstOrDefaultAsync();
+                buocduyet.IsTuChoi = true;
+                _context.kySoBuocDuyets.Update(buocduyet);
+                await _context.SaveChangesAsync();
+                ret = true;
             }
             catch { }
             return ret;

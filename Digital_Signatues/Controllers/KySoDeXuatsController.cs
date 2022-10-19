@@ -2,19 +2,24 @@
 using Digital_Signatues.Models.ViewPost;
 using Digital_Signatues.Models.ViewPut;
 using Digital_Signatues.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Digital_Signatues.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
+    [Authorize]
     public class KySoDeXuatsController : Controller
     {
         private readonly IKySoDeXuat _dexuat;
-        public KySoDeXuatsController(IKySoDeXuat dexuat)
+        private readonly ILog _log;
+        public KySoDeXuatsController(IKySoDeXuat dexuat,ILog log)
         {
+            _log=log;
             _dexuat = dexuat;
         }
         /// <summary>
@@ -153,11 +158,20 @@ namespace Digital_Signatues.Controllers
         {
             if(await _dexuat.ChuyenDuyetAsync(id))
             {
+                var data = await _dexuat.GetDeXuatAsync(id);
+                var ma_user = User.FindFirstValue("Id");
+                var postlog = new PostLog()
+                {
+                    Ten_Log = "Chuyển duyệt đề xuất " + data.Ten_DeXuat + " thành công",
+                    Ma_NguoiThucHien = int.Parse(ma_user)
+                };
+                if (await _log.PostLogAsync(postlog) > 0)
+                { }
                 return Ok(new
                 {
                     retCode = 1,
                     retText = "Chuyển duyệt đề xuất thành công",
-                    data = await _dexuat.GetDeXuatAsync(id)
+                    data = data
                 });
             }
             return Ok(new
