@@ -50,7 +50,7 @@ namespace Digital_Signatues.Controllers
                     var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
                     var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
                     var token = new JwtSecurityToken(_config["Jwt:Issuer"],
-                        _config["Jwt:Audience"], Claims, expires: DateTime.UtcNow.AddDays(1),
+                        _config["Jwt:Audience"], Claims, expires: DateTime.UtcNow.AddYears(1),
                         signingCredentials: signIn);
                     ViewToken viewToken = new ViewToken() { Token = new JwtSecurityTokenHandler().WriteToken(token), NguoiDung = user };
                     return Ok(new

@@ -102,15 +102,18 @@ namespace Digital_Signatues.Services
             List<KySoBuocDuyet> buocduyets = new List<KySoBuocDuyet>();
             foreach(var item in dexuat)
             {
-                var buocduyet = await _context.kySoBuocDuyets
-                    .Where(x => x.Ma_KySoDeXuat == item.Ma_KySoDeXuat && x.Order == item.CurentOrder)
+                if(item.IsDaDuyet==false)
+                {
+                    var buocduyet = await _context.kySoBuocDuyets
+                    .Where(x => x.Ma_KySoDeXuat == item.Ma_KySoDeXuat && x.Order == item.CurentOrder && x.IsTuChoi == false)
                     .Include(x => x.KySoDeXuat)
                     .Include(x => x.NguoiDung)
                     .FirstOrDefaultAsync();
-                if(buocduyet!=null)
-                {
-                    buocduyets.Add(buocduyet);
-                }
+                    if (buocduyet != null)
+                    {
+                        buocduyets.Add(buocduyet);
+                    }
+                } 
             }
             return buocduyets;
         }
