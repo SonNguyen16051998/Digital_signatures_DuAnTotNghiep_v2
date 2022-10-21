@@ -10,9 +10,7 @@ namespace Digital_Signatues.Services
     public interface ILog
     {
         Task<int> PostLogAsync(PostLog log);
-        /*Task<List<Log>> GetLogByNguoiThayDoiAsync(int ma_nguoithaydoi);
-        Task<List<Log>> GetLogByNguoiThucHienAsync(int ma_nguoithuchien);
-        Task<List<Log>> GetAllLogAsync();*/
+        Task<List<Log>> GetAllLogAsync();
     }
     public class LogSvc:ILog
     {
@@ -38,6 +36,12 @@ namespace Digital_Signatues.Services
             }
             catch { }
             return ret;
+        }
+        public async Task<List<Log>> GetAllLogAsync()
+        {
+            return await _context.Logs.OrderByDescending(x=>x.ThoiGianThucHien)
+                .Include(x=>x.NguoiDung)
+                .ToListAsync();
         }
     }
 }

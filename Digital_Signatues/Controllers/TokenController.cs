@@ -19,15 +19,17 @@ namespace Digital_Signatues.Controllers
     {
         private IConfiguration _config;
         private readonly INguoiDung _nguoiDung;
-        public TokenController(IConfiguration config,INguoiDung nguoiDung)
+        private readonly ILog _log;
+        public TokenController(IConfiguration config,INguoiDung nguoiDung,ILog log)
         {
+            _log=log;
             _config=config;
             _nguoiDung=nguoiDung;
         }
         /// <summary>
         /// đăng nhập
         /// </summary>
-        /// <param name="login">trả về object login gồm email và mật khẩu</param>
+        /// <param name="login"></param>
         /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> CusLogin([FromBody] ViewLogin login)
@@ -75,6 +77,20 @@ namespace Digital_Signatues.Controllers
                 retCode = 0,
                 retText = "Dữ liệu không hợp lệ",
                 data = ""
+            });
+        }
+        /// <summary>
+        /// lấy toàn bộ lịch sử của hệ thống
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<IActionResult> GetAllLogAsync()
+        {
+            return Ok(new
+            {
+                retCode = 1,
+                retText = "Lấy lịch sử hệ thống thành công",
+                data = await _log.GetAllLogAsync()
             });
         }
     }
