@@ -145,24 +145,33 @@ namespace Digital_Signatues.Controllers
         {
             if(ModelState.IsValid)
             {
-                if(await _thongso.ChangePasscode(putPasscode))
+                if(await _thongso.CheckPasscode(putPasscode.Ma_NguoiDung,putPasscode.PassCode))
                 {
-                    var data = await _thongso.GetThongSoNguoiDungAsync(putPasscode.Ma_NguoiDung);
-                    var id = User.FindFirstValue("Id");
-                    var postlog = new PostLog()
+                    if (await _thongso.ChangePasscode(putPasscode))
                     {
-                        Ten_Log = "Cập nhật passcode cho người dùng " + data.NguoiDung.HoTen + " thành công",
-                        Ma_NguoiThucHien = int.Parse(id)
-                    };
-                    if (await _log.PostLogAsync(postlog) > 0)
-                    { }
-                    return Ok(new
-                    {
-                        retCode = 1,
-                        retText = "Cập nhật passcode thành công",
-                        data = data
-                    });
+                        var data = await _thongso.GetThongSoNguoiDungAsync(putPasscode.Ma_NguoiDung);
+                        var id = User.FindFirstValue("Id");
+                        var postlog = new PostLog()
+                        {
+                            Ten_Log = "Cập nhật passcode cho người dùng " + data.NguoiDung.HoTen + " thành công",
+                            Ma_NguoiThucHien = int.Parse(id)
+                        };
+                        if (await _log.PostLogAsync(postlog) > 0)
+                        { }
+                        return Ok(new
+                        {
+                            retCode = 1,
+                            retText = "Cập nhật passcode thành công",
+                            data = data
+                        });
+                    }
                 }
+                return Ok(new
+                {
+                    retCode = 0,
+                    retText = "Passcode cũ không chính xác",
+                    data = ""
+                });
             }
             return Ok(new
             {

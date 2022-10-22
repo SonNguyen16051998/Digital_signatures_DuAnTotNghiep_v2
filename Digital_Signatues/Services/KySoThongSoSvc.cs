@@ -21,6 +21,7 @@ namespace Digital_Signatues.Services
         Task<string> CheckSubjectFileAsync(int ma_nguoidung);//kiểm tra subject của người dùng có trùng không
         Task<bool> DeleteThongSoAsync(int ma_nguoidung);//xóa thông số người dùng
         Task<List<NguoiDung>> GetNguoiDuyetsAsync();//danh sach nguoi dung co quyen duyet ki so
+        Task<bool> CheckPasscode(int ma_nguoidung, string passcode);
     }
     public class KySoThongSoSvc:IKySoThongSo
     {
@@ -106,7 +107,7 @@ namespace Digital_Signatues.Services
             try
             {
                 var thongso = await _context.KySoThongSos.Where(x => x.Ma_NguoiDung == putPasscode.Ma_NguoiDung).FirstOrDefaultAsync();
-                thongso.PassCode = putPasscode.PassCode;
+                thongso.PassCode = putPasscode.NewPassCode;
                 _context.KySoThongSos.Update(thongso);
                 await _context.SaveChangesAsync();
                 result = true;
@@ -209,13 +210,20 @@ namespace Digital_Signatues.Services
                 var quyen = await _context.NguoiDung_Quyens
                     .Where(x => x.Ma_NguoiDung == item.Ma_NguoiDung && x.Ma_Quyen==4)
                     .FirstOrDefaultAsync();
-                if(quyen!=null)
+                var nguoidung_thongso = await _context.KySoThongSos
+                    .Where(x => x.Ma_NguoiDung == item.Ma_NguoiDung).FirstOrDefaultAsync();
+                if(quyen!=null && nguoidung_thongso==null)
                 {
                     item.PassWord = string.Empty;
                     nguoidung_duyet.Add(item);
                 }
             }
             return nguoidung_duyet;
+        }
+        public async Task<bool> CheckPasscode(int ma_nguoidung, string passcode)
+        {
+            var check = await _context.KySoThongSos.Where(x => x.Ma_NguoiDung == ma_nguoidung && x.PassCode == passcode).FirstOrDefaultAsync();
+            return check==null? false: true;
         }
     }
 }

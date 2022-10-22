@@ -9,7 +9,6 @@ namespace Digital_Signatues.Models.ViewPut
         [Column(TypeName = "nvarchar(55)"), Required]
         public string PassCode { get; set; }
         [Column(TypeName = "nvarchar(55)"), Required]
-        [Compare("PassCode", ErrorMessage = "Mật khẩu không trùng khớp!!!")]
-        public string RetypePasscode { get; set; }
+        public string NewPassCode { get; set; }
     }
 }
