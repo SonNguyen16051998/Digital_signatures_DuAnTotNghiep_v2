@@ -47,7 +47,7 @@ namespace Digital_Signatues.Controllers
             {
                 string fileName = "";
                 var thongso = await _thongso.GetThongSoNguoiDungAsync(signs.Id_NguoiDung);
-                if(string.IsNullOrEmpty(thongso.Subject) && thongso.LoaiChuKy==true)
+                if(string.IsNullOrEmpty(thongso.FilePfx) && thongso.LoaiChuKy==true)
                 {
                     return Ok(new
                     {
