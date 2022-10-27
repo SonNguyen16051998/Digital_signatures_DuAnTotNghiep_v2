@@ -46,15 +46,18 @@ namespace Digital_Signatues.Controllers
             if (ModelState.IsValid)
             {
                 string fileName = "";
-                foreach (var item in signs.PostPositionSigns)
+                var thongso = await _thongso.GetThongSoNguoiDungAsync(signs.Id_NguoiDung);
+                if(string.IsNullOrEmpty(thongso.Subject) && thongso.LoaiChuKy==true)
                 {
-                    string outputFile = "";
-                    string inputNewFile = "";
-                    string fieldName = "";
-                    string name = Path.GetFileNameWithoutExtension(signs.inputFile);
-                    string fontPath = Path.Combine(_environment.WebRootPath, "Font", "ARIALUNI.TTF");
-                    var thongso = await _thongso.GetThongSoNguoiDungAsync(signs.Id_NguoiDung);
-                    Certicate myCert = new Certicate(thongso.FilePfx, thongso.PasscodeFilePfx);
+                    return Ok(new
+                    {
+                        retCode = 0,
+                        retText = "Ký thử thất bại. Người dùng chưa cấu hình file chữ kí",
+                        data = ""
+                    });
+                }
+                else
+                {
                     X509Certificate cert = new X509Certificate(thongso.FilePfx, thongso.PasscodeFilePfx);
 
                     if (await _thongso.CheckSubjectFileAsync(signs.Id_NguoiDung) != cert.Subject)
@@ -65,56 +68,66 @@ namespace Digital_Signatues.Controllers
                         thongsofilepfx.Serial = cert.GetSerialNumberString();
                         await _thongso.CapNhatThongSoFileAsync(thongsofilepfx);
                     }
-                    PDFSigner pdfs = new PDFSigner();
-                    for (int i = 0; i < 1000; i++)
+                    foreach (var item in signs.PostPositionSigns)
                     {
-                        fileName = name + "_" + i + "_daky.pdf";
-                        fieldName = "filedName_" + i;
-                        outputFile = Path.Combine(_environment.WebRootPath, "Filedaky") + @"\" + name + "_" + i + "_daky.pdf";
-                        if (!System.IO.File.Exists(outputFile))
+                        string outputFile = "";
+                        string inputNewFile = "";
+                        string fieldName = "";
+                        string name = Path.GetFileNameWithoutExtension(signs.inputFile);
+                        string fontPath = Path.Combine(_environment.WebRootPath, "Font", "ARIALUNI.TTF");
+                        Certicate myCert = new Certicate(thongso.FilePfx, thongso.PasscodeFilePfx);
+
+                        PDFSigner pdfs = new PDFSigner();
+                        for (int i = 0; i < 1000; i++)
                         {
-                            inputNewFile = Path.Combine(_environment.WebRootPath, "Filedaky") + @"\" + name + "_" + (i - 1) + "_daky.pdf";
-                            break;
+                            fileName = name + "_" + i + "_daky.pdf";
+                            fieldName = "filedName_" + i;
+                            outputFile = Path.Combine(_environment.WebRootPath, "Filedaky") + @"\" + name + "_" + i + "_daky.pdf";
+                            if (!System.IO.File.Exists(outputFile))
+                            {
+                                inputNewFile = Path.Combine(_environment.WebRootPath, "Filedaky") + @"\" + name + "_" + (i - 1) + "_daky.pdf";
+                                break;
+                            }
+                        }
+                        if (System.IO.File.Exists(inputNewFile))
+                        {
+                            pdfs = new PDFSigner(inputNewFile, outputFile, myCert, fontPath);
+                        }
+                        else
+                        {
+                            pdfs = new PDFSigner(signs.inputFile, outputFile, myCert, fontPath);
+                        }
+                        if (!string.IsNullOrEmpty(item.textSign))
+                        {
+                            var rectangle = new iTextSharp.text.Rectangle((int)item.x, (int)item.y);
+                            pdfs.SignText(thongso.LyDoMacDinh, "", "", item.textSign, rectangle, item.pageSign, fieldName);
+                        }
+                        else
+                        {
+                            var recJ = new RectangleJ((int)item.x, (int)item.y, (int)item.img_w, (int)item.img_h);
+
+                            string inputImg = item.imgSign;
+                            var rectangle = new iTextSharp.text.Rectangle(recJ);
+                            pdfs.SignImage(thongso.LyDoMacDinh, "", "", inputImg, rectangle, item.pageSign, fieldName, false);
                         }
                     }
-                    if (System.IO.File.Exists(inputNewFile))
+                    var nguoidung = await _thongso.GetThongSoNguoiDungAsync(signs.Id_NguoiDung);
+                    var id = User.FindFirstValue("Id");
+                    var postlog = new PostLog()
                     {
-                        pdfs = new PDFSigner(inputNewFile, outputFile, myCert, fontPath);
-                    }
-                    else
+                        Ten_Log = "Kí thử trên tài khoản " + nguoidung.NguoiDung.HoTen + " thành công",
+                        Ma_NguoiThucHien = int.Parse(id)
+                    };
+                    if (await _log.PostLogAsync(postlog) > 0)
+                    { }
+                    return Ok(new
                     {
-                        pdfs = new PDFSigner(signs.inputFile, outputFile, myCert, fontPath);
-                    }
-                    if (!string.IsNullOrEmpty(item.textSign))
-                    {
-                        var rectangle = new iTextSharp.text.Rectangle((int)item.x, (int)item.y);
-                        pdfs.SignText(thongso.LyDoMacDinh, "", "", item.textSign, rectangle, item.pageSign, fieldName);
-                    }
-                    else
-                    {
-                        var recJ = new RectangleJ((int)item.x, (int)item.y, (int)item.img_w, (int)item.img_h);
-
-                        string inputImg = item.imgSign;
-                        var rectangle = new iTextSharp.text.Rectangle(recJ);
-                        pdfs.SignImage(thongso.LyDoMacDinh, "", "", inputImg, rectangle, item.pageSign, fieldName, false);
-                    }
+                        retCode = 1,
+                        retText = "Ký thử thành công",
+                        data = Path.Combine("Filedaky", fileName)
+                    });
                 }
-                var nguoidung = await _thongso.GetThongSoNguoiDungAsync(signs.Id_NguoiDung);
-                var id = User.FindFirstValue("Id");
-                var postlog = new PostLog()
-                {
-                    Ten_Log = "Kí thử trên tài khoản " + nguoidung.NguoiDung.HoTen +  " thành công",
-                    Ma_NguoiThucHien = int.Parse(id)
-                };
-                if (await _log.PostLogAsync(postlog) > 0)
-                { }
-                return Ok(new
-                {
-                    retCode = 1,
-                    retText = "Ký thử thành công",
-                    data = Path.Combine("Filedaky", fileName)
-                });
-            }
+            }    
             return Ok(new
             {
                 retCode = 0,

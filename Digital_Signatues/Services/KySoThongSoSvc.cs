@@ -3,7 +3,9 @@ using Digital_Signatues.Models.ViewPost;
 using Digital_Signatues.Models.ViewPut;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Digital_Signatues.Services
@@ -123,11 +125,16 @@ namespace Digital_Signatues.Services
             bool result = false;
             try
             {
+                string namePfx=Path.GetFileNameWithoutExtension(cauHinhFileChuKy.FilePfx) +".pfx";
+                using var client = new HttpClient();
+                using var s = await client.GetStreamAsync(cauHinhFileChuKy.FilePfx);
+                using var fs = new FileStream(Path.Combine("wwwroot\\FilePfx",namePfx), FileMode.OpenOrCreate);
+                await s.CopyToAsync(fs);
                 var thongso = await _context.KySoThongSos
                     .Where(x => x.Ma_NguoiDung == cauHinhFileChuKy.Ma_NguoiDung).FirstOrDefaultAsync();
                 if(cauHinhFileChuKy.FilePfx != null)
                 {
-                    thongso.FilePfx = cauHinhFileChuKy.FilePfx;
+                    thongso.FilePfx = "wwwroot\\FilePfx\\" + namePfx;
                     thongso.PasscodeFilePfx = cauHinhFileChuKy.PasscodeFilePfx;
                 }
                 thongso.LoaiChuKy = cauHinhFileChuKy.LoaiChuKy;
