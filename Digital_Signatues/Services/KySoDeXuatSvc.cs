@@ -98,6 +98,7 @@ namespace Digital_Signatues.Services
         {
             return await _context.kySoDeXuats.Where(x=>x.Ma_NguoiDeXuat==ma_nguoidexuat)
                 .Include(x=>x.KySoBuocDuyets)
+                .Include(x=>x.NguoiDung)
                 .ToListAsync();
         }
         public async Task<List<KySoDeXuat>> GetDeXuatsAsync()

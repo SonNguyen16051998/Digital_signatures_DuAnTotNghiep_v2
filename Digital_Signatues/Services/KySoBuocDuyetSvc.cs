@@ -111,12 +111,16 @@ namespace Digital_Signatues.Services
             return await _context.kySoBuocDuyets
                 .Where(x => x.Ma_BuocDuyet == ma_BuocDuyet)
                 .Include(x=>x.KySoDeXuat)
+                .Include(x=>x.NguoiDung)
                 .FirstOrDefaultAsync();
         }
         public async Task<List<KySoBuocDuyet>> GetAllBuocDuyetAsync(int ma_dexuat)
         {
             return await _context.kySoBuocDuyets
-                .Where(x=>x.Ma_KySoDeXuat==ma_dexuat).ToListAsync();
+                .Where(x=>x.Ma_KySoDeXuat==ma_dexuat)
+                .Include(x => x.NguoiDung)
+                .Include(x=>x.KySoDeXuat)
+                .ToListAsync();
         }
         public async Task<bool> CheckDeleteAsync(int ma_buocduyet)
         {
