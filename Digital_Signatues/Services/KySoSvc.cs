@@ -107,6 +107,7 @@ namespace Digital_Signatues.Services
                     var buocduyet = await _context.kySoBuocDuyets
                     .Where(x => x.Ma_KySoDeXuat == item.Ma_KySoDeXuat && x.Order == item.CurentOrder && x.IsTuChoi == false)
                     .Include(x => x.KySoDeXuat)
+                    .Include(x => x.KySoDeXuat.NguoiDung)
                     .Include(x => x.NguoiDung)
                     .FirstOrDefaultAsync();
                     if (buocduyet != null)
