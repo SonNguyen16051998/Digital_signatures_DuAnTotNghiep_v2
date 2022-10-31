@@ -1,4 +1,5 @@
 ﻿using Digital_Signatues.Models;
+using Digital_Signatues.Models.ViewModel;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace Digital_Signatues.Services
     {
         Task<int> AddKySoTest (KySoTest kySotest);
         Task<bool> Sign(int ma_buocduyet,string filedaky);
-        Task<bool> CheckPassCode(int ma_nguoiky,string passcode);
+        Task<bool> CheckPassCode(CheckPasscode checkPasscode);
         Task<int> GetIndexBuocDuyet(int ma_buocduyet);
         Task<List<KySoBuocDuyet>> GetBuocDuyetHienTai();
     }
@@ -73,12 +74,12 @@ namespace Digital_Signatues.Services
             catch { }
             return ret;
         }
-        public async Task<bool> CheckPassCode(int ma_nguoiky,string passcode)
+        public async Task<bool> CheckPassCode(CheckPasscode checkPasscode)
         {
             bool ret=false;
             try
             {
-                var check = await _context.KySoThongSos.Where(x => x.Ma_NguoiDung == ma_nguoiky && x.PassCode == passcode)
+                var check = await _context.KySoThongSos.Where(x => x.Ma_NguoiDung == checkPasscode.Ma_NguoiKy && x.PassCode == checkPasscode.Passcode)
                     .FirstOrDefaultAsync();
                 ret = check == null ? false : true;
             }

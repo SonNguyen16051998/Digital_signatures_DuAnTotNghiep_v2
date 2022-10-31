@@ -11,8 +11,6 @@ namespace Digital_Signatues.Models.ViewPost
         public string inputFile { get; set; }
         [Required]
         public int Ma_BuocDuyet { get; set; }
-        [Required]
-        public string passcode { get; set; }
         public List<PostPositionSign> PostPositionSigns { get; set; }
     }
 }
