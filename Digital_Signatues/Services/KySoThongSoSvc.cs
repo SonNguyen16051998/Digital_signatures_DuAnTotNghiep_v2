@@ -24,6 +24,7 @@ namespace Digital_Signatues.Services
         Task<bool> DeleteThongSoAsync(int ma_nguoidung);//xóa thông số người dùng
         Task<List<NguoiDung>> GetNguoiDuyetsAsync();//danh sach nguoi dung co quyen duyet ki so
         Task<bool> CheckPasscode(int ma_nguoidung, string passcode);
+        Task<List<KySoThongSo>> GetAllNguoiDungDuocKyAsync();//lấy toàn bộ người dùng có quyền được kí
     }
     public class KySoThongSoSvc:IKySoThongSo
     {
@@ -231,6 +232,27 @@ namespace Digital_Signatues.Services
         {
             var check = await _context.KySoThongSos.Where(x => x.Ma_NguoiDung == ma_nguoidung && x.PassCode == passcode).FirstOrDefaultAsync();
             return check==null? false: true;
+        }
+        public async Task<List<KySoThongSo>> GetAllNguoiDungDuocKyAsync()
+        {
+            var thongso = await _context.KySoThongSos.Include(x => x.NguoiDung)
+                .Include(x => x.NguoiDung.ChucDanh)
+                .ToListAsync();
+            List<KySoThongSo> ret = new List<KySoThongSo>();
+            foreach (var item in thongso)
+            {
+                if (item.NguoiDung.IsThongSo == true)
+                {
+                    var ng_duyet = await _context.NguoiDung_Quyens
+                   .Where(x => x.Ma_NguoiDung == item.Ma_NguoiDung && x.Ma_Quyen == 4)
+                   .FirstOrDefaultAsync();
+                    if (ng_duyet != null)
+                    {
+                        ret.Add(item);
+                    }
+                }
+            }
+            return ret;
         }
     }
 }

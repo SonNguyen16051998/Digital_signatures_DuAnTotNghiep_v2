@@ -264,5 +264,19 @@ namespace Digital_Signatues.Controllers
                 data = await _thongso.GetNguoiDuyetsAsync()
             });
         }
+        /// <summary>
+        /// lấy toàn bộ người dùng có quyền được ký thật
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet,ActionName("nguoidungky")]
+        public async Task<IActionResult> GetAllNguoiDungKyAsync()
+        {
+            return Ok(new
+            {
+                retCode = 1,
+                retText = "Lấy danh sách người dùng được quyền ký thành công",
+                data = await _thongso.GetAllNguoiDungDuocKyAsync()
+            });
+        }
     }
 }
