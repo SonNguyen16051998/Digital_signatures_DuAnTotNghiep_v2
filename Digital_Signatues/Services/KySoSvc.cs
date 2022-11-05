@@ -99,7 +99,7 @@ namespace Digital_Signatues.Services
         }
         public async Task<List<KySoBuocDuyet>> GetBuocDuyetHienTai()
         {
-            var dexuat = await _context.kySoDeXuats.Where(x => x.IsDaDuyet==false).ToListAsync();
+            var dexuat = await _context.kySoDeXuats.Where(x => x.IsDaDuyet==false && x.TrangThai==true).ToListAsync();
             List<KySoBuocDuyet> buocduyets = new List<KySoBuocDuyet>();
             foreach(var item in dexuat)
             {
