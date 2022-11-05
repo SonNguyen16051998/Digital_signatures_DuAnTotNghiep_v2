@@ -109,6 +109,7 @@ namespace Digital_Signatues.Services
         {
             return await _context.kySoDeXuats.Where(x => x.Ma_KySoDeXuat == ma_dexuat)
                 .Include(x => x.KySoBuocDuyets)
+                .Include(x=>x.NguoiDung)
                 .FirstOrDefaultAsync();
         }
         public async Task<bool> CheckDeleteAsync(int ma_dexuat)
