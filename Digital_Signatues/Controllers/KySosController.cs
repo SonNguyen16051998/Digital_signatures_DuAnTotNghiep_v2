@@ -151,7 +151,8 @@ namespace Digital_Signatues.Controllers
                 string outputFile = "";
                 string inputNewFile = "";
                 string fieldName = "filedName_0";
-                if (await _kyso.GetIndexBuocDuyet(signs.Ma_BuocDuyet) > 1)
+                int buocduyethientai = await _kyso.GetIndexBuocDuyet(signs.Ma_BuocDuyet);
+                if (buocduyethientai> 1)
                 {
                     for (int i = 0; i < 1000; i++)
                     {
@@ -172,6 +173,17 @@ namespace Digital_Signatues.Controllers
                 }
                 foreach (var item in signs.PostPositionSigns)
                 {
+                    for (int i = 0; i < 1000; i++)
+                    {
+                        fileName = name + "_" + i + "_daky.pdf";
+                        fieldName = "filedName_" + i;
+                        outputFile = Path.Combine(_environment.WebRootPath, "Filedaky") + @"\" + name + "_" + i + "_daky.pdf";
+                        if (!System.IO.File.Exists(outputFile))
+                        {
+                            inputNewFile = Path.Combine(_environment.WebRootPath, "Filedaky") + @"\" + name + "_" + (i - 1) + "_daky.pdf";
+                            break;
+                        }
+                    }
                     string fontPath = Path.Combine(_environment.WebRootPath, "Font", "ARIALUNI.TTF");
                     var thongso = await _thongso.GetThongSoNguoiDungAsync(signs.Id_NguoiDung);
                     Certicate myCert = new Certicate(thongso.FilePfx, thongso.PasscodeFilePfx);
