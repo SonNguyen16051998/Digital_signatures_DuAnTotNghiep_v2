@@ -43,6 +43,7 @@ namespace Digital_Signatues.Services
                     LoaiVanBan = kySoDeXuat.LoaiVanBan,
                     GhiChu = kySoDeXuat.GhiChu,
                     inputFile = kySoDeXuat.inputFile,
+                    Ten_FileGoc = kySoDeXuat.Ten_FileGoc,
                     NgayDeXuat = System.DateTime.Now,
                     TrangThai = false,
                     CurentOrder = 0
@@ -65,6 +66,7 @@ namespace Digital_Signatues.Services
                 update.LoaiVanBan = kySoDeXuat.LoaiVanBan;
                 update.GhiChu = kySoDeXuat.GhiChu;
                 update.inputFile = kySoDeXuat.inputFile;
+                update.Ten_FileGoc = kySoDeXuat.Ten_FileGoc;
                 _context.kySoDeXuats.Update(update);
                 await _context.SaveChangesAsync();
                 ret = true;

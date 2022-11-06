@@ -38,14 +38,6 @@ namespace Digital_Signatues.Controllers
                     if (await _nguoiDung_PhongBan.AddOrUpdateNguoiDung_PhongBanAsync(NguoiDung_PhongBans))
                     {
                         var data = await _nguoiDung_PhongBan.GetNguoiDung_PhongBansAsync(NguoiDung_PhongBans.Id_NguoiDung);
-                        var id = User.FindFirstValue("Id");
-                        var postlog = new PostLog()
-                        {
-                            Ten_Log = "Cập nhật phòng ban cho người dùng " + data[0].Ten_NguoiDung + " có mã số " + data[0].Ma_NguoiDung + " thành công",
-                            Ma_NguoiThucHien = int.Parse(id)
-                        };
-                        if (await _log.PostLogAsync(postlog) > 0)
-                        { }
                         return Ok(new
                         {
                             retCode = 1,

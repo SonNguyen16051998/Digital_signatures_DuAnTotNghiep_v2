@@ -11,6 +11,8 @@ namespace Digital_Signatues.Services
     {
         Task<int> PostLogAsync(PostLog log);
         Task<List<Log>> GetAllLogAsync();
+        Task<List<Log>> GetAllLogThongSoAsync(int ma_taikhoan);
+        Task<List<Log>> GetAllLogDeXuatAsync(int ma_dexuat);
     }
     public class LogSvc:ILog
     {
@@ -28,7 +30,9 @@ namespace Digital_Signatues.Services
                 {
                     Ten_Log = log.Ten_Log,
                     Ma_NguoiThucHien = log.Ma_NguoiThucHien,
-                    ThoiGianThucHien = System.DateTime.Now
+                    ThoiGianThucHien = System.DateTime.Now,
+                    Ma_TaiKhoan=log.Ma_TaiKhoan,
+                    Ma_DeXuat=log.Ma_DeXuat
                 };
                 await _context.Logs.AddAsync(post);
                 await _context.SaveChangesAsync();
@@ -41,6 +45,20 @@ namespace Digital_Signatues.Services
         {
             return await _context.Logs.OrderByDescending(x=>x.ThoiGianThucHien)
                 .Include(x=>x.NguoiDung)
+                .ToListAsync();
+        }
+        public async Task<List<Log>> GetAllLogThongSoAsync(int ma_taikhoan)
+        {
+            return await _context.Logs.Where(x=>x.Ma_TaiKhoan==ma_taikhoan)
+                .OrderByDescending(x => x.ThoiGianThucHien)
+                .Include(x => x.NguoiDung)
+                .ToListAsync();
+        }
+        public async Task<List<Log>> GetAllLogDeXuatAsync(int ma_dexuat)
+        {
+            return await _context.Logs.Where(x => x.Ma_DeXuat == ma_dexuat)
+                .OrderByDescending(x => x.ThoiGianThucHien)
+                .Include(x => x.NguoiDung)
                 .ToListAsync();
         }
     }

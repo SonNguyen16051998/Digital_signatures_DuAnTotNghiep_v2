@@ -73,14 +73,6 @@ namespace Digital_Signatues.Controllers
                 int id_ChucDanh = await _chucDanh.AddChucDanhAsync(addChucDanh);
                 if (id_ChucDanh> 0)
                 {
-                    var id = User.FindFirstValue("Id");
-                    var postlog = new PostLog()
-                    {
-                        Ten_Log = "Thêm chức danh " + addChucDanh.Ten_ChucDanh + " thành công",
-                        Ma_NguoiThucHien = int.Parse(id)
-                    };
-                    if(await _log.PostLogAsync(postlog)>0)
-                    {}
                     return Ok(new
                     {
                         retCode = 1,
@@ -106,19 +98,9 @@ namespace Digital_Signatues.Controllers
         {//cập nhật chức danh truyền đầy đủ dữ liệu
             if (ModelState.IsValid)
             {
-                var chucdanhcu=await _chucDanh.GetChucDanhAsync(putChucDanh.Ma_ChucDanh);
-                string tencu = chucdanhcu.Ten_ChucDanh;
                 int id_chucDanh = await _chucDanh.UpdateChucDanhAsync(putChucDanh);
                 if ( id_chucDanh> 0)
                 {
-                    var id = User.FindFirstValue("Id");
-                    var postlog = new PostLog()
-                    {
-                        Ten_Log = "Cập nhật chức danh " + tencu + " thành " + putChucDanh.Ten_ChucDanh + " thành công",
-                        Ma_NguoiThucHien = int.Parse(id)
-                    };
-                    if (await _log.PostLogAsync(postlog) > 0)
-                    { }
                     return Ok(new
                     {
                         retCode = 1,
@@ -142,18 +124,8 @@ namespace Digital_Signatues.Controllers
         [HttpDelete("{id}"), ActionName("chucdanh")]
         public async Task<IActionResult> DeleteChucDanhAsync(int id)
         {
-            var chucdanhcu = await _chucDanh.GetChucDanhAsync(id);
-            string tencu = chucdanhcu.Ten_ChucDanh;
             if (await _chucDanh.DeleteChucDanhAsync(id))
             {
-                var manguoidung = User.FindFirstValue("Id");
-                var postlog = new PostLog()
-                {
-                    Ten_Log = "Xóa chức danh " + tencu + " thành công",
-                    Ma_NguoiThucHien = int.Parse(manguoidung)
-                };
-                if (await _log.PostLogAsync(postlog) > 0)
-                { }
                 return Ok(new
                 {
                     retCode = 1,
@@ -180,14 +152,6 @@ namespace Digital_Signatues.Controllers
             {
                 if(await _chucDanh.SapXepThuTuAsync(chucDanhs))
                 {
-                    var id = User.FindFirstValue("Id");
-                    var postlog = new PostLog()
-                    {
-                        Ten_Log = "Sắp xếp thứ tự chức danh thành công",
-                        Ma_NguoiThucHien = int.Parse(id)
-                    };
-                    if (await _log.PostLogAsync(postlog) > 0)
-                    { }
                     return Ok(new
                     {
                         retCode = 1,

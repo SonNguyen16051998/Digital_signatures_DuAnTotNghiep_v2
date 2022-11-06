@@ -65,14 +65,16 @@ namespace Digital_Signatues.Controllers
                 int id_buocduyet = await _buocduyet.PostBuocDuyetAsync(buocDuyet);
                 if (id_buocduyet > 0)
                 {
-                    /*var id = User.FindFirstValue("Id");
+                    var id = User.FindFirstValue("Id");
                     var postlog = new PostLog()
                     {
-                        Ten_Log = "Thêm bước duyệt " + buocDuyet.Ten_Buoc + " cho mã số đề xuất " + buocDuyet.Ma_KySoDeXuat + " thành công",
-                        Ma_NguoiThucHien = int.Parse(id)
+                        Ten_Log = "Thêm bước duyệt " + buocDuyet.Ten_Buoc + " thành công",
+                        Ma_NguoiThucHien = int.Parse(id),
+                        Ma_TaiKhoan=null,
+                        Ma_DeXuat=buocDuyet.Ma_KySoDeXuat
                     };
                     if (await _log.PostLogAsync(postlog) > 0)
-                    { }*/
+                    { }
                     return Ok(new
                     {
                         retCode = 1,
@@ -101,14 +103,16 @@ namespace Digital_Signatues.Controllers
                 if (await _buocduyet.PutBuocDuyetAsync(buocDuyet))
                 {
                     var data = await _buocduyet.GetBuocDuyetAsync(buocDuyet.Ma_BuocDuyet);
-                    /*var id = User.FindFirstValue("Id");
+                    var id = User.FindFirstValue("Id");
                     var postlog = new PostLog()
                     {
-                        Ten_Log = "Cập nhật bước duyệt " + buocDuyet.Ten_Buoc + " cho mã số đề xuất " + data.KySoDeXuat.Ma_KySoDeXuat + " thành công",
-                        Ma_NguoiThucHien = int.Parse(id)
+                        Ten_Log = "Cập nhật bước duyệt " + buocDuyet.Ten_Buoc + " thành công",
+                        Ma_NguoiThucHien = int.Parse(id),
+                        Ma_TaiKhoan = null,
+                        Ma_DeXuat =data.Ma_KySoDeXuat
                     };
                     if (await _log.PostLogAsync(postlog) > 0)
-                    { }*/
+                    { }
                     return Ok(new
                     {
                         retCode = 1,
@@ -132,10 +136,21 @@ namespace Digital_Signatues.Controllers
         [HttpDelete("{id}"), ActionName("buocduyet")]
         public async Task<IActionResult> DeleteBuocDuyetAsync(int id)
         {
+            var buocduyet = await _buocduyet.GetBuocDuyetAsync(id);
             if (await _buocduyet.CheckDeleteAsync(id))
             {
                 if (await _buocduyet.DeleteBuocDuyetAsync(id))
                 {
+                    var ma_user = User.FindFirstValue("Id");
+                    var postlog = new PostLog()
+                    {
+                        Ten_Log = "Xóa bước duyệt " + buocduyet.Ten_Buoc + " thành công",
+                        Ma_NguoiThucHien = int.Parse(ma_user),
+                        Ma_TaiKhoan = null,
+                        Ma_DeXuat = buocduyet.Ma_KySoDeXuat
+                    };
+                    if (await _log.PostLogAsync(postlog) > 0)
+                    { }
                     return Ok(new
                     {
                         retCode = 1,
@@ -159,20 +174,31 @@ namespace Digital_Signatues.Controllers
         [HttpPut("{id}"),ActionName("tuchoi")]
         public async Task<IActionResult> TuChoiDuyetAsync(int id)
         {
-            var data = await _buocduyet.GetBuocDuyetAsync(id);
-            var mauser = User.FindFirstValue("Id");
-            var postlog = new PostLog()
+            if(await _buocduyet.TuChoiDuyetAsync(id))
             {
-                Ten_Log = "Từ chối duyệt " + data.Ten_Buoc + " cho mã số đề xuất " + data.KySoDeXuat.Ma_KySoDeXuat + " thành công",
-                Ma_NguoiThucHien = int.Parse(mauser)
-            };
-            if (await _log.PostLogAsync(postlog) > 0)
-            { }
+                var data = await _buocduyet.GetBuocDuyetAsync(id);
+                var mauser = User.FindFirstValue("Id");
+                var postlog = new PostLog()
+                {
+                    Ten_Log = "Từ chối duyệt " + data.Ten_Buoc,
+                    Ma_NguoiThucHien = int.Parse(mauser),
+                    Ma_TaiKhoan = null,
+                    Ma_DeXuat = data.Ma_KySoDeXuat
+                };
+                if (await _log.PostLogAsync(postlog) > 0)
+                { }
+                return Ok(new
+                {
+                    retCode = 1,
+                    retText = "Từ chối duyệt thành công",
+                    data = data
+                });
+            }
             return Ok(new
             {
-                retCode = 1,
-                retText = "Từ chối duyệt thành công",
-                data = data
+                retCode = 0,
+                retText = "Từ chối duyệt thất bại",
+                data =""
             });
         }
     }

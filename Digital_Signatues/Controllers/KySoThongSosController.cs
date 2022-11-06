@@ -72,8 +72,10 @@ namespace Digital_Signatues.Controllers
                         var id = User.FindFirstValue("Id");
                         var postlog = new PostLog()
                         {
-                            Ten_Log = "Thêm thông số cho người dùng " + data.NguoiDung.HoTen +  " thành công",
-                            Ma_NguoiThucHien = int.Parse(id)
+                            Ten_Log = "Tạo thông số thành công",
+                            Ma_NguoiThucHien = int.Parse(id),
+                            Ma_TaiKhoan=thongSo.Ma_NguoiDung,
+                            Ma_DeXuat=null
                         };
                         if (await _log.PostLogAsync(postlog) > 0)
                         { }
@@ -107,16 +109,17 @@ namespace Digital_Signatues.Controllers
         [HttpPut, ActionName("thongso")]
         public async Task<IActionResult> PutThongSoAsync([FromBody] PutThongSo putThongSo)
         {
-            if(ModelState.IsValid)
+            var id = User.FindFirstValue("Id");
+            if (ModelState.IsValid)
             {
                 if(await _thongso.UpdateThongSoAsync(putThongSo) > 0)
                 {
-                    var data = await _thongso.GetThongSoNguoiDungAsync(putThongSo.Ma_NguoiDung);
-                    var id = User.FindFirstValue("Id");
                     var postlog = new PostLog()
                     {
-                        Ten_Log = "Cập nhật thông số cho người dùng " + data.NguoiDung.HoTen + " thành công",
-                        Ma_NguoiThucHien = int.Parse(id)
+                        Ten_Log = "Cập nhật thông số thành công",
+                        Ma_NguoiThucHien = int.Parse(id),
+                        Ma_TaiKhoan=putThongSo.Ma_NguoiDung,
+                        Ma_DeXuat=null
                     };
                     if (await _log.PostLogAsync(postlog) > 0)
                     { }
@@ -124,9 +127,21 @@ namespace Digital_Signatues.Controllers
                     {
                         retCode = 1,
                         retText = "Cập nhật thông số người dùng thành công",
-                        data = data
+                        data = await _thongso.GetThongSoNguoiDungAsync(putThongSo.Ma_NguoiDung)
                     });
                 }
+                else
+                {
+                    var postlog = new PostLog()
+                    {
+                        Ten_Log = "Cập nhật thông số thất bại",
+                        Ma_NguoiThucHien = int.Parse(id),
+                        Ma_TaiKhoan = putThongSo.Ma_NguoiDung,
+                        Ma_DeXuat = null
+                    };
+                    if (await _log.PostLogAsync(postlog) > 0)
+                    { }
+                }    
             }
             return Ok(new
             {
@@ -143,18 +158,19 @@ namespace Digital_Signatues.Controllers
         [HttpPut, ActionName("passcode")]
         public async Task<IActionResult> ChangePasscode([FromBody] PutPasscode putPasscode)
         {
-            if(ModelState.IsValid)
+            var id = User.FindFirstValue("Id");
+            if (ModelState.IsValid)
             {
                 if(await _thongso.CheckPasscode(putPasscode.Ma_NguoiDung,putPasscode.PassCode))
                 {
                     if (await _thongso.ChangePasscode(putPasscode))
                     {
-                        var data = await _thongso.GetThongSoNguoiDungAsync(putPasscode.Ma_NguoiDung);
-                        var id = User.FindFirstValue("Id");
                         var postlog = new PostLog()
                         {
-                            Ten_Log = "Cập nhật passcode cho người dùng " + data.NguoiDung.HoTen + " thành công",
-                            Ma_NguoiThucHien = int.Parse(id)
+                            Ten_Log = "Cập nhật passcode thành công",
+                            Ma_NguoiThucHien = int.Parse(id),
+                            Ma_TaiKhoan=putPasscode.Ma_NguoiDung,
+                            Ma_DeXuat=null
                         };
                         if (await _log.PostLogAsync(postlog) > 0)
                         { }
@@ -162,21 +178,51 @@ namespace Digital_Signatues.Controllers
                         {
                             retCode = 1,
                             retText = "Cập nhật passcode thành công",
-                            data = data
+                            data = await _thongso.GetThongSoNguoiDungAsync(putPasscode.Ma_NguoiDung)
+                        });
+                    }
+                    else
+                    {
+                        var postlog = new PostLog()
+                        {
+                            Ten_Log = "Cập nhật passcode thất bại",
+                            Ma_NguoiThucHien = int.Parse(id),
+                            Ma_TaiKhoan = putPasscode.Ma_NguoiDung,
+                            Ma_DeXuat = null
+                        };
+                        if (await _log.PostLogAsync(postlog) > 0)
+                        { }
+                        return Ok(new
+                        {
+                            retCode = 0,
+                            retText = "Cập nhật passcode thất bại",
+                            data = ""
                         });
                     }
                 }
-                return Ok(new
+                else
                 {
-                    retCode = 0,
-                    retText = "Passcode cũ không chính xác",
-                    data = ""
-                });
+                    var postlog = new PostLog()
+                    {
+                        Ten_Log = "Nhập passcode cũ không chính xác khi đổi passcode",
+                        Ma_NguoiThucHien = int.Parse(id),
+                        Ma_TaiKhoan = putPasscode.Ma_NguoiDung,
+                        Ma_DeXuat = null
+                    };
+                    if (await _log.PostLogAsync(postlog) > 0)
+                    { }
+                    return Ok(new
+                    {
+                        retCode = 0,
+                        retText = "Passcode cũ không chính xác",
+                        data = ""
+                    });
+                }     
             }
             return Ok(new
             {
                 retCode = 0,
-                retText = "Cập nhật passcode thất bại",
+                retText = "Dữ liệu không hợp lệ",
                 data = ""
             });
         }
@@ -192,12 +238,13 @@ namespace Digital_Signatues.Controllers
             {
                 if(await _thongso.CauHinhChuKyAsync(fileChuKy))
                 {
-                    var data = await _thongso.GetThongSoNguoiDungAsync(fileChuKy.Ma_NguoiDung);
                     var id = User.FindFirstValue("Id");
                     var postlog = new PostLog()
                     {
-                        Ten_Log = "Cấu hình file chữ ký cho người dùng " + data.NguoiDung.HoTen + " thành công",
-                        Ma_NguoiThucHien = int.Parse(id)
+                        Ten_Log = "Cấu hình file chữ ký thành công",
+                        Ma_NguoiThucHien = int.Parse(id),
+                        Ma_TaiKhoan=fileChuKy.Ma_NguoiDung,
+                        Ma_DeXuat=null
                     };
                     if (await _log.PostLogAsync(postlog) > 0)
                     { }
@@ -231,8 +278,10 @@ namespace Digital_Signatues.Controllers
                 var mauser = User.FindFirstValue("Id");
                 var postlog = new PostLog()
                 {
-                    Ten_Log = "Xóa thông số người dùng " + ten + " thành công",
-                    Ma_NguoiThucHien = int.Parse(mauser)
+                    Ten_Log = "Xóa thông số thành công",
+                    Ma_NguoiThucHien = int.Parse(mauser),
+                    Ma_TaiKhoan=id,
+                    Ma_DeXuat=null
                 };
                 if (await _log.PostLogAsync(postlog) > 0)
                 { }

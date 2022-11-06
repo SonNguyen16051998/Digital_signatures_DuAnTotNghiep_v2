@@ -13,30 +13,30 @@ using System.Threading.Tasks;
 namespace Digital_Signatues.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [AllowAnonymous]
     public class TokenController : Controller
     {
         private IConfiguration _config;
         private readonly INguoiDung _nguoiDung;
         private readonly ILog _log;
-        public TokenController(IConfiguration config,INguoiDung nguoiDung,ILog log)
+        public TokenController(IConfiguration config, INguoiDung nguoiDung, ILog log)
         {
-            _log=log;
-            _config=config;
-            _nguoiDung=nguoiDung;
+            _log = log;
+            _config = config;
+            _nguoiDung = nguoiDung;
         }
         /// <summary>
         /// đăng nhập
         /// </summary>
         /// <param name="login"></param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpPost, ActionName("login")]
         public async Task<IActionResult> CusLogin([FromBody] ViewLogin login)
         {
             if (ModelState.IsValid)
             {
-                var user =await _nguoiDung.LoginAsync(login);
+                var user = await _nguoiDung.LoginAsync(login);
                 if (user != null)
                 {
                     var Claims = new[]
@@ -52,7 +52,7 @@ namespace Digital_Signatues.Controllers
                     var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
                     var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
                     var token = new JwtSecurityToken(_config["Jwt:Issuer"],
-                        _config["Jwt:Audience"], Claims, expires: DateTime.UtcNow.AddYears(1),  
+                        _config["Jwt:Audience"], Claims, expires: DateTime.UtcNow.AddYears(1),
                         signingCredentials: signIn);
                     ViewToken viewToken = new ViewToken() { Token = new JwtSecurityTokenHandler().WriteToken(token), NguoiDung = user };
                     return Ok(new
@@ -79,7 +79,7 @@ namespace Digital_Signatues.Controllers
                 data = ""
             });
         }
-        /// <summary>
+        /*/// <summary>
         /// lấy toàn bộ lịch sử của hệ thống
         /// </summary>
         /// <returns></returns>
@@ -92,6 +92,31 @@ namespace Digital_Signatues.Controllers
                 retCode = 1,
                 retText = "Lấy lịch sử hệ thống thành công",
                 data = await _log.GetAllLogAsync()
+            });
+        }*/
+        /// <summary>
+        /// lấy toàn bộ lịch sử thông số của tài khoản hiện tại
+        /// </summary>
+        /// <param name="id">mã tài khoản</param>
+        /// <returns></returns>
+        [HttpGet("{Id}"),ActionName("logthongso")]
+        public async Task<IActionResult> GetAllLogThongSoAsync(int id)
+        {
+            return Ok(new
+            {
+                retCode = 1,
+                retText = "Lấy lịch sử thông số người dùng thành công",
+                data = await _log.GetAllLogThongSoAsync(id)
+            });
+        }
+        [HttpGet("{id}"),ActionName("logdexuat")]
+        public async Task<IActionResult> GetAllLogDeXuatAsync(int id)
+        {
+            return Ok(new
+            {
+                retCode = 1,
+                retText = "Lấy lịch sử đề xuất thành công",
+                data = await _log.GetAllLogDeXuatAsync(id)
             });
         }
     }

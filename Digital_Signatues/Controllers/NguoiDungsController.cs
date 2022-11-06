@@ -93,14 +93,14 @@ namespace Digital_Signatues.Controllers
                     int id_NguoiDung = await _nguoiDung.AddNguoiDungAsync(addNguoiDung);
                     if (id_NguoiDung > 0)
                     {
-                        var id = User.FindFirstValue("Id");
+                       /* var id = User.FindFirstValue("Id");
                         var postlog = new PostLog()
                         {
                             Ten_Log = "Thêm người dùng " + addNguoiDung.HoTen + " có mã số " + id_NguoiDung + " thành công",
                             Ma_NguoiThucHien = int.Parse(id)
                         };
                         if (await _log.PostLogAsync(postlog) > 0)
-                        { }
+                        { }*/
                         return Ok(new
                         {
                             retCode = 1,
@@ -130,14 +130,14 @@ namespace Digital_Signatues.Controllers
                 int id_nguoiDung = await _nguoiDung.UpdateNguoiDungAsync(putNguoiDung);
                 if (id_nguoiDung>0)
                 {
-                    var id = User.FindFirstValue("Id");
+                    /*var id = User.FindFirstValue("Id");
                     var postlog = new PostLog()
                     {
                         Ten_Log = "Cập nhật thông tin người dùng có mã số " + id_nguoiDung + " thành công",
                         Ma_NguoiThucHien = int.Parse(id)
                     };
                     if (await _log.PostLogAsync(postlog) > 0)
-                    { }
+                    { }*/
                     return Ok(new
                     {
                         retCode = 1,
@@ -326,14 +326,14 @@ namespace Digital_Signatues.Controllers
             {
                 if(await _nguoiDung.DeleteNguoiDungAsync(id))
                 {
-                    var mauser = User.FindFirstValue("Id");
+                   /* var mauser = User.FindFirstValue("Id");
                     var postlog = new PostLog()
                     {
                         Ten_Log = "Xóa người dùng có mã số " + id + " thành công",
                         Ma_NguoiThucHien = int.Parse(mauser)
                     };
                     if (await _log.PostLogAsync(postlog) > 0)
-                    { }
+                    { }*/
                     return Ok(new
                     {
                         retCode = 1,

@@ -38,14 +38,6 @@ namespace Digital_Signatues.Controllers
                     if(await _nguoiDung_Role.AddOrUpdateNguoiDung_RoleAsync(nguoiDung_Roles))
                     {
                         var data = await _nguoiDung_Role.GetNguoiDung_RolesAsync(nguoiDung_Roles.Id_NguoiDung);
-                        var id = User.FindFirstValue("Id");
-                        var postlog = new PostLog()
-                        {
-                            Ten_Log = "Cập nhật role cho người dùng " + data[0].NguoiDung.HoTen + "có mã số " + data[0].Ma_NguoiDung + " thành công",
-                            Ma_NguoiThucHien = int.Parse(id)
-                        };
-                        if (await _log.PostLogAsync(postlog) > 0)
-                        { }
                         return Ok(new
                         {
                             retCode = 1,

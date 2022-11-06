@@ -19,10 +19,12 @@ namespace Digital_Signatues.Models
         [Column(TypeName ="nvarchar(500)")]
         public string GhiChu { get; set; }
         public string inputFile { get; set; }
+        public string Ten_FileGoc { get; set; }
         public DateTime NgayDeXuat { get; set; }
         public bool TrangThai { get; set; }//đã chuyển duyệt hay chưa
         public bool IsDaDuyet { get; set; }//đã ký xong hay chưa
         public int CurentOrder { get; set; }//bước duyệt hiện tại
+        public string FileDaKy { get; set; }//file ky cuoi cung
         public ICollection<KySoBuocDuyet> KySoBuocDuyets { get; set; }
         public NguoiDung NguoiDung { get; set;}
         public ICollection<Message> Messages { get; set; }

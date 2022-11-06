@@ -79,10 +79,20 @@ namespace Digital_Signatues.Controllers
                 int id_dexuat = await _dexuat.PostDeXuatAsync(dexuat);
                 if (id_dexuat > 0)
                 {
+                    var ma_user = User.FindFirstValue("Id");
+                    var postlog = new PostLog()
+                    {
+                        Ten_Log = "Tạo đề xuất thành công",
+                        Ma_NguoiThucHien = int.Parse(ma_user),
+                        Ma_TaiKhoan=null,
+                        Ma_DeXuat=id_dexuat
+                    };
+                    if (await _log.PostLogAsync(postlog) > 0)
+                    { }
                     return Ok(new
                     {
                         retCode = 1,
-                        retText = "Đề xuất ký số thành công",
+                        retText = "Tạo đề xuất thành công",
                         data = await _dexuat.GetDeXuatAsync(id_dexuat)
                     });
                 }
@@ -106,12 +116,35 @@ namespace Digital_Signatues.Controllers
             {
                 if (await _dexuat.PutDeXuatAsync(kySoDeXuat))
                 {
+                    var ma_user = User.FindFirstValue("Id");
+                    var postlog = new PostLog()
+                    {
+                        Ten_Log = "Cập nhật đề xuất thành công",
+                        Ma_NguoiThucHien = int.Parse(ma_user),
+                        Ma_TaiKhoan=null,
+                        Ma_DeXuat=kySoDeXuat.Ma_KySoDeXuat
+                    };
+                    if (await _log.PostLogAsync(postlog) > 0)
+                    { }
                     return Ok(new
                     {
                         retCode = 1,
                         retText = "Cập nhật đề xuất thành công",
                         data = await _dexuat.GetDeXuatAsync(kySoDeXuat.Ma_KySoDeXuat)
                     });
+                }
+                else
+                {
+                    var ma_user = User.FindFirstValue("Id");
+                    var postlog = new PostLog()
+                    {
+                        Ten_Log = "Cập nhật đề xuất thất bại",
+                        Ma_NguoiThucHien = int.Parse(ma_user),
+                        Ma_TaiKhoan=null,
+                        Ma_DeXuat=kySoDeXuat.Ma_KySoDeXuat
+                    };
+                    if (await _log.PostLogAsync(postlog) > 0)
+                    { }
                 }
             }
             return Ok(new
@@ -158,12 +191,13 @@ namespace Digital_Signatues.Controllers
         {
             if(await _dexuat.ChuyenDuyetAsync(id))
             {
-                var data = await _dexuat.GetDeXuatAsync(id);
                 var ma_user = User.FindFirstValue("Id");
                 var postlog = new PostLog()
                 {
-                    Ten_Log = "Chuyển duyệt đề xuất " + data.Ten_DeXuat + " thành công",
-                    Ma_NguoiThucHien = int.Parse(ma_user)
+                    Ten_Log = "Chuyển duyệt thành công",
+                    Ma_NguoiThucHien = int.Parse(ma_user),
+                    Ma_TaiKhoan=null,
+                    Ma_DeXuat=id
                 };
                 if (await _log.PostLogAsync(postlog) > 0)
                 { }
@@ -171,7 +205,7 @@ namespace Digital_Signatues.Controllers
                 {
                     retCode = 1,
                     retText = "Chuyển duyệt đề xuất thành công",
-                    data = data
+                    data = await _dexuat.GetDeXuatAsync(id)
                 });
             }
             return Ok(new

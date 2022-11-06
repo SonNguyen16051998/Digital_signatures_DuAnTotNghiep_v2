@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Digital_Signatues.Migrations
 {
-    public partial class digital : Migration
+    public partial class digital_signatures : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -145,10 +145,12 @@ namespace Digital_Signatues.Migrations
                     LoaiVanBan = table.Column<string>(type: "nvarchar(255)", nullable: true),
                     GhiChu = table.Column<string>(type: "nvarchar(500)", nullable: true),
                     inputFile = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Ten_FileGoc = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     NgayDeXuat = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TrangThai = table.Column<bool>(type: "bit", nullable: false),
                     IsDaDuyet = table.Column<bool>(type: "bit", nullable: false),
-                    CurentOrder = table.Column<int>(type: "int", nullable: false)
+                    CurentOrder = table.Column<int>(type: "int", nullable: false),
+                    FileDaKy = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -227,7 +229,9 @@ namespace Digital_Signatues.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Ten_Log = table.Column<string>(type: "nvarchar(255)", nullable: true),
                     Ma_NguoiThucHien = table.Column<int>(type: "int", nullable: false),
-                    ThoiGianThucHien = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    ThoiGianThucHien = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Ma_TaiKhoan = table.Column<int>(type: "int", nullable: true),
+                    Ma_DeXuat = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {

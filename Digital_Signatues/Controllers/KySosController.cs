@@ -44,12 +44,22 @@ namespace Digital_Signatues.Controllers
         [HttpPost,ActionName("signtest")]
         public async Task<IActionResult> SignTest([FromBody] PostSign signs)
         {
+            var id = User.FindFirstValue("Id");
             if (ModelState.IsValid)
             {
                 string fileName = "";
                 var thongso = await _thongso.GetThongSoNguoiDungAsync(signs.Id_NguoiDung);
                 if(string.IsNullOrEmpty(thongso.FilePfx) && thongso.LoaiChuKy==true)
-                {
+                { 
+                    var postlog = new PostLog()
+                    {
+                        Ten_Log = "Kí thử thất bại",
+                        Ma_NguoiThucHien = int.Parse(id),
+                        Ma_TaiKhoan=signs.Id_NguoiDung,
+                        Ma_DeXuat=null,
+                    };
+                    if (await _log.PostLogAsync(postlog) > 0)
+                    { }
                     return Ok(new
                     {
                         retCode = 0,
@@ -112,12 +122,12 @@ namespace Digital_Signatues.Controllers
                             pdfs.SignImage(thongso.LyDoMacDinh, "", "", inputImg, rectangle, item.pageSign, fieldName, false);
                         }
                     }
-                    var nguoidung = await _thongso.GetThongSoNguoiDungAsync(signs.Id_NguoiDung);
-                    var id = User.FindFirstValue("Id");
                     var postlog = new PostLog()
                     {
-                        Ten_Log = "Kí thử trên tài khoản " + nguoidung.NguoiDung.HoTen + " thành công",
-                        Ma_NguoiThucHien = int.Parse(id)
+                        Ten_Log = "Kí thử thành công",
+                        Ma_NguoiThucHien = int.Parse(id),
+                        Ma_TaiKhoan=signs.Id_NguoiDung,
+                        Ma_DeXuat=null
                     };
                     if (await _log.PostLogAsync(postlog) > 0)
                     { }
@@ -129,12 +139,24 @@ namespace Digital_Signatues.Controllers
                     });
                 }
             }    
-            return Ok(new
+            else
             {
-                retCode = 0,
-                retText = "Ky test thất bại",
-                data = ""
-            });
+                var postlog = new PostLog()
+                {
+                    Ten_Log = "Kí thử thất bại",
+                    Ma_NguoiThucHien = int.Parse(id),
+                    Ma_TaiKhoan = signs.Id_NguoiDung,
+                    Ma_DeXuat = null,
+                };
+                if (await _log.PostLogAsync(postlog) > 0)
+                { }
+                return Ok(new
+                {
+                    retCode = 0,
+                    retText = "Ky thử thất bại",
+                    data = ""
+                });
+            }    
         }
         /// <summary>
         /// ký thật
@@ -216,12 +238,13 @@ namespace Digital_Signatues.Controllers
                 if (await _kyso.Sign(signs.Ma_BuocDuyet, filedaky))
                 {
                     var id = User.FindFirstValue("Id");
-                    var nguoidung = await _thongso.GetThongSoNguoiDungAsync(int.Parse(id));
                     var buoc = await _buocduyet.GetBuocDuyetAsync(signs.Ma_BuocDuyet);
                     var postlog = new PostLog()
                     {
-                        Ten_Log = nguoidung.NguoiDung.HoTen + " đã kí " + buoc.Ten_Buoc + " của đề xuất có mã số " + buoc.KySoDeXuat.Ma_KySoDeXuat + " thành công",
-                        Ma_NguoiThucHien = int.Parse(id)
+                        Ten_Log = "Đã ký thành công",
+                        Ma_NguoiThucHien = int.Parse(id),
+                        Ma_TaiKhoan=null,
+                        Ma_DeXuat=buoc.Ma_KySoDeXuat
                     };
                     if (await _log.PostLogAsync(postlog) > 0)
                     { }

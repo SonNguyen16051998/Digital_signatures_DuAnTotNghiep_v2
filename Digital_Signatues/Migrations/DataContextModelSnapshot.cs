@@ -94,6 +94,9 @@ namespace Digital_Signatues.Migrations
                     b.Property<int>("CurentOrder")
                         .HasColumnType("int");
 
+                    b.Property<string>("FileDaKy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("GhiChu")
                         .HasColumnType("nvarchar(500)");
 
@@ -112,6 +115,9 @@ namespace Digital_Signatues.Migrations
                     b.Property<string>("Ten_DeXuat")
                         .IsRequired()
                         .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("Ten_FileGoc")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("TrangThai")
                         .HasColumnType("bit");
@@ -229,7 +235,13 @@ namespace Digital_Signatues.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int?>("Ma_DeXuat")
+                        .HasColumnType("int");
+
                     b.Property<int>("Ma_NguoiThucHien")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Ma_TaiKhoan")
                         .HasColumnType("int");
 
                     b.Property<string>("Ten_Log")
