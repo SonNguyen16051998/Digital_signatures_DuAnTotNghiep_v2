@@ -99,7 +99,7 @@ namespace Digital_Signatues.Controllers
         /// </summary>
         /// <param name="id">mã tài khoản</param>
         /// <returns></returns>
-        [HttpGet("{Id}"),ActionName("logthongso")]
+        [HttpGet("{id}"),ActionName("logthongso")]
         public async Task<IActionResult> GetAllLogThongSoAsync(int id)
         {
             return Ok(new
@@ -109,6 +109,11 @@ namespace Digital_Signatues.Controllers
                 data = await _log.GetAllLogThongSoAsync(id)
             });
         }
+        /// <summary>
+        /// lấy toàn bộ lịch sử của đề xuất
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}"),ActionName("logdexuat")]
         public async Task<IActionResult> GetAllLogDeXuatAsync(int id)
         {
