@@ -49,14 +49,14 @@ namespace Digital_Signatues.Services
         }
         public async Task<List<Log>> GetAllLogThongSoAsync(int ma_taikhoan)
         {
-            return await _context.Logs.Where(x=>x.Ma_TaiKhoan==ma_taikhoan)
+            return await _context.Logs.Where(x=>x.Ma_TaiKhoan==ma_taikhoan && string.IsNullOrEmpty(x.Ma_DeXuat.ToString()))
                 .OrderByDescending(x => x.ThoiGianThucHien)
                 .Include(x => x.NguoiDung)
                 .ToListAsync();
         }
         public async Task<List<Log>> GetAllLogDeXuatAsync(int ma_dexuat)
         {
-            return await _context.Logs.Where(x => x.Ma_DeXuat == ma_dexuat)
+            return await _context.Logs.Where(x => x.Ma_DeXuat == ma_dexuat && string.IsNullOrEmpty(x.Ma_TaiKhoan.ToString()))
                 .OrderByDescending(x => x.ThoiGianThucHien)
                 .Include(x => x.NguoiDung)
                 .ToListAsync();
