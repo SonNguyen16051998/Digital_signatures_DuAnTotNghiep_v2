@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System;
 using Digital_Signatues.Models.ViewPost;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace Digital_Signatues.Controllers
 {
@@ -17,8 +18,10 @@ namespace Digital_Signatues.Controllers
     public class MessagesController : Controller
     {
         private readonly IMessage _message;
-        public MessagesController(IMessage message)
+        private readonly LogSvc _log;
+        public MessagesController(IMessage message,LogSvc log)
         {
+            _log = log;
             _message = message;
         }
         /// <summary>
@@ -64,6 +67,16 @@ namespace Digital_Signatues.Controllers
                 int id = await _message.PostMessageAsync(message);
                 if (id>0)
                 {
+                    var mauser = User.FindFirstValue("Id");
+                    var postlog = new PostLog()
+                    {
+                        Ten_Log = "Thêm trao đổi: " + message.Y_Kien,
+                        Ma_NguoiThucHien = int.Parse(mauser),
+                        Ma_TaiKhoan = null,
+                        Ma_DeXuat = message.Ma_DeXuat
+                    };
+                    if (await _log.PostLogAsync(postlog) > 0)
+                    { }
                     return Ok(new
                     {
                         retCode = 1,
