@@ -100,6 +100,7 @@ namespace Digital_Signatues.Controllers
         /// <param name="id">mã tài khoản</param>
         /// <returns></returns>
         [HttpGet("{id}"),ActionName("logthongso")]
+        [Authorize]
         public async Task<IActionResult> GetAllLogThongSoAsync(int id)
         {
             return Ok(new
@@ -115,6 +116,7 @@ namespace Digital_Signatues.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id}"),ActionName("logdexuat")]
+        [Authorize]
         public async Task<IActionResult> GetAllLogDeXuatAsync(int id)
         {
             return Ok(new

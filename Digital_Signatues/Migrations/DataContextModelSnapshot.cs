@@ -491,6 +491,38 @@ namespace Digital_Signatues.Migrations
                     b.ToTable("Role_Quyens");
                 });
 
+            modelBuilder.Entity("Digital_Signatues.Models.VanBan", b =>
+                {
+                    b.Property<int>("Ma_VanBan")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ChuDe")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("File")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("LoaiVanBan")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("Ma_NguoiTao")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("NgayTao")
+                        .HasColumnType("date");
+
+                    b.HasKey("Ma_VanBan");
+
+                    b.HasIndex("Ma_NguoiTao");
+
+                    b.ToTable("VanBans");
+                });
+
             modelBuilder.Entity("Digital_Signatues.Models.KySoBuocDuyet", b =>
                 {
                     b.HasOne("Digital_Signatues.Models.KySoDeXuat", "KySoDeXuat")
@@ -660,6 +692,17 @@ namespace Digital_Signatues.Migrations
                     b.Navigation("Role");
                 });
 
+            modelBuilder.Entity("Digital_Signatues.Models.VanBan", b =>
+                {
+                    b.HasOne("Digital_Signatues.Models.NguoiDung", "NguoiDung")
+                        .WithMany("VanBans")
+                        .HasForeignKey("Ma_NguoiTao")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("NguoiDung");
+                });
+
             modelBuilder.Entity("Digital_Signatues.Models.ChucDanh", b =>
                 {
                     b.Navigation("NguoiDung");
@@ -691,6 +734,8 @@ namespace Digital_Signatues.Migrations
                     b.Navigation("NguoiDung_Quyens");
 
                     b.Navigation("NguoiDung_Role");
+
+                    b.Navigation("VanBans");
                 });
 
             modelBuilder.Entity("Digital_Signatues.Models.PhongBan", b =>

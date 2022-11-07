@@ -60,5 +60,6 @@ namespace Digital_Signatues.Models
         public ICollection<KySoBuocDuyet> kySoBuocDuyets { get; set; }
         public ICollection<Message> Messages { get; set; }
         public ICollection<Log> Logs { get; set; }
+        public ICollection<VanBan> VanBans { get; set; }
     }
 }

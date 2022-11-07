@@ -319,6 +319,29 @@ namespace Digital_Signatues.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "VanBans",
+                columns: table => new
+                {
+                    Ma_VanBan = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ChuDe = table.Column<string>(type: "nvarchar(255)", nullable: false),
+                    LoaiVanBan = table.Column<string>(type: "nvarchar(255)", nullable: false),
+                    NgayTao = table.Column<DateTime>(type: "date", nullable: false),
+                    File = table.Column<string>(type: "nvarchar(255)", nullable: false),
+                    Ma_NguoiTao = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_VanBans", x => x.Ma_VanBan);
+                    table.ForeignKey(
+                        name: "FK_VanBans_NguoiDungs_Ma_NguoiTao",
+                        column: x => x.Ma_NguoiTao,
+                        principalTable: "NguoiDungs",
+                        principalColumn: "Ma_NguoiDung",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "kySoBuocDuyets",
                 columns: table => new
                 {
@@ -438,6 +461,11 @@ namespace Digital_Signatues.Migrations
                 name: "IX_Role_Quyens_Ma_Quyen",
                 table: "Role_Quyens",
                 column: "Ma_Quyen");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VanBans_Ma_NguoiTao",
+                table: "VanBans",
+                column: "Ma_NguoiTao");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -471,6 +499,9 @@ namespace Digital_Signatues.Migrations
 
             migrationBuilder.DropTable(
                 name: "Role_Quyens");
+
+            migrationBuilder.DropTable(
+                name: "VanBans");
 
             migrationBuilder.DropTable(
                 name: "kySoDeXuats");
