@@ -49,7 +49,7 @@ namespace Digital_Signatues.Services
                     Ma_NguoiDeXuat = kySoDeXuat.Ma_NguoiDeXuat,
                     LoaiVanBan = kySoDeXuat.LoaiVanBan,
                     GhiChu = kySoDeXuat.GhiChu,
-                    inputFile = "wwwroot\\FilePfx\\" + namePdf,
+                    inputFile = "wwwroot\\FileDeXuat\\" + namePdf,
                     Ten_FileGoc = kySoDeXuat.Ten_FileGoc,
                     NgayDeXuat = System.DateTime.Now,
                     TrangThai = false,
@@ -68,7 +68,7 @@ namespace Digital_Signatues.Services
             try
             {
                 string namePdf = Path.GetFileNameWithoutExtension(kySoDeXuat.inputFile) + ".pdf";
-                string checkFile = "wwwroot\\FilePfx\\" + namePdf;
+                string checkFile = "wwwroot\\FileDeXuat\\" + namePdf;
                 var update = await _context.kySoDeXuats
                     .Where(x => x.Ma_KySoDeXuat == kySoDeXuat.Ma_KySoDeXuat).FirstOrDefaultAsync();
                 update.Ten_DeXuat = kySoDeXuat.Ten_DeXuat;
