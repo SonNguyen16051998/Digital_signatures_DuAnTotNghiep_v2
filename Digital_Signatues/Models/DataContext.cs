@@ -23,6 +23,7 @@ namespace Digital_Signatues.Models
 
             model.Entity<NguoiDung_Quyen>().HasKey(e => new { e.Ma_NguoiDung, e.Ma_Quyen });
 
+            model.Entity<MaQR>().HasKey(e => new { e.Ma_DeXuat, e.MaSo });
         }
 
         public DbSet<ChucDanh> ChucDanhs { get; set; }
@@ -42,5 +43,6 @@ namespace Digital_Signatues.Models
         public DbSet<Message> Messages { get; set; }
         public DbSet<Log> Logs { get; set; }
         public DbSet<VanBan> VanBans { get; set; }
+        public DbSet<MaQR> MaQRs { get; set; }
     }
 }

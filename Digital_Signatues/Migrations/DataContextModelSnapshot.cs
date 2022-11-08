@@ -257,6 +257,37 @@ namespace Digital_Signatues.Migrations
                     b.ToTable("Logs");
                 });
 
+            modelBuilder.Entity("Digital_Signatues.Models.MaQR", b =>
+                {
+                    b.Property<int>("Ma_DeXuat")
+                        .HasColumnType("int");
+
+                    b.Property<string>("MaSo")
+                        .HasColumnType("varchar(6)");
+
+                    b.Property<int>("Ma_NguoiTao")
+                        .HasColumnType("int");
+
+                    b.Property<byte>("MucDo")
+                        .HasColumnType("tinyint");
+
+                    b.Property<DateTime>("NgayTao")
+                        .HasColumnType("date");
+
+                    b.Property<string>("NoiDung")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("Ma_DeXuat", "MaSo");
+
+                    b.HasIndex("Ma_DeXuat")
+                        .IsUnique();
+
+                    b.HasIndex("Ma_NguoiTao");
+
+                    b.ToTable("MaQRs");
+                });
+
             modelBuilder.Entity("Digital_Signatues.Models.Message", b =>
                 {
                     b.Property<int>("Ma_Message")
@@ -586,6 +617,25 @@ namespace Digital_Signatues.Migrations
                     b.Navigation("NguoiDung");
                 });
 
+            modelBuilder.Entity("Digital_Signatues.Models.MaQR", b =>
+                {
+                    b.HasOne("Digital_Signatues.Models.KySoDeXuat", "KySoDeXuat")
+                        .WithOne("MaQR")
+                        .HasForeignKey("Digital_Signatues.Models.MaQR", "Ma_DeXuat")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Digital_Signatues.Models.NguoiDung", "NguoiDung")
+                        .WithMany("MaQRs")
+                        .HasForeignKey("Ma_NguoiTao")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("KySoDeXuat");
+
+                    b.Navigation("NguoiDung");
+                });
+
             modelBuilder.Entity("Digital_Signatues.Models.Message", b =>
                 {
                     b.HasOne("Digital_Signatues.Models.KySoDeXuat", "KySoDeXuat")
@@ -712,6 +762,8 @@ namespace Digital_Signatues.Migrations
                 {
                     b.Navigation("KySoBuocDuyets");
 
+                    b.Navigation("MaQR");
+
                     b.Navigation("Messages");
                 });
 
@@ -726,6 +778,8 @@ namespace Digital_Signatues.Migrations
                     b.Navigation("kySoTests");
 
                     b.Navigation("Logs");
+
+                    b.Navigation("MaQRs");
 
                     b.Navigation("Messages");
 

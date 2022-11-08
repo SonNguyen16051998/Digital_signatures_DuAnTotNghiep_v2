@@ -374,6 +374,34 @@ namespace Digital_Signatues.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "MaQRs",
+                columns: table => new
+                {
+                    Ma_DeXuat = table.Column<int>(type: "int", nullable: false),
+                    MaSo = table.Column<string>(type: "varchar(6)", nullable: false),
+                    NoiDung = table.Column<string>(type: "varchar(255)", nullable: false),
+                    NgayTao = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    MucDo = table.Column<byte>(type: "tinyint", nullable: false),
+                    Ma_NguoiTao = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MaQRs", x => new { x.Ma_DeXuat, x.MaSo });
+                    table.ForeignKey(
+                        name: "FK_MaQRs_kySoDeXuats_Ma_DeXuat",
+                        column: x => x.Ma_DeXuat,
+                        principalTable: "kySoDeXuats",
+                        principalColumn: "Ma_KySoDeXuat",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MaQRs_NguoiDungs_Ma_NguoiTao",
+                        column: x => x.Ma_NguoiTao,
+                        principalTable: "NguoiDungs",
+                        principalColumn: "Ma_NguoiDung",
+                        onDelete: ReferentialAction.NoAction);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Messages",
                 columns: table => new
                 {
@@ -426,6 +454,17 @@ namespace Digital_Signatues.Migrations
                 name: "IX_Logs_Ma_NguoiThucHien",
                 table: "Logs",
                 column: "Ma_NguoiThucHien");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MaQRs_Ma_DeXuat",
+                table: "MaQRs",
+                column: "Ma_DeXuat",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MaQRs_Ma_NguoiTao",
+                table: "MaQRs",
+                column: "Ma_NguoiTao");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Messages_Ma_DeXuat",
@@ -481,6 +520,9 @@ namespace Digital_Signatues.Migrations
 
             migrationBuilder.DropTable(
                 name: "Logs");
+
+            migrationBuilder.DropTable(
+                name: "MaQRs");
 
             migrationBuilder.DropTable(
                 name: "Messages");

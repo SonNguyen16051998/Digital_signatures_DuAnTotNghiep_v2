@@ -61,5 +61,6 @@ namespace Digital_Signatues.Models
         public ICollection<Message> Messages { get; set; }
         public ICollection<Log> Logs { get; set; }
         public ICollection<VanBan> VanBans { get; set; }
+        public ICollection<MaQR> MaQRs { get; set; }
     }
 }

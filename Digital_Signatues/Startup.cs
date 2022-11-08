@@ -67,6 +67,7 @@ namespace Digital_Signatues
             services.AddTransient<IMessage, MessageSvc>();
             services.AddTransient<ILog, LogSvc>();
             services.AddTransient<IVanBan, VanBanSvc>();
+            services.AddTransient<IQR, QRSvc>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>

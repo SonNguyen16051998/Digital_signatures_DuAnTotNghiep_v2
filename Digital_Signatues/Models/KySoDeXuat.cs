@@ -28,5 +28,6 @@ namespace Digital_Signatues.Models
         public ICollection<KySoBuocDuyet> KySoBuocDuyets { get; set; }
         public NguoiDung NguoiDung { get; set;}
         public ICollection<Message> Messages { get; set; }
+        public MaQR MaQR { get; set; }
     }
 }

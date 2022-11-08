@@ -7,6 +7,7 @@
   <ItemGroup>
     <PackageReference Include="DotNetEnv" Version="2.3.0" />
     <PackageReference Include="Microsoft.IdentityModel" Version="7.0.0" />
+    <PackageReference Include="QRCoder" Version="1.4.3" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
 	  <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.17" />
 	  <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.2.0" />
@@ -32,7 +33,7 @@
     <Folder Include="wwwroot\Filedaky\" />
     <Folder Include="wwwroot\ImgDaKy\" />
     <Folder Include="wwwroot\FilePfx\" />
-    <Folder Include="wwwroot\FilePDF\" />
+    <Folder Include="wwwroot\FileDeXuat\" />
   </ItemGroup>
 	<PropertyGroup>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
