@@ -25,10 +25,10 @@ namespace Digital_Signatues.Controllers
         private readonly IKySo _kyso;
         private readonly IKySoThongSo _thongso;
         private readonly IHostingEnvironment _environment;
-        private readonly ILog _log;
+        private readonly Services.ILog _log;
         private readonly IKySoBuocDuyet _buocduyet;
         public KySosController(
-            IKySo kyso, IHostingEnvironment environment, IKySoThongSo thongso,ILog log, IKySoBuocDuyet buocduyet)
+            IKySo kyso, IHostingEnvironment environment, IKySoThongSo thongso, Services.ILog log, IKySoBuocDuyet buocduyet)
         {
             _buocduyet=buocduyet;
             _log = log;
@@ -87,6 +87,8 @@ namespace Digital_Signatues.Controllers
                         string name = Path.GetFileNameWithoutExtension(signs.inputFile);
                         string fontPath = Path.Combine(_environment.WebRootPath, "Font", "ARIALUNI.TTF");
                         Certicate myCert = new Certicate(thongso.FilePfx, thongso.PasscodeFilePfx);
+                        var recJ = new RectangleJ((float)item.x, (float)item.y, (float)item.img_w, (float)item.img_h);
+                        var rectangle = new iTextSharp.text.Rectangle((float)item.x, (float)item.y);
 
                         PDFSigner pdfs = new PDFSigner();
                         for (int i = 0; i < 1000; i++)
@@ -106,25 +108,112 @@ namespace Digital_Signatues.Controllers
                         }
                         else
                         {
-                            pdfs = new PDFSigner(signs.inputFile, outputFile, myCert, fontPath);
+                            pdfs = new PDFSigner(Path.Combine(signs.inputFile), outputFile, myCert, fontPath);
                         }
-                        if (!string.IsNullOrEmpty(item.textSign))
+                        if(thongso.LoaiChuKy)
                         {
-                            var rectangle = new iTextSharp.text.Rectangle((int)item.x, (int)item.y);
-                            pdfs.SignText(thongso.LyDoMacDinh, "", "", item.textSign, rectangle, item.pageSign, fieldName);
+                            if (!string.IsNullOrEmpty(item.textSign))
+                            {
+                                
+                                pdfs.SignText(thongso.LyDoMacDinh, "", "", item.textSign, rectangle, item.pageSign, fieldName);
+                            }
+                            else
+                            {
+                                string inputImg = item.imgSign;
+                                var rect = new iTextSharp.text.Rectangle(recJ);
+                                pdfs.SignImage(thongso.LyDoMacDinh, "", "", inputImg, rect, item.pageSign, fieldName, false);
+                            }
                         }
                         else
                         {
-                            var recJ = new RectangleJ((int)item.x, (int)item.y, (int)item.img_w, (int)item.img_h);
-
-                            string inputImg = item.imgSign;
-                            var rectangle = new iTextSharp.text.Rectangle(recJ);
-                            pdfs.SignImage(thongso.LyDoMacDinh, "", "", inputImg, rectangle, item.pageSign, fieldName, false);
+                            string input = "";
+                            if (System.IO.File.Exists(inputNewFile))
+                            {
+                                input=inputNewFile;
+                            }    
+                            else
+                            {
+                                input = Path.Combine(signs.inputFile);
+                            }
+                            if (!string.IsNullOrEmpty(item.textSign))
+                            {
+                                if (SmartCaVNPT.SignSmartCa._signSmartCA_PDF(
+                                "45fd-638030602085672703.apps.smartcaapi.com",
+                                "MmU1ZmQ0Y2E-MDBlZC00NWZk",
+                                "070098006706",
+                                "Son0803@",
+                                input,
+                                outputFile,
+                                "",
+                                item.textSign,
+                                item.pageSign,
+                                thongso.LyDoMacDinh,
+                                true,recJ
+                                ))
+                                {
+                                    continue;
+                                }
+                                else
+                                {
+                                    var log = new PostLog()
+                                    {
+                                        Ten_Log = "Ký thử thất bại",
+                                        Ma_NguoiThucHien = int.Parse(id),
+                                        Ma_TaiKhoan = signs.Id_NguoiDung,
+                                        Ma_DeXuat = null,
+                                    };
+                                    if (await _log.PostLogAsync(log) > 0)
+                                    { }
+                                    return Ok(new
+                                    {
+                                        retCode = 0,
+                                        retText = "Ký thử thất bại",
+                                        data = ""
+                                    });
+                                }    
+                            }    
+                            else
+                            {
+                                if (SmartCaVNPT.SignSmartCa._signSmartCA_PDF(
+                                "45fd-638030602085672703.apps.smartcaapi.com",
+                                "MmU1ZmQ0Y2E-MDBlZC00NWZk",
+                                "070098006706",
+                                "Son0803@",
+                                input,
+                                outputFile,
+                                item.imgSign,
+                                "",
+                                item.pageSign,
+                                thongso.LyDoMacDinh,
+                                true, recJ
+                                ))
+                                {
+                                    continue;
+                                }
+                                else
+                                {
+                                    var log = new PostLog()
+                                    {
+                                        Ten_Log = "Ký thử thất bại",
+                                        Ma_NguoiThucHien = int.Parse(id),
+                                        Ma_TaiKhoan = signs.Id_NguoiDung,
+                                        Ma_DeXuat = null,
+                                    };
+                                    if (await _log.PostLogAsync(log) > 0)
+                                    { }
+                                    return Ok(new
+                                    {
+                                        retCode = 0,
+                                        retText = "Ký thử thất bại",
+                                        data = ""
+                                    });
+                                }
+                            }    
                         }
                     }
                     var postlog = new PostLog()
                     {
-                        Ten_Log = "Kí thử thành công",
+                        Ten_Log = "Ký thử thành công",
                         Ma_NguoiThucHien = int.Parse(id),
                         Ma_TaiKhoan=signs.Id_NguoiDung,
                         Ma_DeXuat=null
@@ -153,13 +242,13 @@ namespace Digital_Signatues.Controllers
                 return Ok(new
                 {
                     retCode = 0,
-                    retText = "Ky thử thất bại",
+                    retText = "Ký thử thất bại",
                     data = ""
                 });
             }    
         }
         /// <summary>
-        /// ký thật
+        /// ký thật 
         /// </summary>
         /// <param name="signs"></param>
         /// <returns></returns>
@@ -168,8 +257,9 @@ namespace Digital_Signatues.Controllers
         {
             if (ModelState.IsValid)
             {
+                var thongso = await _thongso.GetThongSoNguoiDungAsync(signs.Id_NguoiDung);
                 string fileName = "";
-                string name = Path.GetFileNameWithoutExtension(signs.inputFile);
+                string name = Path.GetFileNameWithoutExtension(Path.Combine(signs.inputFile));
                 string outputFile = "";
                 string inputNewFile = "";
                 string fieldName = "filedName_0";
@@ -207,7 +297,7 @@ namespace Digital_Signatues.Controllers
                         }
                     }
                     string fontPath = Path.Combine(_environment.WebRootPath, "Font", "ARIALUNI.TTF");
-                    var thongso = await _thongso.GetThongSoNguoiDungAsync(signs.Id_NguoiDung);
+                    
                     Certicate myCert = new Certicate(thongso.FilePfx, thongso.PasscodeFilePfx);
                     PDFSigner pdfs = new PDFSigner();
 
@@ -217,16 +307,16 @@ namespace Digital_Signatues.Controllers
                     }
                     else
                     {
-                        pdfs = new PDFSigner(signs.inputFile, outputFile, myCert, fontPath);
+                        pdfs = new PDFSigner(Path.Combine(signs.inputFile), outputFile, myCert, fontPath);
                     }
                     if (!string.IsNullOrEmpty(item.textSign))
                     {
-                        var rectangle = new iTextSharp.text.Rectangle((int)item.x, (int)item.y);
+                        var rectangle = new iTextSharp.text.Rectangle((float)item.x, (float)item.y);
                         pdfs.SignText(thongso.LyDoMacDinh, "", "", item.textSign, rectangle, item.pageSign, fieldName);
                     }
                     else
                     {
-                        var recJ = new RectangleJ((int)item.x, (int)item.y, (int)item.img_w, (int)item.img_h);
+                        var recJ = new RectangleJ((float)item.x, (float)item.y, (float)item.img_w, (float)item.img_h);
 
                         string inputImg = item.imgSign;
                         var rectangle = new iTextSharp.text.Rectangle(recJ);
@@ -234,8 +324,7 @@ namespace Digital_Signatues.Controllers
                     }
                 }
                 string fileReturn = Path.Combine("Filedaky", fileName);
-                string filedaky = Path.Combine("wwwroot\\Filedaky", fileName);
-                if (await _kyso.Sign(signs.Ma_BuocDuyet, filedaky))
+                if (await _kyso.Sign(signs.Ma_BuocDuyet, fileReturn))
                 {
                     var id = User.FindFirstValue("Id");
                     var buoc = await _buocduyet.GetBuocDuyetAsync(signs.Ma_BuocDuyet);
@@ -257,7 +346,7 @@ namespace Digital_Signatues.Controllers
                 }
                 else
                 {
-                    System.IO.File.Delete(filedaky);
+                    System.IO.File.Delete(fileReturn);
                     return Ok(new
                     {
                         retCode = 0,

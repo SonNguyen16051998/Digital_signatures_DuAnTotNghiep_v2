@@ -63,7 +63,7 @@ namespace Digital_Signatues.Services
                 }
                 if(toanbobuocduyet.Count==index+1)
                 {
-
+                    kysodexuat.FileDaKy = filedaky;
                     kysodexuat.IsDaDuyet = true;
                 }
                 _context.kySoDeXuats.Update(kysodexuat);

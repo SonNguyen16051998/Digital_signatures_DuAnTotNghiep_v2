@@ -6,8 +6,14 @@
 
   <ItemGroup>
     <PackageReference Include="DotNetEnv" Version="2.3.0" />
+    <PackageReference Include="log4net" Version="2.0.15" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.9" />
     <PackageReference Include="Microsoft.IdentityModel" Version="7.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="QRCoder" Version="1.4.3" />
+    <PackageReference Include="RestSharp" Version="106.15.0" />
+    <PackageReference Include="Serilog" Version="2.12.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
 	  <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.17" />
 	  <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.2.0" />
@@ -19,22 +25,47 @@
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	  </PackageReference>
 	  <PackageReference Include="BouncyCastle" Version="1.8.9" />
-	  <PackageReference Include="iTextSharp" Version="5.5.13.3" />
+	 
 
 	  <PackageReference Include="PdfiumViewer" Version="2.13.0" />
 	  <PackageReference Include="PdfiumViewer.Native.x86_64.v8-xfa" Version="2018.4.8.256" />
 	  <PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
+	  <PackageReference Include="System.Configuration.Abstractions" Version="2.0.2.45" />
 	  <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
+	  <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.13.1" />
 	  <PackageReference Include="System.Security.Cryptography.Pkcs" Version="6.0.1" />
+	  <PackageReference Include="System.Security.Cryptography.Xml" Version="5.0.0" />
+	  <PackageReference Include="System.Security.Permissions" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="lib\" />
     <Folder Include="wwwroot\Font\" />
     <Folder Include="wwwroot\Filedaky\" />
     <Folder Include="wwwroot\ImgDaKy\" />
     <Folder Include="wwwroot\FilePfx\" />
     <Folder Include="wwwroot\FileDeXuat\" />
   </ItemGroup>
+	<ItemGroup>
+		<Reference Include="itextsharp">
+			<HintPath>..\..\..\..\..\vnpt\tailieu\SmartCA\Sample\SmartCANetCore\lib\itextsharp.dll</HintPath>
+		</Reference>
+		<Reference Include="log4net">
+			<HintPath>lib\log4net.dll</HintPath>
+		</Reference>
+		<Reference Include="RestSharp">
+			<HintPath>lib\RestSharp.dll</HintPath>
+		</Reference>
+		<Reference Include="SignService.Common.HashSignature">
+			<HintPath>..\..\..\..\..\vnpt\tailieu\SmartCA\Sample\SmartCANetCore\lib\SignService.Common.HashSignature.dll</HintPath>
+		</Reference>
+		<Reference Include="System.Security.Custom">
+			<HintPath>..\..\..\..\..\vnpt\tailieu\SmartCA\Sample\SmartCANetCore\lib\System.Security.Custom.dll</HintPath>
+		</Reference>
+		<Reference Include="WindowBaseExt">
+			<HintPath>..\..\..\..\..\vnpt\tailieu\SmartCA\Sample\SmartCANetCore\lib\WindowBaseExt.dll</HintPath>
+		</Reference>
+	</ItemGroup>
 	<PropertyGroup>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<NoWarn>$(NoWarn);1591</NoWarn>

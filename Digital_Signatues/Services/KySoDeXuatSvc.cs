@@ -41,7 +41,7 @@ namespace Digital_Signatues.Services
                 string namePdf = Path.GetFileNameWithoutExtension(kySoDeXuat.inputFile) + ".pdf";
                 using var client = new HttpClient();
                 using var s = await client.GetStreamAsync(kySoDeXuat.inputFile);
-                using var fs = new FileStream(Path.Combine("wwwroot\\FileDeXuat", namePdf), FileMode.OpenOrCreate);
+                using var fs = new FileStream(Path.Combine("FileDeXuat", namePdf), FileMode.OpenOrCreate);
                 await s.CopyToAsync(fs);
                 var postdexuat = new KySoDeXuat()
                 {
@@ -49,9 +49,10 @@ namespace Digital_Signatues.Services
                     Ma_NguoiDeXuat = kySoDeXuat.Ma_NguoiDeXuat,
                     LoaiVanBan = kySoDeXuat.LoaiVanBan,
                     GhiChu = kySoDeXuat.GhiChu,
-                    inputFile = "wwwroot\\FileDeXuat\\" + namePdf,
+                    inputFile = "FileDeXuat\\" + namePdf,
                     Ten_FileGoc = kySoDeXuat.Ten_FileGoc,
                     NgayDeXuat = System.DateTime.Now,
+                    FileDaKy=null,
                     TrangThai = false,
                     CurentOrder = 0
                 };
@@ -68,7 +69,7 @@ namespace Digital_Signatues.Services
             try
             {
                 string namePdf = Path.GetFileNameWithoutExtension(kySoDeXuat.inputFile) + ".pdf";
-                string checkFile = "wwwroot\\FileDeXuat\\" + namePdf;
+                string checkFile = "FileDeXuat\\" + namePdf;
                 var update = await _context.kySoDeXuats
                     .Where(x => x.Ma_KySoDeXuat == kySoDeXuat.Ma_KySoDeXuat).FirstOrDefaultAsync();
                 update.Ten_DeXuat = kySoDeXuat.Ten_DeXuat;
@@ -78,7 +79,7 @@ namespace Digital_Signatues.Services
                 {
                     using var client = new HttpClient();
                     using var s = await client.GetStreamAsync(kySoDeXuat.inputFile);
-                    using var fs = new FileStream(Path.Combine("wwwroot\\FileDeXuat", namePdf), FileMode.OpenOrCreate);
+                    using var fs = new FileStream(Path.Combine("FileDeXuat", namePdf), FileMode.OpenOrCreate);
                     await s.CopyToAsync(fs);
                     update.inputFile = checkFile;
                     update.Ten_FileGoc = kySoDeXuat.Ten_FileGoc;
