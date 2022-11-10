@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Digital_Signatues.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20221108052352_digital_signatures")]
+    [Migration("20221110054229_digital_signatures")]
     partial class digital_signatures
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -182,6 +182,12 @@ namespace Digital_Signatues.Migrations
                     b.Property<int>("Ma_NguoiDung")
                         .HasColumnType("int");
 
+                    b.Property<string>("Client_ID")
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("Client_Secret")
+                        .HasColumnType("nvarchar(255)");
+
                     b.Property<string>("FilePfx")
                         .HasColumnType("nvarchar(500)");
 
@@ -216,6 +222,9 @@ namespace Digital_Signatues.Migrations
                     b.Property<string>("PasscodeFilePfx")
                         .HasColumnType("nvarchar(500)");
 
+                    b.Property<string>("PasswordSmartSign")
+                        .HasColumnType("nvarchar(255)");
+
                     b.Property<string>("Serial")
                         .HasColumnType("nvarchar(500)");
 
@@ -223,6 +232,12 @@ namespace Digital_Signatues.Migrations
                         .HasColumnType("nvarchar(500)");
 
                     b.Property<bool>("TrangThai")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UID")
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<bool>("isDislayValid")
                         .HasColumnType("bit");
 
                     b.HasKey("Ma_NguoiDung");
@@ -274,7 +289,7 @@ namespace Digital_Signatues.Migrations
                         .HasColumnType("tinyint");
 
                     b.Property<DateTime>("NgayTao")
-                        .HasColumnType("date");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("NoiDung")
                         .IsRequired()

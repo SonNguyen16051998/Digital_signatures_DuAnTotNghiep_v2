@@ -49,7 +49,7 @@ namespace Digital_Signatues.Controllers
             {
                 string fileName = "";
                 var thongso = await _thongso.GetThongSoNguoiDungAsync(signs.Id_NguoiDung);
-                if(string.IsNullOrEmpty(thongso.FilePfx) && thongso.LoaiChuKy==true)
+                if(string.IsNullOrEmpty(thongso.FilePfx) && string.IsNullOrEmpty(thongso.Client_ID))
                 { 
                     var postlog = new PostLog()
                     {
@@ -69,15 +69,31 @@ namespace Digital_Signatues.Controllers
                 }
                 else
                 {
-                    X509Certificate cert = new X509Certificate(thongso.FilePfx, thongso.PasscodeFilePfx);
-
-                    if (await _thongso.CheckSubjectFileAsync(signs.Id_NguoiDung) != cert.Subject)
+                    if (thongso.LoaiChuKy == true)
                     {
-                        PostThongSoFilePfx thongsofilepfx = new PostThongSoFilePfx();
-                        thongsofilepfx.Ma_NguoiDung = signs.Id_NguoiDung;
-                        thongsofilepfx.Subject = cert.Subject;
-                        thongsofilepfx.Serial = cert.GetSerialNumberString();
-                        await _thongso.CapNhatThongSoFileAsync(thongsofilepfx);
+                        X509Certificate cert = new X509Certificate(thongso.FilePfx, thongso.PasscodeFilePfx);
+
+                        if (await _thongso.CheckSubjectFileAsync(signs.Id_NguoiDung) != cert.Subject)
+                        {
+                            PostThongSoFilePfx thongsofilepfx = new PostThongSoFilePfx();
+                            thongsofilepfx.Ma_NguoiDung = signs.Id_NguoiDung;
+                            thongsofilepfx.Subject = cert.Subject;
+                            thongsofilepfx.Serial = cert.GetSerialNumberString();
+                            await _thongso.CapNhatThongSoFileAsync(thongsofilepfx);
+                        }
+                    }
+                    else
+                    {
+                        var subject_serialSmartCa = SmartCaVNPT.SignSmartCa._getSubjectandSerial(
+                            thongso.Client_ID, thongso.Client_Secret, thongso.UID, thongso.PasswordSmartSign);
+                        if(await _thongso.CheckSubjectFileAsync(signs.Id_NguoiDung) != subject_serialSmartCa.subject)
+                        {
+                            PostThongSoFilePfx thongsofilepfx = new PostThongSoFilePfx();
+                            thongsofilepfx.Ma_NguoiDung = signs.Id_NguoiDung;
+                            thongsofilepfx.Subject = subject_serialSmartCa.subject;
+                            thongsofilepfx.Serial = subject_serialSmartCa.serial;
+                            await _thongso.CapNhatThongSoFileAsync(thongsofilepfx);
+                        }
                     }
                     foreach (var item in signs.PostPositionSigns)
                     {
@@ -86,7 +102,6 @@ namespace Digital_Signatues.Controllers
                         string fieldName = "";
                         string name = Path.GetFileNameWithoutExtension(signs.inputFile);
                         string fontPath = Path.Combine(_environment.WebRootPath, "Font", "ARIALUNI.TTF");
-                        Certicate myCert = new Certicate(thongso.FilePfx, thongso.PasscodeFilePfx);
                         var recJ = new RectangleJ((float)item.x, (float)item.y, (float)item.img_w, (float)item.img_h);
                         var rectangle = new iTextSharp.text.Rectangle((float)item.x, (float)item.y);
 
@@ -102,16 +117,17 @@ namespace Digital_Signatues.Controllers
                                 break;
                             }
                         }
-                        if (System.IO.File.Exists(inputNewFile))
-                        {
-                            pdfs = new PDFSigner(inputNewFile, outputFile, myCert, fontPath);
-                        }
-                        else
-                        {
-                            pdfs = new PDFSigner(Path.Combine(signs.inputFile), outputFile, myCert, fontPath);
-                        }
                         if(thongso.LoaiChuKy)
                         {
+                            Certicate myCert = new Certicate(thongso.FilePfx, thongso.PasscodeFilePfx);
+                            if (System.IO.File.Exists(inputNewFile))
+                            {
+                                pdfs = new PDFSigner(inputNewFile, outputFile, myCert, fontPath);
+                            }
+                            else
+                            {
+                                pdfs = new PDFSigner(Path.Combine(signs.inputFile), outputFile, myCert, fontPath);
+                            }
                             if (!string.IsNullOrEmpty(item.textSign))
                             {
                                 
@@ -138,17 +154,17 @@ namespace Digital_Signatues.Controllers
                             if (!string.IsNullOrEmpty(item.textSign))
                             {
                                 if (SmartCaVNPT.SignSmartCa._signSmartCA_PDF(
-                                "45fd-638030602085672703.apps.smartcaapi.com",
-                                "MmU1ZmQ0Y2E-MDBlZC00NWZk",
-                                "070098006706",
-                                "Son0803@",
+                                thongso.Client_ID,
+                                thongso.Client_Secret,
+                                thongso.UID,
+                                thongso.PasswordSmartSign,
                                 input,
                                 outputFile,
                                 "",
                                 item.textSign,
                                 item.pageSign,
                                 thongso.LyDoMacDinh,
-                                true,recJ
+                                thongso.isDislayValid,recJ
                                 ))
                                 {
                                     continue;
@@ -175,17 +191,17 @@ namespace Digital_Signatues.Controllers
                             else
                             {
                                 if (SmartCaVNPT.SignSmartCa._signSmartCA_PDF(
-                                "45fd-638030602085672703.apps.smartcaapi.com",
-                                "MmU1ZmQ0Y2E-MDBlZC00NWZk",
-                                "070098006706",
-                                "Son0803@",
+                                thongso.Client_ID,
+                                thongso.Client_Secret,
+                                thongso.UID,
+                                thongso.PasswordSmartSign,
                                 input,
                                 outputFile,
                                 item.imgSign,
                                 "",
                                 item.pageSign,
                                 thongso.LyDoMacDinh,
-                                true, recJ
+                                thongso.isDislayValid, recJ
                                 ))
                                 {
                                     continue;
@@ -285,6 +301,8 @@ namespace Digital_Signatues.Controllers
                 }
                 foreach (var item in signs.PostPositionSigns)
                 {
+                    var recJ = new RectangleJ((float)item.x, (float)item.y, (float)item.img_w, (float)item.img_h);
+                    var rectangle = new iTextSharp.text.Rectangle((float)item.x, (float)item.y);
                     for (int i = 0; i < 1000; i++)
                     {
                         fileName = name + "_" + i + "_daky.pdf";
@@ -300,27 +318,94 @@ namespace Digital_Signatues.Controllers
                     
                     Certicate myCert = new Certicate(thongso.FilePfx, thongso.PasscodeFilePfx);
                     PDFSigner pdfs = new PDFSigner();
-
-                    if (System.IO.File.Exists(inputNewFile))
+                    if(thongso.LoaiChuKy)
                     {
-                        pdfs = new PDFSigner(inputNewFile, outputFile, myCert, fontPath);
+                        if (System.IO.File.Exists(inputNewFile))
+                        {
+                            pdfs = new PDFSigner(inputNewFile, outputFile, myCert, fontPath);
+                        }
+                        else
+                        {
+                            pdfs = new PDFSigner(Path.Combine(signs.inputFile), outputFile, myCert, fontPath);
+                        }
+                        if (!string.IsNullOrEmpty(item.textSign))
+                        {
+                            pdfs.SignText(thongso.LyDoMacDinh, "", "", item.textSign, rectangle, item.pageSign, fieldName);
+                        }
+                        else
+                        {
+                            string inputImg = item.imgSign;
+                            var rect = new iTextSharp.text.Rectangle(recJ);
+                            pdfs.SignImage(thongso.LyDoMacDinh, "", "", inputImg, rect, item.pageSign, fieldName, false);
+                        }
                     }
                     else
                     {
-                        pdfs = new PDFSigner(Path.Combine(signs.inputFile), outputFile, myCert, fontPath);
-                    }
-                    if (!string.IsNullOrEmpty(item.textSign))
-                    {
-                        var rectangle = new iTextSharp.text.Rectangle((float)item.x, (float)item.y);
-                        pdfs.SignText(thongso.LyDoMacDinh, "", "", item.textSign, rectangle, item.pageSign, fieldName);
-                    }
-                    else
-                    {
-                        var recJ = new RectangleJ((float)item.x, (float)item.y, (float)item.img_w, (float)item.img_h);
-
-                        string inputImg = item.imgSign;
-                        var rectangle = new iTextSharp.text.Rectangle(recJ);
-                        pdfs.SignImage(thongso.LyDoMacDinh, "", "", inputImg, rectangle, item.pageSign, fieldName, false);
+                        string input = "";
+                        if (System.IO.File.Exists(inputNewFile))
+                        {
+                            input = inputNewFile;
+                        }
+                        else
+                        {
+                            input = Path.Combine(signs.inputFile);
+                        }
+                        if (!string.IsNullOrEmpty(item.textSign))
+                        {
+                            if (SmartCaVNPT.SignSmartCa._signSmartCA_PDF(
+                            thongso.Client_ID,
+                            thongso.Client_Secret,
+                            thongso.UID,
+                            thongso.PasswordSmartSign,
+                            input,
+                            outputFile,
+                            "",
+                            item.textSign,
+                            item.pageSign,
+                            thongso.LyDoMacDinh,
+                            thongso.isDislayValid, recJ
+                            ))
+                            {
+                                continue;
+                            }
+                            else
+                            {
+                                return Ok(new
+                                {
+                                    retCode = 0,
+                                    retText = "Ký thất bại",
+                                    data = ""
+                                });
+                            }
+                        }
+                        else
+                        {
+                            if (SmartCaVNPT.SignSmartCa._signSmartCA_PDF(
+                            thongso.Client_ID,
+                            thongso.Client_Secret,
+                            thongso.UID,
+                            thongso.PasswordSmartSign,
+                            input,
+                            outputFile,
+                            item.imgSign,
+                            "",
+                            item.pageSign,
+                            thongso.LyDoMacDinh,
+                            thongso.isDislayValid, recJ
+                            ))
+                            {
+                                continue;
+                            }
+                            else
+                            {
+                                return Ok(new
+                                {
+                                    retCode = 0,
+                                    retText = "Ký thất bại",
+                                    data = ""
+                                });
+                            }
+                        }
                     }
                 }
                 string fileReturn = Path.Combine("Filedaky", fileName);

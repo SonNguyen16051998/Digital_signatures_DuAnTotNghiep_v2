@@ -33,6 +33,15 @@ namespace Digital_Signatues.Models
         public string FilePfx { get; set; }
         [Column(TypeName = "nvarchar(500)")]
         public string PasscodeFilePfx { get; set; }
+        [Column(TypeName = "nvarchar(255)")]
+        public string Client_ID { get; set; }
+        [Column(TypeName = "nvarchar(255)")]
+        public string Client_Secret { get; set; }
+        [Column(TypeName = "nvarchar(255)")]
+        public string UID { get; set; }
+        [Column(TypeName = "nvarchar(255)")]
+        public string PasswordSmartSign { get; set; }
+        public bool isDislayValid { get; set; }
         public NguoiDung NguoiDung { get; set; }
     }
 }

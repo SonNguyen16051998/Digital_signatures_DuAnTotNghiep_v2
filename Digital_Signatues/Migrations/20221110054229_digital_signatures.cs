@@ -208,7 +208,12 @@ namespace Digital_Signatues.Migrations
                     Serial = table.Column<string>(type: "nvarchar(500)", nullable: true),
                     Subject = table.Column<string>(type: "nvarchar(500)", nullable: true),
                     FilePfx = table.Column<string>(type: "nvarchar(500)", nullable: true),
-                    PasscodeFilePfx = table.Column<string>(type: "nvarchar(500)", nullable: true)
+                    PasscodeFilePfx = table.Column<string>(type: "nvarchar(500)", nullable: true),
+                    Client_ID = table.Column<string>(type: "nvarchar(255)", nullable: true),
+                    Client_Secret = table.Column<string>(type: "nvarchar(255)", nullable: true),
+                    UID = table.Column<string>(type: "nvarchar(255)", nullable: true),
+                    PasswordSmartSign = table.Column<string>(type: "nvarchar(255)", nullable: true),
+                    isDislayValid = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {

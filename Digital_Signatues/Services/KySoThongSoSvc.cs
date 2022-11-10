@@ -126,19 +126,27 @@ namespace Digital_Signatues.Services
             bool result = false;
             try
             {
-                string namePfx=Path.GetFileNameWithoutExtension(cauHinhFileChuKy.FilePfx) +".pfx";
-                using var client = new HttpClient();
-                using var s = await client.GetStreamAsync(cauHinhFileChuKy.FilePfx);
-                using var fs = new FileStream(Path.Combine("wwwroot\\FilePfx",namePfx), FileMode.OpenOrCreate);
-                await s.CopyToAsync(fs);
                 var thongso = await _context.KySoThongSos
-                    .Where(x => x.Ma_NguoiDung == cauHinhFileChuKy.Ma_NguoiDung).FirstOrDefaultAsync();
-                if(cauHinhFileChuKy.FilePfx != null)
+                        .Where(x => x.Ma_NguoiDung == cauHinhFileChuKy.Ma_NguoiDung).FirstOrDefaultAsync();
+                if (!string.IsNullOrEmpty(cauHinhFileChuKy.FilePfx))
                 {
+                    string namePfx = Path.GetFileNameWithoutExtension(cauHinhFileChuKy.FilePfx) + ".pfx";
+                    using var client = new HttpClient();
+                    using var s = await client.GetStreamAsync(cauHinhFileChuKy.FilePfx);
+                    using var fs = new FileStream(Path.Combine("wwwroot\\FilePfx", namePfx), FileMode.OpenOrCreate);
+                    await s.CopyToAsync(fs);
                     thongso.FilePfx = "wwwroot\\FilePfx\\" + namePfx;
                     thongso.PasscodeFilePfx = cauHinhFileChuKy.PasscodeFilePfx;
                 }
+                else
+                {
+                    thongso.Client_ID = cauHinhFileChuKy.Client_ID;
+                    thongso.Client_Secret = cauHinhFileChuKy.Client_Secret;
+                    thongso.UID = cauHinhFileChuKy.UID;
+                    thongso.PasswordSmartSign = cauHinhFileChuKy.PasswordSmartSign;
+                }
                 thongso.LoaiChuKy = cauHinhFileChuKy.LoaiChuKy;
+                thongso.isDislayValid = cauHinhFileChuKy.isDislayValid;
                 _context.KySoThongSos.Update(thongso);
                 await _context.SaveChangesAsync();
                 result = true;

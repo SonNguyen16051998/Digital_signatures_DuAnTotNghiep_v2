@@ -10,12 +10,14 @@ using System.Collections.Generic;
 using SignService.Common.HashSignature.Pdf;
 using System.Net;
 using System.util;
+using Digital_Signatues.Services;
+using System.Threading.Tasks;
 
 namespace Digital_Signatues.SmartCaVNPT
 {
     public class SignSmartCa
     {
-        private static readonly ILog _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly log4net.ILog _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public static bool _signSmartCA_PDF(String client_ID, String client_Secret,string UID,string Pass,
             string inputFile, String outputFile, string img_sign, 
             string text_sign, int page, string reason,bool displayValid,RectangleJ rectJ)
@@ -34,7 +36,6 @@ namespace Digital_Signatues.SmartCaVNPT
 
             String credential = _getCredentialSmartCA(access_token, "https://gwsca.vnpt.vn/csc/credentials/list");
             String certBase64 = _getAccoutSmartCACert(access_token, "https://gwsca.vnpt.vn/csc/credentials/info", credential);
-
 
             string _pdfInput = inputFile;
             string _pdfSignedPath = outputFile;
@@ -101,7 +102,7 @@ namespace Digital_Signatues.SmartCaVNPT
                 ((PdfHashSigner)signer).AddSignatureView(new PdfSignatureView
                 {
                     Rectangle = string.Format("{0},{1},{2},{3}", (float)rectJ.X, (float)rectJ.Y, (float)rectJ.X + (float)rectJ.Width, (float)rectJ.Y + (float)rectJ.Height),
-                    Page = 1
+                    Page = page
                 });
             }
              
@@ -172,7 +173,6 @@ namespace Digital_Signatues.SmartCaVNPT
             //_log.Info("SignHash PDF: Successfull. signed file at '" + _pdfSignedPath + "'");
             return true;
         }
-
         private static void _signSmartCA_OFFICE()
         {
             var customerEmail = "162952530";// "03090010105"; 
@@ -541,6 +541,58 @@ namespace Digital_Signatues.SmartCaVNPT
 
             }
             return null;
+        }
+
+        public static subAndSerial _getSubjectandSerial(string client_ID,string client_Secret,string UID,string Pass)
+        {
+            String client_id = client_ID;
+            String client_secret = client_Secret;
+            var customerEmail = UID;// "03090010105"; 
+            var customerPass = Pass;// "123456aA@";
+
+            var access_token = _getAccessToken("https://gwsca.vnpt.vn/auth/token", customerEmail, customerPass, client_id, client_secret);
+            String credential = _getCredentialSmartCA(access_token, "https://gwsca.vnpt.vn/csc/credentials/list");
+            string serviceUri = "https://gwsca.vnpt.vn/csc/credentials/info";
+            var req = new ReqCertificateSmartCA
+            {
+                credentialId = credential,
+                certificates = "chain",
+                certInfo = true,
+                authInfo = true
+            };
+            var body = JsonConvert.SerializeObject(req);
+
+            using (WebClient wc = new WebClient())
+            {
+                try
+                {
+                    
+                    wc.Headers[HttpRequestHeader.ContentType] = "application/json";
+                    wc.Headers[HttpRequestHeader.Authorization] = "Bearer " + access_token;
+                    string HtmlResult = wc.UploadString(serviceUri, "POST", body);
+
+                    CertificateSmartCAResponse res = JsonConvert.DeserializeObject<CertificateSmartCAResponse>(HtmlResult);
+                    var subject_serial = new subAndSerial()
+                    {
+                        subject = res.cert.subjectDN,
+                        serial = res.cert.serialNumber
+                    };
+                    return subject_serial;
+
+                }
+                catch 
+                {
+                    
+                }
+
+            }
+            return null;
+        }
+
+        public class subAndSerial
+        {
+            public string subject { get; set; }
+            public string serial { get; set; }
         }
 
         class GetTokenResponse
