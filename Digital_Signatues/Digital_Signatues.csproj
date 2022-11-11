@@ -41,7 +41,6 @@
   <ItemGroup>
     <Folder Include="lib\" />
     <Folder Include="wwwroot\Font\" />
-    <Folder Include="wwwroot\Filedaky\" />
     <Folder Include="wwwroot\ImgDaKy\" />
     <Folder Include="wwwroot\FilePfx\" />
     <Folder Include="wwwroot\FileDeXuat\" />
