@@ -6,5 +6,6 @@
         public int Ma_NguoiTao { get; set; }
         public float Left { get; set; }
         public float Top { get; set; }
+        public string inputFile { get; set; }
     }
 }

@@ -28,7 +28,8 @@ namespace Digital_Signatues.Controllers
         private readonly Services.ILog _log;
         private readonly IKySoBuocDuyet _buocduyet;
         public KySosController(
-            IKySo kyso, IHostingEnvironment environment, IKySoThongSo thongso, Services.ILog log, IKySoBuocDuyet buocduyet)
+            IKySo kyso, IHostingEnvironment environment, IKySoThongSo thongso, 
+            Services.ILog log, IKySoBuocDuyet buocduyet)
         {
             _buocduyet=buocduyet;
             _log = log;

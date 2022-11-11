@@ -24,6 +24,10 @@ namespace Digital_Signatues.Controllers
             _log = log;
             _QR = QR;
         }
+        /// <summary>
+        /// lấy toàn bộ mã QR
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> GetAllQRCode()
         {
@@ -37,7 +41,7 @@ namespace Digital_Signatues.Controllers
         /// <summary>
         /// lấy chi tiết mã qr
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">mã số QR code</param>
         /// <returns></returns>
         [HttpGet("{id}")]
         public async Task<IActionResult> GetQRCodeAsync(string id)
@@ -46,25 +50,64 @@ namespace Digital_Signatues.Controllers
             {
                 retCode = 1,
                 retText = "Lấy chi tiết QRCode thành công",
-                data = await _QR.GetMaQRAsync(id)
+                data = await _QR.GetMaQRbyMaSoAsync(id)
             });
         }
-        /*[HttpPost]
-        public async Task<IActionResult> PostAsync([FromBody] PostQR postQR)
+        /// <summary>
+        /// gắn mã qr vào file pdf
+        /// </summary>
+        /// <param name="qrcode"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<IActionResult> AddQRCode([FromBody] PostQR qrcode)
+        {
+
+            if (ModelState.IsValid)
+            {
+                if (await _QR.AddQRCodeToPdf(qrcode))
+                {
+                    return Ok(new
+                    {
+                        retCode = 1,
+                        retText = "Gắn mã QR thành công",
+                        data = await _QR.GetMaQRbyDeXuatAsync(qrcode.Ma_DeXuat)
+                    });
+                }
+            }
+            return Ok(new
+            {
+                retCode = 0,
+                retText = "Gắn mã QR thất bại",
+                data = ""
+            });
+        }
+        /// <summary>
+        /// cập nhật mức độ của mã qr
+        /// </summary>
+        /// <param name="qrcode"></param>
+        /// <returns></returns>
+        [HttpPut]
+        public async Task<IActionResult> PutQRCode([FromBody]PutQR qrcode)
         {
             if(ModelState.IsValid)
             {
-                string maso = await _QR.AddMaQRAsync(postQR);
+                var maso = await _QR.UpdateMaQRAsync(qrcode);
                 if (maso.Length>0)
                 {
                     return Ok(new
                     {
                         retCode = 1,
-                        retText = "Thêm QRCode thành công",
-                        data = await _QR.GetMaQRAsync(id)
+                        retText = "Cập nhật QR thành công",
+                        data = await _QR.GetMaQRbyMaSoAsync(qrcode.MaSo)
                     });
                 }
             }
-        }*/
+            return Ok(new
+            {
+                retCode = 0,
+                retText = "Cập nhật QR thất bại",
+                data = ""
+            });
+        }
     }
 }
