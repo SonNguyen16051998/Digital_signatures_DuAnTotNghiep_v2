@@ -164,33 +164,6 @@ namespace Digital_Signatues.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "KySoTests",
-                columns: table => new
-                {
-                    Id_KySoTest = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Id_NguoiDung = table.Column<int>(type: "int", nullable: false),
-                    inputFile = table.Column<string>(type: "nvarchar(1000)", nullable: false),
-                    imgSign = table.Column<string>(type: "nvarchar(1000)", nullable: false),
-                    pageSign = table.Column<int>(type: "int", nullable: false),
-                    x = table.Column<float>(type: "real", nullable: false),
-                    y = table.Column<float>(type: "real", nullable: false),
-                    img_w = table.Column<float>(type: "real", nullable: false),
-                    img_h = table.Column<float>(type: "real", nullable: false),
-                    NgayKyTest = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_KySoTests", x => x.Id_KySoTest);
-                    table.ForeignKey(
-                        name: "FK_KySoTests_NguoiDungs_Id_NguoiDung",
-                        column: x => x.Id_NguoiDung,
-                        principalTable: "NguoiDungs",
-                        principalColumn: "Ma_NguoiDung",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "KySoThongSos",
                 columns: table => new
                 {
@@ -451,11 +424,6 @@ namespace Digital_Signatues.Migrations
                 column: "Ma_NguoiDeXuat");
 
             migrationBuilder.CreateIndex(
-                name: "IX_KySoTests_Id_NguoiDung",
-                table: "KySoTests",
-                column: "Id_NguoiDung");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Logs_Ma_NguoiThucHien",
                 table: "Logs",
                 column: "Ma_NguoiThucHien");
@@ -516,9 +484,6 @@ namespace Digital_Signatues.Migrations
         {
             migrationBuilder.DropTable(
                 name: "kySoBuocDuyets");
-
-            migrationBuilder.DropTable(
-                name: "KySoTests");
 
             migrationBuilder.DropTable(
                 name: "KySoThongSos");

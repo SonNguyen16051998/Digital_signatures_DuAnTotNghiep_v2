@@ -36,7 +36,6 @@ namespace Digital_Signatues.Models
         public DbSet<Role> Roles { get; set; }
         public DbSet<Role_Quyen> Role_Quyens { get; set; }
         public DbSet<OTP> OTPs { get; set; }
-        public DbSet<KySoTest> KySoTests { get; set;}
         public DbSet<KySoThongSo> KySoThongSos { get; set; }
         public DbSet<KySoDeXuat> kySoDeXuats { get; set; }
         public DbSet<KySoBuocDuyet> kySoBuocDuyets { get; set; }
