@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -39,10 +40,16 @@ namespace Digital_Signatues.Services
             try
             {
                 string namePdf = Path.GetFileNameWithoutExtension(kySoDeXuat.inputFile) + ".pdf";
-                using var client = new HttpClient();
+                /*using var client = new HttpClient();
                 using var s = await client.GetStreamAsync(kySoDeXuat.inputFile);
                 using var fs = new FileStream(Path.Combine("FileDeXuat", namePdf), FileMode.OpenOrCreate);
-                await s.CopyToAsync(fs);
+                await s.CopyToAsync(fs);*/
+                string remoteUri = kySoDeXuat.inputFile;
+                string fileName = Path.Combine("wwwroot\\FileDeXuat", namePdf);
+                using (var webpage = new WebClient())
+                {
+                    webpage.DownloadFileAsync(new System.Uri(remoteUri,System.UriKind.Absolute), fileName);
+                }
                 var postdexuat = new KySoDeXuat()
                 {
                     Ten_DeXuat = kySoDeXuat.Ten_DeXuat,
