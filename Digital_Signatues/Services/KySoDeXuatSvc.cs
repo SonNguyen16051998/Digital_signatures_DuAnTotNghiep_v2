@@ -84,10 +84,12 @@ namespace Digital_Signatues.Services
                 update.GhiChu = kySoDeXuat.GhiChu;
                 if(update.inputFile!=checkFile)
                 {
-                    using var client = new HttpClient();
-                    using var s = await client.GetStreamAsync(kySoDeXuat.inputFile);
-                    using var fs = new FileStream(Path.Combine("FileDeXuat", namePdf), FileMode.OpenOrCreate);
-                    await s.CopyToAsync(fs);
+                    string remoteUri = kySoDeXuat.inputFile;
+                    string fileName = Path.Combine("wwwroot\\FileDeXuat", namePdf);
+                    using (var webpage = new WebClient())
+                    {
+                        webpage.DownloadFileAsync(new System.Uri(remoteUri, System.UriKind.Absolute), fileName);
+                    }
                     update.inputFile = checkFile;
                     update.Ten_FileGoc = kySoDeXuat.Ten_FileGoc;
                 }
