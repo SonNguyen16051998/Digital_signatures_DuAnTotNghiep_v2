@@ -150,7 +150,7 @@ namespace Digital_Signatues.Controllers
                             }    
                             else
                             {
-                                input = Path.Combine(signs.inputFile);
+                                input = signs.inputFile;
                             }
                             if (!string.IsNullOrEmpty(item.textSign))
                             {
