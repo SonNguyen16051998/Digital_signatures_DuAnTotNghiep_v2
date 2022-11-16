@@ -58,21 +58,30 @@ namespace Digital_Signatues.Controllers
         {
             if (ModelState.IsValid)
             {
-                Role addRole = new Role()
+                if(await _role.isCheckTen(Role.Ten_Role))
                 {
-                    IsDeleted = false,
-                    Ten_Role = Role.Ten_Role
-                };
-                int id_Role = await _role.AddRoleAsync(addRole);
-                if ( id_Role> 0)
-                {
-                    return Ok(new
+                    Role addRole = new Role()
                     {
-                        retCode = 1,
-                        retText = "Thêm role thành công",
-                        data = await _role.GetRoleAsync(id_Role)
-                    });
+                        IsDeleted = false,
+                        Ten_Role = Role.Ten_Role
+                    };
+                    int id_Role = await _role.AddRoleAsync(addRole);
+                    if (id_Role > 0)
+                    {
+                        return Ok(new
+                        {
+                            retCode = 1,
+                            retText = "Thêm role thành công",
+                            data = await _role.GetRoleAsync(id_Role)
+                        });
+                    }
                 }
+                return Ok(new
+                {
+                    retCode = 0,
+                    retText = "Vai trò đã tồn tại",
+                    data = ""
+                });
             }
             return Ok(new
             {
@@ -91,16 +100,25 @@ namespace Digital_Signatues.Controllers
         {
             if (ModelState.IsValid)
             {
-                int id_Role = await _role.UpdateRoleAsync(putRole);
-                if ( id_Role> 0)
+                if (await _role.isCheckTen(putRole.Ten_Role))
                 {
-                    return Ok(new
+                    int id_Role = await _role.UpdateRoleAsync(putRole);
+                    if (id_Role > 0)
                     {
-                        retCode = 1,
-                        retText = "Cập nhật vai trò thành công",
-                        data = await _role.GetRoleAsync(id_Role)
-                    });
+                        return Ok(new
+                        {
+                            retCode = 1,
+                            retText = "Cập nhật vai trò thành công",
+                            data = await _role.GetRoleAsync(id_Role)
+                        });
+                    }
                 }
+                return Ok(new
+                {
+                    retCode = 0,
+                    retText = "Vai trò đã tồn tại",
+                    data = ""
+                });
             }
             return Ok(new
             {

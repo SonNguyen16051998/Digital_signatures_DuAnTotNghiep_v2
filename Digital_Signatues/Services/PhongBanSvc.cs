@@ -15,6 +15,7 @@ namespace Digital_Signatues.Services
         Task<int> AddPhongBanAsync(PhongBan phongBan);
         Task<int> UpdatePhongBanAsync(PutPhongBan putPhongBan);
         Task<bool> SapXepPhongBanAsync(List<PutSapXep> phongBans);
+        Task<bool> isCheckTen(string ten);
     }
     public class PhongBanSvc:IPhongBan
     {
@@ -132,6 +133,11 @@ namespace Digital_Signatues.Services
             }
             catch { }
             return ret;
+        }
+        public async Task<bool> isCheckTen(string ten)
+        {
+            var check = await _context.PhongBans.Where(x => x.Ten_PhongBan == ten && x.IsDeleted==false).FirstOrDefaultAsync();
+            return check != null?false:true;
         }
     }
 }

@@ -15,6 +15,7 @@ namespace Digital_Signatues.Services
         Task<int> AddChucDanhAsync(ChucDanh chucDanh);
         Task<int> UpdateChucDanhAsync(PutChucDanh putChucDanh);
         Task<bool> SapXepThuTuAsync(List<PutSapXep> chucDanhs);
+        Task<bool> isCheckName(string name);    
     }
     public class ChucDanhSvc:IChucDanh
     {
@@ -133,6 +134,11 @@ namespace Digital_Signatues.Services
             }
             catch { }
             return ret;
+        }
+        public async Task<bool> isCheckName(string name)
+        {
+            var check=await _context.ChucDanhs.Where(x=>x.Ten_ChucDanh==name).FirstOrDefaultAsync();
+            return check!=null? false:true;
         }
     }
 }

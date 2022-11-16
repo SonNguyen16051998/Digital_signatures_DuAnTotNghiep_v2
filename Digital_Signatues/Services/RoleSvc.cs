@@ -14,6 +14,7 @@ namespace Digital_Signatues.Services
         Task<bool> DeleteRoleAsync(int id);
         Task<int> AddRoleAsync(Role role);
         Task<int> UpdateRoleAsync(PutRole putRole);
+        Task<bool> isCheckTen(string ten);
     }
     public class RoleSvc:IRole
     {
@@ -141,6 +142,11 @@ namespace Digital_Signatues.Services
                 ret = 0;
             }
             return ret;
+        }
+        public async Task<bool> isCheckTen(string ten)
+        {
+            var check=await _context.Roles.Where(x=>x.Ten_Role==ten).FirstOrDefaultAsync();
+            return check != null ? false : true;
         }
     }
 }

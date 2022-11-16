@@ -63,28 +63,36 @@ namespace Digital_Signatues.Controllers
         {// thêm chức danh chỉ cần gửi tên chức danh
             if (ModelState.IsValid)
             {
-                
-                ChucDanh addChucDanh = new ChucDanh()
+                if(await _chucDanh.isCheckName(chucDanh.Ten_ChucDanh))
                 {
-                    IsDeleted = false,
-                    Order = 0,
-                    Ten_ChucDanh = chucDanh.Ten_ChucDanh
-                };
-                int id_ChucDanh = await _chucDanh.AddChucDanhAsync(addChucDanh);
-                if (id_ChucDanh> 0)
-                {
-                    return Ok(new
+                    ChucDanh addChucDanh = new ChucDanh()
                     {
-                        retCode = 1,
-                        retText = "Thêm chức danh thành công",
-                        data = await _chucDanh.GetChucDanhAsync(id_ChucDanh)
-                    });
+                        IsDeleted = false,
+                        Order = 0,
+                        Ten_ChucDanh = chucDanh.Ten_ChucDanh
+                    };
+                    int id_ChucDanh = await _chucDanh.AddChucDanhAsync(addChucDanh);
+                    if (id_ChucDanh > 0)
+                    {
+                        return Ok(new
+                        {
+                            retCode = 1,
+                            retText = "Thêm chức danh thành công",
+                            data = await _chucDanh.GetChucDanhAsync(id_ChucDanh)
+                        });
+                    }
                 }
+                return Ok(new
+                {
+                    retCode = 0,
+                    retText = "Chức danh đã tồn tại",
+                    data = ""
+                });
             }
             return Ok(new
             {
                 retCode = 0,
-                retText = "Thêm chức danh thất bại",
+                retText = "Dữ liệu không hợp lệ",
                 data = ""
             });
         }
@@ -98,16 +106,25 @@ namespace Digital_Signatues.Controllers
         {//cập nhật chức danh truyền đầy đủ dữ liệu
             if (ModelState.IsValid)
             {
-                int id_chucDanh = await _chucDanh.UpdateChucDanhAsync(putChucDanh);
-                if ( id_chucDanh> 0)
+                if(await _chucDanh.isCheckName(putChucDanh.Ten_ChucDanh))
                 {
-                    return Ok(new
+                    int id_chucDanh = await _chucDanh.UpdateChucDanhAsync(putChucDanh);
+                    if (id_chucDanh > 0)
                     {
-                        retCode = 1,
-                        retText = "Cập nhật chức danh thành công",
-                        data = await _chucDanh.GetChucDanhAsync(id_chucDanh)
-                    });
+                        return Ok(new
+                        {
+                            retCode = 1,
+                            retText = "Cập nhật chức danh thành công",
+                            data = await _chucDanh.GetChucDanhAsync(id_chucDanh)
+                        });
+                    }
                 }
+                return Ok(new
+                {
+                    retCode = 0,
+                    retText = "Chức danh đã tồn tại",
+                    data = ""
+                });
             }
             return Ok(new
             {

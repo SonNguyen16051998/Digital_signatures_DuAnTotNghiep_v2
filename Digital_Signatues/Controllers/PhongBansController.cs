@@ -61,23 +61,32 @@ namespace Digital_Signatues.Controllers
         {
             if(ModelState.IsValid)
             {
-                PhongBan addPhongBan = new PhongBan()
+                if(await _phongBan.isCheckTen(phongBan.Ten_PhongBan))
                 {
-                    NgayTao = DateTime.Now,
-                    Order = 0,
-                    IsDeleted = false,
-                    Ten_PhongBan = phongBan.Ten_PhongBan
-                };
-                int id_Phongban = await _phongBan.AddPhongBanAsync(addPhongBan);
-                if (id_Phongban>0)
-                {
-                    return Ok(new
+                    PhongBan addPhongBan = new PhongBan()
                     {
-                        retCode = 1,
-                        retText = "Thêm phòng ban thành công",
-                        data = await _phongBan.GetPhongBanAsync(id_Phongban)
-                    }) ;
+                        NgayTao = DateTime.Now,
+                        Order = 0,
+                        IsDeleted = false,
+                        Ten_PhongBan = phongBan.Ten_PhongBan
+                    };
+                    int id_Phongban = await _phongBan.AddPhongBanAsync(addPhongBan);
+                    if (id_Phongban > 0)
+                    {
+                        return Ok(new
+                        {
+                            retCode = 1,
+                            retText = "Thêm phòng ban thành công",
+                            data = await _phongBan.GetPhongBanAsync(id_Phongban)
+                        });
+                    }
                 }
+                return Ok(new
+                {
+                    retCode = 0,
+                    retText = "Phòng ban đã tồn tại",
+                    data = ""
+                });
             }
             return Ok(new
             {
@@ -96,16 +105,25 @@ namespace Digital_Signatues.Controllers
         {
             if (ModelState.IsValid)
             {
-                int id_Phongban = await _phongBan.UpdatePhongBanAsync(putPhongBan);
-                if ( id_Phongban> 0)
+                if(await _phongBan.isCheckTen(putPhongBan.Ten_PhongBan))
                 {
-                    return Ok(new
+                    int id_Phongban = await _phongBan.UpdatePhongBanAsync(putPhongBan);
+                    if (id_Phongban > 0)
                     {
-                        retCode = 1,
-                        retText = "Cập nhật phòng ban thành công",
-                        data = await _phongBan.GetPhongBanAsync(id_Phongban)
-                    });
+                        return Ok(new
+                        {
+                            retCode = 1,
+                            retText = "Cập nhật phòng ban thành công",
+                            data = await _phongBan.GetPhongBanAsync(id_Phongban)
+                        });
+                    }
                 }
+                return Ok(new
+                {
+                    retCode = 0,
+                    retText = "Phòng ban đã tồn tại",
+                    data = ""
+                });
             }
             return Ok(new
             {

@@ -17,6 +17,7 @@ namespace Digital_Signatues.Services
         Task<List<KySoBuocDuyet>> GetAllBuocDuyetAsync(int ma_dexuat);
         Task<bool> CheckDeleteAsync(int ma_buocduyet);
         Task<bool> TuChoiDuyetAsync(int ma_buocduyet);
+        Task<bool> isCheckTenBuoc(int ma_dexuat, string tenbuoc);
     }
     public class KySoBuocDuyetSvc:IKySoBuocDuyet
     {
@@ -147,6 +148,11 @@ namespace Digital_Signatues.Services
             }
             catch { }
             return ret;
+        }
+        public async Task<bool> isCheckTenBuoc(int ma_dexuat, string tenbuoc)
+        {
+            var check=await _context.kySoBuocDuyets.Where(x=>x.Ma_KySoDeXuat == ma_dexuat && x.Ten_Buoc==tenbuoc).FirstOrDefaultAsync();
+            return check != null ? false : true;
         }
     }
 }

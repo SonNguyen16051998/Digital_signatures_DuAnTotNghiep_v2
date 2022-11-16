@@ -84,7 +84,7 @@ namespace Digital_Signatues.Controllers
                     return Ok(new
                     {
                         retCode = 0,
-                        retText = "Email đã tồn tại",
+                        retText = "Email đã tồn tại. Nếu tài khoản đã khóa vui lòng liên hệ IT để mở khóa",
                         data = "" 
                     });
                 }
