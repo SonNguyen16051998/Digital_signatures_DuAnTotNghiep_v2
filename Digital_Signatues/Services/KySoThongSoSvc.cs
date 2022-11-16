@@ -39,12 +39,25 @@ namespace Digital_Signatues.Services
             int ret = 0;
             try
             {
+                string hinh1 = null, hinh2 = null, hinh3 = null;
+                if(!string.IsNullOrEmpty(PostKySoThongSo.Hinh1))
+                {
+                    hinh1 = GetChuKy(PostKySoThongSo.Hinh1);
+                }
+                if (!string.IsNullOrEmpty(PostKySoThongSo.Hinh2))
+                {
+                    hinh2 = GetChuKy(PostKySoThongSo.Hinh2);
+                }
+                if (!string.IsNullOrEmpty(PostKySoThongSo.Hinh3))
+                {
+                    hinh3 = GetChuKy(PostKySoThongSo.Hinh3);
+                }
                 var thongso = new KySoThongSo()
                 {
                     Ma_NguoiDung = PostKySoThongSo.Ma_NguoiDung,
-                    Hinh1 = PostKySoThongSo.Hinh1,
-                    Hinh2 = PostKySoThongSo.Hinh2,
-                    Hinh3 = PostKySoThongSo.Hinh3,
+                    Hinh1 = hinh1,
+                    Hinh2 = hinh2,
+                    Hinh3 = hinh3,
                     LyDoMacDinh = PostKySoThongSo.LyDoMacDinh,
                     PassCode = PostKySoThongSo.PassCode,
                     Ma_NguoiCapNhatCuoi = PostKySoThongSo.Ma_NguoiCapNhatCuoi,
@@ -55,7 +68,12 @@ namespace Digital_Signatues.Services
                     Serial = null,
                     Subject = null,
                     FilePfx =null,
-                    PasscodeFilePfx =null
+                    PasscodeFilePfx =null,
+                    Client_ID = null,
+                    Client_Secret = null,
+                    UID=null,
+                    PasswordSmartSign = null,
+                    isDislayValid = false
                 };
                 await _context.KySoThongSos.AddAsync(thongso);
                 await _context.SaveChangesAsync();
@@ -85,16 +103,44 @@ namespace Digital_Signatues.Services
             int ret = 0;
             try
             {
+                string hinh1 = null, hinh2 = null, hinh3 = null;
                 var capnhatthongso = await _context.KySoThongSos
                     .Where(x => x.Ma_NguoiDung == PutThongSo.Ma_NguoiDung).FirstOrDefaultAsync();
-                capnhatthongso.Hinh1 = PutThongSo.Hinh1;
-                capnhatthongso.Hinh2 = PutThongSo.Hinh2;
-                capnhatthongso.Hinh3 = PutThongSo.Hinh3;
+                
+                if (!string.IsNullOrEmpty(PutThongSo.Hinh1))
+                {
+                    string name = Path.GetFileNameWithoutExtension(PutThongSo.Hinh1) + ".png";
+                    string check = "ImgChuKy\\" + name;
+                    if(capnhatthongso.Hinh1!=check)
+                    {
+                        hinh1 = GetChuKy(PutThongSo.Hinh1);
+                    }
+                }
+                if (!string.IsNullOrEmpty(PutThongSo.Hinh2))
+                {
+                    string name = Path.GetFileNameWithoutExtension(PutThongSo.Hinh2) + ".png";
+                    string check = "ImgChuKy\\" + name;
+                    if (capnhatthongso.Hinh2 != check)
+                    {
+                        hinh2 = GetChuKy(PutThongSo.Hinh2);
+                    }
+                }
+                if (!string.IsNullOrEmpty(PutThongSo.Hinh3))
+                {
+                    string name = Path.GetFileNameWithoutExtension(PutThongSo.Hinh3) + ".png";
+                    string check = "ImgChuKy\\" + name;
+                    if (capnhatthongso.Hinh3 != check)
+                    {
+                        hinh3 = GetChuKy(PutThongSo.Hinh3);
+                    }
+                }
+                capnhatthongso.Hinh1 = hinh1;
+                capnhatthongso.Hinh2 = hinh2;
+                capnhatthongso.Hinh3 = hinh3;
                 capnhatthongso.LyDoMacDinh = PutThongSo.LyDoMacDinh;
                 capnhatthongso.Ma_NguoiCapNhatCuoi = PutThongSo.Ma_NguoiCapNhatCuoi;
                 capnhatthongso.NgayCapNhatCuoi = System.DateTime.Now;
                 capnhatthongso.TrangThai = PutThongSo.TrangThai;
-
                 _context.KySoThongSos.Update(capnhatthongso);
                 await _context.SaveChangesAsync();
                 ret = PutThongSo.Ma_NguoiDung;
@@ -132,10 +178,6 @@ namespace Digital_Signatues.Services
                 if (!string.IsNullOrEmpty(cauHinhFileChuKy.FilePfx))
                 {
                     string namePfx = Path.GetFileNameWithoutExtension(cauHinhFileChuKy.FilePfx) + ".pfx";
-                    /*using var client = new HttpClient();
-                    using var s = await client.GetStreamAsync(cauHinhFileChuKy.FilePfx);
-                    using var fs = new FileStream(Path.Combine("wwwroot\\FilePfx", namePfx), FileMode.OpenOrCreate);
-                    await s.CopyToAsync(fs);*/
                     string remoteUri = cauHinhFileChuKy.FilePfx;
                     string fileName = Path.Combine("wwwroot\\FilePfx", namePfx);
                     using (var webpage = new WebClient())
@@ -268,6 +310,18 @@ namespace Digital_Signatues.Services
                 }
             }
             return ret;
+        }
+        public string GetChuKy(string chuky)
+        {
+            string nameimg = Path.GetFileNameWithoutExtension(chuky) + ".png";
+            string remoteUri = chuky;
+            string fileName = Path.Combine("wwwroot\\ImgChuKy", nameimg);
+            using (var webpage = new WebClient())
+            {
+                webpage.DownloadFileAsync(new System.Uri(remoteUri, System.UriKind.Absolute), fileName);
+            }
+            string hinhanh = "ImgChuKy\\" + nameimg;
+            return hinhanh;
         }
     }
 }

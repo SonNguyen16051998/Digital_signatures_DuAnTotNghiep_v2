@@ -36,8 +36,8 @@ namespace Digital_Signatues.SmartCaVNPT
 
             String credential = _getCredentialSmartCA(access_token, "https://gwsca.vnpt.vn/csc/credentials/list");
             String certBase64 = _getAccoutSmartCACert(access_token, "https://gwsca.vnpt.vn/csc/credentials/info", credential);
-
-            string _pdfInput = inputFile;
+      
+            string _pdfInput = Path.Combine("wwwroot", inputFile);
             string _pdfSignedPath = outputFile;
 
             byte[] unsignData = null;
@@ -94,8 +94,9 @@ namespace Digital_Signatues.SmartCaVNPT
             } 
             else
             {
+                string img = Path.Combine("wwwroot",img_sign);
                 // Hình ảnh hiển thị trên chữ ký (mặc định là logo VNPT)
-                var imgBytes = File.ReadAllBytes(img_sign);
+                var imgBytes = File.ReadAllBytes(img);
                 var x = Convert.ToBase64String(imgBytes);
                 ((PdfHashSigner)signer).SetCustomImage(imgBytes);
                 // Hiển thị ảnh chữ ký tại nhiều vị trí trên tài liệu

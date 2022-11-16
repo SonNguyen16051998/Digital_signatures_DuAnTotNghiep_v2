@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -48,6 +49,13 @@ namespace Digital_Signatues.Controllers
             var id = User.FindFirstValue("Id");
             if (ModelState.IsValid)
             {
+                string namepdf = Path.GetFileNameWithoutExtension(signs.inputFile) + ".pdf";
+                string remoteUri = signs.inputFile;
+                string filePath = Path.Combine("wwwroot\\FileDeXuat", namepdf);
+                using (var webpage = new WebClient())
+                {
+                    webpage.DownloadFileAsync(new System.Uri(remoteUri, System.UriKind.Absolute), filePath);
+                }
                 string fileName = "";
                 var thongso = await _thongso.GetThongSoNguoiDungAsync(signs.Id_NguoiDung);
                 if(string.IsNullOrEmpty(thongso.FilePfx) && string.IsNullOrEmpty(thongso.Client_ID))
@@ -101,7 +109,7 @@ namespace Digital_Signatues.Controllers
                         string outputFile = "";
                         string inputNewFile = "";
                         string fieldName = "";
-                        string name = Path.GetFileNameWithoutExtension(signs.inputFile);
+                        string name = Path.GetFileNameWithoutExtension(filePath);
                         string fontPath = Path.Combine(_environment.WebRootPath, "Font", "ARIALUNI.TTF");
                         var recJ = new RectangleJ((float)item.x, (float)item.y, (float)item.img_w, (float)item.img_h);
                         var rectangle = new iTextSharp.text.Rectangle((float)item.x, (float)item.y);
@@ -127,7 +135,7 @@ namespace Digital_Signatues.Controllers
                             }
                             else
                             {
-                                pdfs = new PDFSigner(Path.Combine(signs.inputFile), outputFile, myCert, fontPath);
+                                pdfs = new PDFSigner(filePath, outputFile, myCert, fontPath);
                             }
                             if (!string.IsNullOrEmpty(item.textSign))
                             {
@@ -159,7 +167,7 @@ namespace Digital_Signatues.Controllers
                                 thongso.Client_Secret,
                                 thongso.UID,
                                 thongso.PasswordSmartSign,
-                                input,
+                                filePath,
                                 outputFile,
                                 "",
                                 item.textSign,
@@ -196,7 +204,7 @@ namespace Digital_Signatues.Controllers
                                 thongso.Client_Secret,
                                 thongso.UID,
                                 thongso.PasswordSmartSign,
-                                input,
+                                filePath,
                                 outputFile,
                                 item.imgSign,
                                 "",
@@ -217,7 +225,7 @@ namespace Digital_Signatues.Controllers
                                         Ma_DeXuat = null,
                                     };
                                     if (await _log.PostLogAsync(log) > 0)
-                                    { }
+                                    { System.IO.File.Delete(filePath); }
                                     return Ok(new
                                     {
                                         retCode = 0,
@@ -236,7 +244,9 @@ namespace Digital_Signatues.Controllers
                         Ma_DeXuat=null
                     };
                     if (await _log.PostLogAsync(postlog) > 0)
-                    { }
+                    {
+                        System.IO.File.Delete(filePath);
+                    }
                     return Ok(new
                     {
                         retCode = 1,
@@ -249,7 +259,7 @@ namespace Digital_Signatues.Controllers
             {
                 var postlog = new PostLog()
                 {
-                    Ten_Log = "Kí thử thất bại",
+                    Ten_Log = "Kí thử thất bại do dữ liệu không hợp lệ",
                     Ma_NguoiThucHien = int.Parse(id),
                     Ma_TaiKhoan = signs.Id_NguoiDung,
                     Ma_DeXuat = null,
@@ -280,7 +290,7 @@ namespace Digital_Signatues.Controllers
                 string outputFile = "";
                 string inputNewFile = "";
                 string fieldName = "filedName_0";
-                int buocduyethientai = await _kyso.GetIndexBuocDuyet(signs.Ma_BuocDuyet);
+                /*int buocduyethientai = await _kyso.GetIndexBuocDuyet(signs.Ma_BuocDuyet);
                 if (buocduyethientai> 1)
                 {
                     for (int i = 0; i < 1000; i++)
@@ -299,7 +309,7 @@ namespace Digital_Signatues.Controllers
                 {
                     fileName = name + "_" + 0 + "_daky.pdf";
                     outputFile = Path.Combine(_environment.WebRootPath, "Filedaky") + @"\" + name + "_" + 0 + "_daky.pdf";
-                }
+                }*/
                 foreach (var item in signs.PostPositionSigns)
                 {
                     var recJ = new RectangleJ((float)item.x, (float)item.y, (float)item.img_w, (float)item.img_h);

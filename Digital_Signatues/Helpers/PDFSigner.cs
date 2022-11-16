@@ -48,10 +48,11 @@ namespace Digital_Signatues.Helpers
         public void SignImage(string sigReason, string sigContact, string sigLocation, string imageFilePath,
          Rectangle rectangle, int page, string fieldName, bool flagKyHethong)
         {
+            string inputfile = Path.Combine("wwwroot", this.InputPDF);
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             IExternalSignature externalSignature = new PrivateKeySignature(this.Cert.Akp, DigestAlgorithms.SHA256);
             PdfReader.unethicalreading = true;
-            PdfReader reader = new PdfReader(this.InputPDF);
+            PdfReader reader = new PdfReader(inputfile);
             var output = new FileStream(this.OutputPDF, FileMode.Create, FileAccess.Write);
             PdfStamper Stamper = PdfStamper.CreateSignature(reader, output, '\0', null, true);
 
@@ -71,18 +72,18 @@ namespace Digital_Signatues.Helpers
             Font NormalFont = FontFactory.GetFont("Arial", 11, Font.NORMAL, BaseColor.BLUE);
             BaseFont bf = BaseFont.CreateFont(this.FontPath, BaseFont.IDENTITY_H, true);
             appearance.Layer2Font = new iTextSharp.text.Font(bf, (float)11.5, Font.NORMAL, BaseColor.BLUE);
-
+            string img=Path.Combine("wwwroot",imageFilePath);
             if (flagKyHethong)
             {
                 //imageFilePath= Server.Map ""
-                appearance.SignatureGraphic = Image.GetInstance(imageFilePath);
+                appearance.SignatureGraphic = Image.GetInstance(img);
                 appearance.SignatureRenderingMode = PdfSignatureAppearance.RenderingMode.DESCRIPTION;
                 //appearance.SignatureRenderingMode = PdfSignatureAppearance.RenderingMode.NAME_AND_DESCRIPTION;
                 //appearance.SignatureRenderingMode = PdfSignatureAppearance.RenderingMode.GRAPHIC_AND_DESCRIPTION;
             }
             else
             {
-                appearance.SignatureGraphic = Image.GetInstance(imageFilePath);
+                appearance.SignatureGraphic = Image.GetInstance(img);
                 appearance.SignatureRenderingMode = PdfSignatureAppearance.RenderingMode.GRAPHIC;
             }
             //appearance.SignatureRenderingMode = PdfSignatureAppearance.RenderingMode.GRAPHIC;
