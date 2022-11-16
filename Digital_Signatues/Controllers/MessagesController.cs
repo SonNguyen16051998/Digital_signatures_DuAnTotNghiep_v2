@@ -18,8 +18,8 @@ namespace Digital_Signatues.Controllers
     public class MessagesController : Controller
     {
         private readonly IMessage _message;
-        private readonly LogSvc _log;
-        public MessagesController(IMessage message,LogSvc log)
+        private readonly ILog _log;
+        public MessagesController(IMessage message,ILog log)
         {
             _log = log;
             _message = message;
