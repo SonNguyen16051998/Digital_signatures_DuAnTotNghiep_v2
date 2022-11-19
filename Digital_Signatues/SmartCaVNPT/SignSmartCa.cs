@@ -37,7 +37,7 @@ namespace Digital_Signatues.SmartCaVNPT
             String credential = _getCredentialSmartCA(access_token, "https://gwsca.vnpt.vn/csc/credentials/list");
             String certBase64 = _getAccoutSmartCACert(access_token, "https://gwsca.vnpt.vn/csc/credentials/info", credential);
       
-            string _pdfInput = Path.Combine("wwwroot",inputFile);
+            string _pdfInput = inputFile;
             string _pdfSignedPath = outputFile;
 
             byte[] unsignData = null;

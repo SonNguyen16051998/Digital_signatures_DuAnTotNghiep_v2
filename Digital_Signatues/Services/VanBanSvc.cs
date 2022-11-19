@@ -158,7 +158,7 @@ namespace Digital_Signatues.Services
             }
             else
             {
-                exten = ".fpg";
+                exten = ".jpg";
             }
             return exten;
         }
