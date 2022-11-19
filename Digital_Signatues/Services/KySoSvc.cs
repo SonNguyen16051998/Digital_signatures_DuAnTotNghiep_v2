@@ -106,7 +106,11 @@ namespace Digital_Signatues.Services
         }
         public async Task<List<KySoBuocDuyet>> GetDaDuyet()
         {
-            return await _context.kySoBuocDuyets.Where(x => x.IsDaKy == true).ToListAsync();
+            return await _context.kySoBuocDuyets.Where(x => x.IsDaKy == true)
+                .Include(x => x.KySoDeXuat)
+                .Include(x => x.KySoDeXuat.NguoiDung)
+                .Include(x => x.NguoiDung)
+                .ToListAsync();
         }
     }
 }

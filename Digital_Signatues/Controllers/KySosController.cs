@@ -501,7 +501,7 @@ namespace Digital_Signatues.Controllers
         /// lấy ký số đã duyệt
         /// </summary>
         /// <returns></returns>
-        [HttpPut, ActionName("daduyet")]
+        [HttpGet, ActionName("daduyet")]
         public async Task<IActionResult> GetDaDuyet()
         {
             return Ok(new
