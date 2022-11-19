@@ -39,7 +39,7 @@ namespace Digital_Signatues.Services
             int ret = 0;
             try
             {
-                string namePdf = Path.GetFileNameWithoutExtension(kySoDeXuat.inputFile) + ".pdf";
+                string namePdf = Path.GetFileNameWithoutExtension(kySoDeXuat.inputFile).Replace("%","") + ".pdf";
                 /*using var client = new HttpClient();
                 using var s = await client.GetStreamAsync(kySoDeXuat.inputFile);
                 using var fs = new FileStream(Path.Combine("FileDeXuat", namePdf), FileMode.OpenOrCreate);
@@ -75,8 +75,7 @@ namespace Digital_Signatues.Services
             bool ret = false;
             try
             {
-                string namePdf = Path.GetFileNameWithoutExtension(kySoDeXuat.inputFile) + ".pdf";
-                string checkFile = "FileDeXuat\\" + namePdf;
+                string checkFile = kySoDeXuat.inputFile;
                 var update = await _context.kySoDeXuats
                     .Where(x => x.Ma_KySoDeXuat == kySoDeXuat.Ma_KySoDeXuat).FirstOrDefaultAsync();
                 update.Ten_DeXuat = kySoDeXuat.Ten_DeXuat;
@@ -84,6 +83,7 @@ namespace Digital_Signatues.Services
                 update.GhiChu = kySoDeXuat.GhiChu;
                 if(update.inputFile!=checkFile)
                 {
+                    string namePdf = Path.GetFileNameWithoutExtension(kySoDeXuat.inputFile).Replace("%", "") + ".pdf";
                     string remoteUri = kySoDeXuat.inputFile;
                     string fileName = Path.Combine("wwwroot\\FileDeXuat", namePdf);
                     using (var webpage = new WebClient())

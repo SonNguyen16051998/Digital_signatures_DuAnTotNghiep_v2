@@ -177,7 +177,7 @@ namespace Digital_Signatues.Services
                         .Where(x => x.Ma_NguoiDung == cauHinhFileChuKy.Ma_NguoiDung).FirstOrDefaultAsync();
                 if (!string.IsNullOrEmpty(cauHinhFileChuKy.FilePfx))
                 {
-                    string namePfx = Path.GetFileNameWithoutExtension(cauHinhFileChuKy.FilePfx) + ".pfx";
+                    string namePfx = Path.GetFileNameWithoutExtension(cauHinhFileChuKy.FilePfx).Replace("%","") + ".pfx";
                     string remoteUri = cauHinhFileChuKy.FilePfx;
                     string fileName = Path.Combine("wwwroot\\FilePfx", namePfx);
                     using (var webpage = new WebClient())
@@ -313,7 +313,7 @@ namespace Digital_Signatues.Services
         }
         public string GetChuKy(string chuky)
         {
-            string nameimg = Path.GetFileNameWithoutExtension(chuky) + ".png";
+            string nameimg = Path.GetFileNameWithoutExtension(chuky).Replace("%","") + ".png";
             string remoteUri = chuky;
             string fileName = Path.Combine("wwwroot\\ImgChuKy", nameimg);
             using (var webpage = new WebClient())
