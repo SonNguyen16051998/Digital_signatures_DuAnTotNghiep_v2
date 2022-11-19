@@ -192,7 +192,7 @@ namespace Digital_Signatues.Controllers
                                     return Ok(new
                                     {
                                         retCode = 0,
-                                        retText = "Ký thử thất bại",
+                                        retText = "Ký thử text thất bại",
                                         data = ""
                                     });
                                 }    
@@ -229,7 +229,7 @@ namespace Digital_Signatues.Controllers
                                     return Ok(new
                                     {
                                         retCode = 0,
-                                        retText = "Ký thử thất bại",
+                                        retText = "Ký thử img thất bại",
                                         data = ""
                                     });
                                 }
