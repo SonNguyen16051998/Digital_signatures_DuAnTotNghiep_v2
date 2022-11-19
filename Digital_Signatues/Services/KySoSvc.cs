@@ -13,6 +13,7 @@ namespace Digital_Signatues.Services
         Task<bool> CheckPassCode(CheckPasscode checkPasscode);
         Task<int> GetIndexBuocDuyet(int ma_buocduyet);
         Task<List<KySoBuocDuyet>> GetBuocDuyetHienTai();
+        Task<List<KySoBuocDuyet>> GetDaDuyet();
     }
     public class KySoSvc:IKySo 
     {
@@ -102,6 +103,10 @@ namespace Digital_Signatues.Services
                 } 
             }
             return buocduyets;
+        }
+        public async Task<List<KySoBuocDuyet>> GetDaDuyet()
+        {
+            return await _context.kySoBuocDuyets.Where(x => x.IsDaKy == true).ToListAsync();
         }
     }
 }

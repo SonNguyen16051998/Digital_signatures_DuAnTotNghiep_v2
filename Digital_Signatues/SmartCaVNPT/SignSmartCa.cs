@@ -534,10 +534,9 @@ namespace Digital_Signatues.SmartCaVNPT
                     var content = JsonConvert.DeserializeObject<GetTokenResponse>(HtmlResult);
                     return content.access_token;
                 }
-                catch (Exception ex)
+                catch 
                 {
-                    throw ex;
-
+                   
                 }
 
             }
