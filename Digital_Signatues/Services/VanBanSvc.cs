@@ -55,7 +55,7 @@ namespace Digital_Signatues.Services
                 if (!string.IsNullOrEmpty(postvanban.File))
                 {
                     string exten=getExten(postvanban.File);
-                    string name = Path.GetFileName(postvanban.File).Replace("%", "") + exten;
+                    string name = Path.GetFileNameWithoutExtension(postvanban.File).Replace("%", "") + exten;
                     string remoteUri = postvanban.File;
                     string fileName = Path.Combine("wwwroot\\FileVanBan", name);
                     using (var webpage = new WebClient())
