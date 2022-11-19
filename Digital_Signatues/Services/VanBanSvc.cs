@@ -54,7 +54,8 @@ namespace Digital_Signatues.Services
                 string file = "";
                 if (!string.IsNullOrEmpty(postvanban.File))
                 {
-                    string name = Path.GetFileName(postvanban.File).Replace("%", "");
+                    string exten=getExten(postvanban.File);
+                    string name = Path.GetFileName(postvanban.File).Replace("%", "") + exten;
                     string remoteUri = postvanban.File;
                     string fileName = Path.Combine("wwwroot\\FileVanBan", name);
                     using (var webpage = new WebClient())
@@ -92,7 +93,8 @@ namespace Digital_Signatues.Services
                 string tengoc=update.Ten_FileGoc;
                 if (!string.IsNullOrEmpty(putVanBan.File))
                 {
-                    string name = Path.GetFileName(putVanBan.File).Replace("%","");
+                    string exten = getExten(putVanBan.File);
+                    string name = Path.GetFileNameWithoutExtension(putVanBan.File).Replace("%","") + exten;
                     string filecheck = "FileVanBan\\" + name;
                     if(filecheck!= file)
                     {
@@ -124,6 +126,41 @@ namespace Digital_Signatues.Services
                 ret = 0;
             }
             return ret;
+        }
+        public string getExten(string file)
+        {
+            string exten = "";
+            bool pdf = file.Contains(".pdf");
+            bool docx = file.Contains(".docx");
+            bool doc = file.Contains(".doc");
+            bool png = file.Contains(".png");
+            bool jpeg = file.Contains(".jpeg");
+            bool jpg = file.Contains(".jpg");
+            if(pdf)
+            {
+                exten = ".pdf";
+            }
+            else if(docx)
+            {
+                exten = ".docx";
+            }
+            else if(doc)
+            {
+                exten = ".doc";
+            }
+            else if(png)
+            {
+                exten = ".png";
+            }
+            else if(jpeg)
+            {
+                exten = ".jpeg";
+            }
+            else
+            {
+                exten = ".fpg";
+            }
+            return exten;
         }
     }
 }
