@@ -236,25 +236,60 @@ namespace Digital_Signatues.Controllers
         {
             if(ModelState.IsValid)
             {
-                if(await _thongso.CauHinhChuKyAsync(fileChuKy))
+                if(fileChuKy.LoaiChuKy==true)
                 {
-                    var id = User.FindFirstValue("Id");
-                    var postlog = new PostLog()
+                    if(await _thongso.VerifyPassword(fileChuKy.FilePfx,fileChuKy.PasscodeFilePfx))
                     {
-                        Ten_Log = "Cấu hình file chữ ký thành công",
-                        Ma_NguoiThucHien = int.Parse(id),
-                        Ma_TaiKhoan=fileChuKy.Ma_NguoiDung,
-                        Ma_DeXuat=null
-                    };
-                    if (await _log.PostLogAsync(postlog) > 0)
-                    { }
+                        if (await _thongso.CauHinhChuKyAsync(fileChuKy))
+                        {
+                            var id = User.FindFirstValue("Id");
+                            var postlog = new PostLog()
+                            {
+                                Ten_Log = "Cấu hình file chữ ký thành công",
+                                Ma_NguoiThucHien = int.Parse(id),
+                                Ma_TaiKhoan = fileChuKy.Ma_NguoiDung,
+                                Ma_DeXuat = null
+                            };
+                            if (await _log.PostLogAsync(postlog) > 0)
+                            { }
+                            return Ok(new
+                            {
+                                retCode = 1,
+                                retText = "Cấu hình file chữ kí người dùng thành công",
+                                data = await _thongso.GetThongSoNguoiDungAsync(fileChuKy.Ma_NguoiDung)
+                            });
+                        }
+                    }
                     return Ok(new
                     {
-                        retCode = 1,
-                        retText = "Cấu hình file chữ kí người dùng thành công",
-                        data = await _thongso.GetThongSoNguoiDungAsync(fileChuKy.Ma_NguoiDung)
+                        retCode = 0,
+                        retText = "Passcode file PFX không chính xác",
+                        data = ""
                     });
                 }
+                else
+                {
+                    if (await _thongso.CauHinhChuKyAsync(fileChuKy))
+                    {
+                        var id = User.FindFirstValue("Id");
+                        var postlog = new PostLog()
+                        {
+                            Ten_Log = "Cấu hình file chữ ký thành công",
+                            Ma_NguoiThucHien = int.Parse(id),
+                            Ma_TaiKhoan = fileChuKy.Ma_NguoiDung,
+                            Ma_DeXuat = null
+                        };
+                        if (await _log.PostLogAsync(postlog) > 0)
+                        { }
+                        return Ok(new
+                        {
+                            retCode = 1,
+                            retText = "Cấu hình file chữ kí người dùng thành công",
+                            data = await _thongso.GetThongSoNguoiDungAsync(fileChuKy.Ma_NguoiDung)
+                        });
+                    }
+                }
+               
             }
             return Ok(new
             {

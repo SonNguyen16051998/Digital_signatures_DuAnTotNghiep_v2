@@ -7,6 +7,9 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Digital_Signatues.Services
@@ -26,6 +29,7 @@ namespace Digital_Signatues.Services
         Task<List<NguoiDung>> GetNguoiDuyetsAsync();//danh sach nguoi dung co quyen duyet ki so
         Task<bool> CheckPasscode(int ma_nguoidung, string passcode);
         Task<List<KySoThongSo>> GetAllNguoiDungDuocKyAsync();//lấy toàn bộ người dùng có quyền được kí
+        Task<bool> VerifyPassword(string filepfx, string password);
     }
     public class KySoThongSoSvc:IKySoThongSo
     {
@@ -323,5 +327,51 @@ namespace Digital_Signatues.Services
             string hinhanh = "ImgChuKy\\" + nameimg;
             return hinhanh;
         }
+        public async Task<bool> VerifyPassword(string filepfx, string password)
+        {
+            try
+            {
+                string namePfx = Path.GetFileNameWithoutExtension(filepfx).Replace("%", "") + ".pfx";
+                string remoteUri = filepfx;
+                string fileName = Path.Combine("wwwroot\\FilePfx", namePfx);
+           
+               /* using (var webpage = new WebClient())
+                {
+                    webpage.DownloadFileAsync(new System.Uri(remoteUri), fileName);
+                    
+                }*/
+                try
+                {
+                    var webpage = new WebClient();
+                    await webpage.DownloadFileTaskAsync(new System.Uri(remoteUri), fileName);
+                }
+                catch
+                {
+
+                }
+                finally
+                {
+                    byte[]  data = File.ReadAllBytes("wwwroot\\FilePfx\\"+namePfx);
+                    var certificate = new X509Certificate2(data, password);
+                }
+                // ReSharper disable once UnusedVariable
+                
+            }
+            catch (CryptographicException ex)
+            {
+                if ((ex.HResult & 0xFFFF) == 0x56)
+                {
+                    return false;
+                };
+
+                throw;
+            }
+
+            return true;
+        }
+       /* public async Task<string> down(string filepfx, string password)
+        {
+
+        }*/
     }
 }
