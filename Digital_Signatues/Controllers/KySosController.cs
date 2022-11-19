@@ -327,10 +327,11 @@ namespace Digital_Signatues.Controllers
                     }
                     string fontPath = Path.Combine(_environment.WebRootPath, "Font", "ARIALUNI.TTF");
                     
-                    Certicate myCert = new Certicate(thongso.FilePfx, thongso.PasscodeFilePfx);
-                    PDFSigner pdfs = new PDFSigner();
+                    
                     if(thongso.LoaiChuKy)
                     {
+                        Certicate myCert = new Certicate(thongso.FilePfx, thongso.PasscodeFilePfx);
+                        PDFSigner pdfs = new PDFSigner();
                         if (System.IO.File.Exists(inputNewFile))
                         {
                             pdfs = new PDFSigner(inputNewFile, outputFile, myCert, fontPath);
