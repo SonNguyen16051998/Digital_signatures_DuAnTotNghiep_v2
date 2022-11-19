@@ -75,13 +75,12 @@ namespace Digital_Signatues.Services
             bool ret = false;
             try
             {
-                string checkFile = kySoDeXuat.inputFile;
                 var update = await _context.kySoDeXuats
                     .Where(x => x.Ma_KySoDeXuat == kySoDeXuat.Ma_KySoDeXuat).FirstOrDefaultAsync();
                 update.Ten_DeXuat = kySoDeXuat.Ten_DeXuat;
                 update.LoaiVanBan = kySoDeXuat.LoaiVanBan;
                 update.GhiChu = kySoDeXuat.GhiChu;
-                if(update.inputFile!=checkFile)
+                if(!string.IsNullOrEmpty(kySoDeXuat.inputFile))
                 {
                     string namePdf = Path.GetFileNameWithoutExtension(kySoDeXuat.inputFile).Replace("%", "") + ".pdf";
                     string remoteUri = kySoDeXuat.inputFile;
@@ -90,7 +89,7 @@ namespace Digital_Signatues.Services
                     {
                         webpage.DownloadFileAsync(new System.Uri(remoteUri, System.UriKind.Absolute), fileName);
                     }
-                    update.inputFile = checkFile;
+                    update.inputFile = "FileDeXuat\\" + namePdf;
                     update.Ten_FileGoc = kySoDeXuat.Ten_FileGoc;
                 }
                 _context.kySoDeXuats.Update(update);

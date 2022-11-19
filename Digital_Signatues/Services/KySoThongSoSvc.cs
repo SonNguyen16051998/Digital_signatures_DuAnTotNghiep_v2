@@ -103,10 +103,10 @@ namespace Digital_Signatues.Services
             int ret = 0;
             try
             {
-                string hinh1 = null, hinh2 = null, hinh3 = null;
+                
                 var capnhatthongso = await _context.KySoThongSos
                     .Where(x => x.Ma_NguoiDung == PutThongSo.Ma_NguoiDung).FirstOrDefaultAsync();
-                
+                string hinh1 = capnhatthongso.Hinh1, hinh2 = capnhatthongso.Hinh2, hinh3 = capnhatthongso.Hinh3;
                 if (!string.IsNullOrEmpty(PutThongSo.Hinh1))
                 {
                     string name = Path.GetFileNameWithoutExtension(PutThongSo.Hinh1) + ".png";
