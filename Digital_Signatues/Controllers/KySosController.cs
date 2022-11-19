@@ -52,10 +52,10 @@ namespace Digital_Signatues.Controllers
                 string namepdf = Path.GetFileNameWithoutExtension(signs.inputFile).Replace("%","") + ".pdf";
                 string remoteUri = signs.inputFile;
                 string filePath ="wwwroot\\FileDeXuat\\" + namepdf;
-                /*using (var webpage = new WebClient())
+                using (var webpage = new WebClient())
                 {
                     await webpage.DownloadFileTaskAsync(new System.Uri(remoteUri, System.UriKind.Absolute), filePath);
-                }*/
+                }
                 string fileName = "";
                 var thongso = await _thongso.GetThongSoNguoiDungAsync(signs.Id_NguoiDung);
                 if(string.IsNullOrEmpty(thongso.FilePfx) && string.IsNullOrEmpty(thongso.Client_ID))
