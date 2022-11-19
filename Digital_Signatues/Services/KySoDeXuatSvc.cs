@@ -48,7 +48,7 @@ namespace Digital_Signatues.Services
                 string fileName = Path.Combine("wwwroot\\FileDeXuat", namePdf);
                 using (var webpage = new WebClient())
                 {
-                    webpage.DownloadFileAsync(new System.Uri(remoteUri,System.UriKind.Absolute), fileName);
+                    await webpage.DownloadFileTaskAsync(new System.Uri(remoteUri,System.UriKind.Absolute), fileName);
                 }
                 var postdexuat = new KySoDeXuat()
                 {
@@ -87,7 +87,7 @@ namespace Digital_Signatues.Services
                     string fileName = Path.Combine("wwwroot\\FileDeXuat", namePdf);
                     using (var webpage = new WebClient())
                     {
-                        webpage.DownloadFileAsync(new System.Uri(remoteUri, System.UriKind.Absolute), fileName);
+                        await webpage.DownloadFileTaskAsync(new System.Uri(remoteUri, System.UriKind.Absolute), fileName);
                     }
                     update.inputFile = "FileDeXuat\\" + namePdf;
                     update.Ten_FileGoc = kySoDeXuat.Ten_FileGoc;

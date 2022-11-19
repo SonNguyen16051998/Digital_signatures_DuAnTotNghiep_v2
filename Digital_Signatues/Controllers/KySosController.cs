@@ -54,7 +54,7 @@ namespace Digital_Signatues.Controllers
                 string filePath ="wwwroot\\FileDeXuat" + namepdf;
                 using (var webpage = new WebClient())
                 {
-                    webpage.DownloadFileAsync(new System.Uri(remoteUri, System.UriKind.Absolute), filePath);
+                    await webpage.DownloadFileTaskAsync(new System.Uri(remoteUri, System.UriKind.Absolute), filePath);
                 }
                 string fileName = "";
                 var thongso = await _thongso.GetThongSoNguoiDungAsync(signs.Id_NguoiDung);

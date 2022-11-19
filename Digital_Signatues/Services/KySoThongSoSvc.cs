@@ -46,15 +46,15 @@ namespace Digital_Signatues.Services
                 string hinh1 = null, hinh2 = null, hinh3 = null;
                 if(!string.IsNullOrEmpty(PostKySoThongSo.Hinh1))
                 {
-                    hinh1 = GetChuKy(PostKySoThongSo.Hinh1);
+                    hinh1 = await GetChuKy(PostKySoThongSo.Hinh1);
                 }
                 if (!string.IsNullOrEmpty(PostKySoThongSo.Hinh2))
                 {
-                    hinh2 = GetChuKy(PostKySoThongSo.Hinh2);
+                    hinh2 = await GetChuKy(PostKySoThongSo.Hinh2);
                 }
                 if (!string.IsNullOrEmpty(PostKySoThongSo.Hinh3))
                 {
-                    hinh3 = GetChuKy(PostKySoThongSo.Hinh3);
+                    hinh3 = await GetChuKy(PostKySoThongSo.Hinh3);
                 }
                 var thongso = new KySoThongSo()
                 {
@@ -117,7 +117,7 @@ namespace Digital_Signatues.Services
                     string check = "ImgChuKy\\" + name;
                     if(capnhatthongso.Hinh1!=check)
                     {
-                        hinh1 = GetChuKy(PutThongSo.Hinh1);
+                        hinh1 = await GetChuKy(PutThongSo.Hinh1);
                     }
                 }
                 if (!string.IsNullOrEmpty(PutThongSo.Hinh2))
@@ -126,7 +126,7 @@ namespace Digital_Signatues.Services
                     string check = "ImgChuKy\\" + name;
                     if (capnhatthongso.Hinh2 != check)
                     {
-                        hinh2 = GetChuKy(PutThongSo.Hinh2);
+                        hinh2 = await GetChuKy(PutThongSo.Hinh2);
                     }
                 }
                 if (!string.IsNullOrEmpty(PutThongSo.Hinh3))
@@ -135,7 +135,7 @@ namespace Digital_Signatues.Services
                     string check = "ImgChuKy\\" + name;
                     if (capnhatthongso.Hinh3 != check)
                     {
-                        hinh3 = GetChuKy(PutThongSo.Hinh3);
+                        hinh3 =await  GetChuKy(PutThongSo.Hinh3);
                     }
                 }
                 capnhatthongso.Hinh1 = hinh1;
@@ -315,14 +315,14 @@ namespace Digital_Signatues.Services
             }
             return ret;
         }
-        public string GetChuKy(string chuky)
+        public async Task<string> GetChuKy(string chuky)
         {
             string nameimg = Path.GetFileNameWithoutExtension(chuky).Replace("%","") + ".png";
             string remoteUri = chuky;
             string fileName = Path.Combine("wwwroot\\ImgChuKy", nameimg);
             using (var webpage = new WebClient())
             {
-                webpage.DownloadFileAsync(new System.Uri(remoteUri, System.UriKind.Absolute), fileName);
+               await webpage.DownloadFileTaskAsync(new System.Uri(remoteUri, System.UriKind.Absolute), fileName);
             }
             string hinhanh = "ImgChuKy\\" + nameimg;
             return hinhanh;
