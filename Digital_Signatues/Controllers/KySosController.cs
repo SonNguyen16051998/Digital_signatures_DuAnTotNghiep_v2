@@ -497,5 +497,18 @@ namespace Digital_Signatues.Controllers
                 data = ""
             });
         }
+        /// <summary>
+        /// lấy ký số đã duyệt
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IActionResult> GetDaDuyet()
+        {
+            return Ok(new
+            {
+                retCode = 1,
+                retText = "Lấy ký số đã duyệt thành công",
+                data = await _kyso.GetDaDuyet()
+            });
+        }
     }
 }
