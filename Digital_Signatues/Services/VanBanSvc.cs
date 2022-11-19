@@ -54,7 +54,7 @@ namespace Digital_Signatues.Services
                 string file = "";
                 if (!string.IsNullOrEmpty(postvanban.File))
                 {
-                    string name = Path.GetFileName(postvanban.File);
+                    string name = Path.GetFileName(postvanban.File).Replace("%", "");
                     string remoteUri = postvanban.File;
                     string fileName = Path.Combine("wwwroot\\FileVanBan", name);
                     using (var webpage = new WebClient())
@@ -69,6 +69,7 @@ namespace Digital_Signatues.Services
                     LoaiVanBan=postvanban.LoaiVanBan,
                     NgayTao=System.DateTime.Now,
                     File=file,
+                    Ten_FileGoc=postvanban.Ten_FileGoc,
                     Ma_NguoiTao=postvanban.Ma_NguoiTao 
                 };
                 await _context.VanBans.AddAsync(add);
@@ -88,9 +89,10 @@ namespace Digital_Signatues.Services
             {
                 var update = await GetVanBanAsync(putVanBan.Ma_VanBan);
                 string file = update.File;
+                string tengoc=update.Ten_FileGoc;
                 if (!string.IsNullOrEmpty(putVanBan.File))
                 {
-                    string name = Path.GetFileName(putVanBan.File);
+                    string name = Path.GetFileName(putVanBan.File).Replace("%","");
                     string filecheck = "FileVanBan\\" + name;
                     if(filecheck!= file)
                     {
@@ -101,6 +103,7 @@ namespace Digital_Signatues.Services
                             webpage.DownloadFileAsync(new System.Uri(remoteUri, System.UriKind.Absolute), fileName);
                         }
                         file = "FileVanBan\\" + name;
+                        tengoc = putVanBan.Ten_FileGoc;
                     }
                 }
                 
@@ -109,6 +112,7 @@ namespace Digital_Signatues.Services
                     update.LoaiVanBan = putVanBan.LoaiVanBan;
                     update.ChuDe=putVanBan.ChuDe;
                     update.File=file;
+                    update.Ten_FileGoc = tengoc;
                     update.Ma_NguoiTao = putVanBan.Ma_NguoiTao;
                     _context.VanBans.Update(update);
                     await _context.SaveChangesAsync();

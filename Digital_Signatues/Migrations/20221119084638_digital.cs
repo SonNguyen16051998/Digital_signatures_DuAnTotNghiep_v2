@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Digital_Signatues.Migrations
 {
-    public partial class digital_signatures : Migration
+    public partial class digital : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -306,6 +306,7 @@ namespace Digital_Signatues.Migrations
                     LoaiVanBan = table.Column<string>(type: "nvarchar(255)", nullable: false),
                     NgayTao = table.Column<DateTime>(type: "date", nullable: false),
                     File = table.Column<string>(type: "nvarchar(255)", nullable: false),
+                    Ten_FileGoc = table.Column<string>(type: "nvarchar(255)", nullable: false),
                     Ma_NguoiTao = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>

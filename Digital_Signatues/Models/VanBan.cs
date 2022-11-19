@@ -16,6 +16,8 @@ namespace Digital_Signatues.Models
         public DateTime NgayTao { get; set; }
         [Required, Column(TypeName = "nvarchar(255)")]
         public string File { get; set; }
+        [Required, Column(TypeName = "nvarchar(255)")]
+        public string Ten_FileGoc { get; set; }
         [ForeignKey("NguoiDung")]
         public int Ma_NguoiTao { get; set; }
         public NguoiDung NguoiDung { get; set; }
