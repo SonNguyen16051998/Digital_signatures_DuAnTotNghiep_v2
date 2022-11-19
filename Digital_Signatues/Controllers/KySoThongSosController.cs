@@ -269,27 +269,36 @@ namespace Digital_Signatues.Controllers
                 }
                 else
                 {
-                    if (await _thongso.CauHinhChuKyAsync(fileChuKy))
+                    if(SmartCaVNPT.SignSmartCa.CheckAccount(fileChuKy.Client_ID, fileChuKy.Client_Secret, fileChuKy.UID, fileChuKy.PasswordSmartSign))
                     {
-                        var id = User.FindFirstValue("Id");
-                        var postlog = new PostLog()
+                        if (await _thongso.CauHinhChuKyAsync(fileChuKy))
                         {
-                            Ten_Log = "Cấu hình file chữ ký thành công",
-                            Ma_NguoiThucHien = int.Parse(id),
-                            Ma_TaiKhoan = fileChuKy.Ma_NguoiDung,
-                            Ma_DeXuat = null
-                        };
-                        if (await _log.PostLogAsync(postlog) > 0)
-                        { }
-                        return Ok(new
-                        {
-                            retCode = 1,
-                            retText = "Cấu hình file chữ kí người dùng thành công",
-                            data = await _thongso.GetThongSoNguoiDungAsync(fileChuKy.Ma_NguoiDung)
-                        });
+                            var id = User.FindFirstValue("Id");
+                            var postlog = new PostLog()
+                            {
+                                Ten_Log = "Cấu hình file chữ ký thành công",
+                                Ma_NguoiThucHien = int.Parse(id),
+                                Ma_TaiKhoan = fileChuKy.Ma_NguoiDung,
+                                Ma_DeXuat = null
+                            };
+                            if (await _log.PostLogAsync(postlog) > 0)
+                            { }
+                            return Ok(new
+                            {
+                                retCode = 1,
+                                retText = "Cấu hình file chữ kí người dùng thành công",
+                                data = await _thongso.GetThongSoNguoiDungAsync(fileChuKy.Ma_NguoiDung)
+                            });
+                        }
                     }
+                    
                 }
-               
+                return Ok(new
+                {
+                    retCode = 0,
+                    retText = "Thông tin tài khoản không chính xác. Vui lòng kiểm tra lại",
+                    data = ""
+                });
             }
             return Ok(new
             {

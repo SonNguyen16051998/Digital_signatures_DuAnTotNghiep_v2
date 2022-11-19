@@ -51,7 +51,7 @@ namespace Digital_Signatues.Controllers
             {
                 string namepdf = Path.GetFileNameWithoutExtension(signs.inputFile).Replace("%","") + ".pdf";
                 string remoteUri = signs.inputFile;
-                string filePath ="wwwroot\\FileDeXuat" + namepdf;
+                string filePath ="wwwroot\\FileDeXuat\\" + namepdf;
                 using (var webpage = new WebClient())
                 {
                     await webpage.DownloadFileTaskAsync(new System.Uri(remoteUri, System.UriKind.Absolute), filePath);
@@ -167,7 +167,7 @@ namespace Digital_Signatues.Controllers
                                 thongso.Client_Secret,
                                 thongso.UID,
                                 thongso.PasswordSmartSign,
-                                filePath,
+                                "FileDeXuat\\"+namepdf,
                                 outputFile,
                                 "",
                                 item.textSign,
@@ -204,7 +204,7 @@ namespace Digital_Signatues.Controllers
                                 thongso.Client_Secret,
                                 thongso.UID,
                                 thongso.PasswordSmartSign,
-                                filePath,
+                                "FileDeXuat\\" + namepdf,
                                 outputFile,
                                 item.imgSign,
                                 "",
@@ -338,7 +338,7 @@ namespace Digital_Signatues.Controllers
                         }
                         else
                         {
-                            pdfs = new PDFSigner(Path.Combine(signs.inputFile), outputFile, myCert, fontPath);
+                            pdfs = new PDFSigner(Path.Combine("wwwroot",signs.inputFile), outputFile, myCert, fontPath);
                         }
                         if (!string.IsNullOrEmpty(item.textSign))
                         {
@@ -385,7 +385,7 @@ namespace Digital_Signatues.Controllers
                                 return Ok(new
                                 {
                                     retCode = 0,
-                                    retText = "Ký thất bại",
+                                    retText = "Ký text thất bại",
                                     data = ""
                                 });
                             }
@@ -413,7 +413,7 @@ namespace Digital_Signatues.Controllers
                                 return Ok(new
                                 {
                                     retCode = 0,
-                                    retText = "Ký thất bại",
+                                    retText = "Ký img thất bại",
                                     data = ""
                                 });
                             }
@@ -443,7 +443,6 @@ namespace Digital_Signatues.Controllers
                 }
                 else
                 {
-                    System.IO.File.Delete(fileReturn);
                     return Ok(new
                     {
                         retCode = 0,

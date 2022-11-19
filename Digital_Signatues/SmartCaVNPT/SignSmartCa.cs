@@ -37,7 +37,7 @@ namespace Digital_Signatues.SmartCaVNPT
             String credential = _getCredentialSmartCA(access_token, "https://gwsca.vnpt.vn/csc/credentials/list");
             String certBase64 = _getAccoutSmartCACert(access_token, "https://gwsca.vnpt.vn/csc/credentials/info", credential);
       
-            string _pdfInput = inputFile;
+            string _pdfInput = Path.Combine("wwwroot",inputFile);
             string _pdfSignedPath = outputFile;
 
             byte[] unsignData = null;
@@ -588,6 +588,16 @@ namespace Digital_Signatues.SmartCaVNPT
 
             }
             return null;
+        }
+        public static bool CheckAccount(string client_ID, string client_Secret, string UID, string Pass)
+        {
+            String client_id = client_ID;
+            String client_secret = client_Secret;
+            var customerEmail = UID;// "03090010105"; 
+            var customerPass = Pass;// "123456aA@";
+
+            var access_token = _getAccessToken("https://gwsca.vnpt.vn/auth/token", customerEmail, customerPass, client_id, client_secret);
+            return access_token != null ? true : false;
         }
 
         public class subAndSerial
