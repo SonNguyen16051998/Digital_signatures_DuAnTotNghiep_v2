@@ -48,11 +48,10 @@ namespace Digital_Signatues.Helpers
         public void SignImage(string sigReason, string sigContact, string sigLocation, string imageFilePath,
          Rectangle rectangle, int page, string fieldName, bool flagKyHethong)
         {
-            string inputfile = Path.Combine("wwwroot", this.InputPDF);
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             IExternalSignature externalSignature = new PrivateKeySignature(this.Cert.Akp, DigestAlgorithms.SHA256);
             PdfReader.unethicalreading = true;
-            PdfReader reader = new PdfReader(inputfile);
+            PdfReader reader = new PdfReader(this.InputPDF);
             var output = new FileStream(this.OutputPDF, FileMode.Create, FileAccess.Write);
             PdfStamper Stamper = PdfStamper.CreateSignature(reader, output, '\0', null, true);
 

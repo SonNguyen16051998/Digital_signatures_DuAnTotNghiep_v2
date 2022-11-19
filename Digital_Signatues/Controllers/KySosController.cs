@@ -49,9 +49,9 @@ namespace Digital_Signatues.Controllers
             var id = User.FindFirstValue("Id");
             if (ModelState.IsValid)
             {
-                string namepdf = Path.GetFileNameWithoutExtension(signs.inputFile) + ".pdf";
+                string namepdf = Path.GetFileNameWithoutExtension(signs.inputFile).Replace("%","") + ".pdf";
                 string remoteUri = signs.inputFile;
-                string filePath = Path.Combine("wwwroot\\FileDeXuat", namepdf);
+                string filePath ="wwwroot\\FileDeXuat" + namepdf;
                 using (var webpage = new WebClient())
                 {
                     webpage.DownloadFileAsync(new System.Uri(remoteUri, System.UriKind.Absolute), filePath);
