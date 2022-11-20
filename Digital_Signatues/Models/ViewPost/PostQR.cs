@@ -13,5 +13,7 @@ namespace Digital_Signatues.Models.ViewPost
         public float Top { get; set; }
         [Required]
         public string inputFile { get; set; }
+        [Required]
+        public int MucDo { get; set; }
     }
 }

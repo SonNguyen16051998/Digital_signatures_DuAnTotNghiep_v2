@@ -66,6 +66,16 @@ namespace Digital_Signatues.Controllers
             {
                 if (await _QR.AddQRCodeToPdf(qrcode))
                 {
+                    var ma_user = User.FindFirstValue("Id");
+                    var postlog = new PostLog()
+                    {
+                        Ten_Log = "Gắn mã QR thành công",
+                        Ma_NguoiThucHien = int.Parse(ma_user),
+                        Ma_TaiKhoan = null,
+                        Ma_DeXuat = qrcode.Ma_DeXuat
+                    };
+                    if (await _log.PostLogAsync(postlog) > 0)
+                    { System.IO.File.Delete(System.IO.Path.Combine("wwwroot", qrcode.inputFile)); }
                     return Ok(new
                     {
                         retCode = 1,

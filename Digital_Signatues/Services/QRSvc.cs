@@ -30,15 +30,21 @@ namespace Digital_Signatues.Services
         }
         public async Task<List<MaQR>> GetMaQRsAsync()
         {
-            return await _context.MaQRs.OrderByDescending(x=>x.NgayTao).ToListAsync();
+            return await _context.MaQRs.OrderByDescending(x=>x.NgayTao)
+                .Include(x => x.KySoDeXuat)
+                .ToListAsync();
         }
         public async Task<MaQR> GetMaQRbyDeXuatAsync(int madexuat)
         {
-            return await _context.MaQRs.Where(x=>x.Ma_DeXuat==madexuat).FirstOrDefaultAsync();
+            return await _context.MaQRs.Where(x=>x.Ma_DeXuat==madexuat)
+                .Include(x => x.KySoDeXuat)
+                .FirstOrDefaultAsync();
         }
         public async Task<MaQR> GetMaQRbyMaSoAsync(string maso)
         {
-            return await _context.MaQRs.Where(x => x.MaSo == maso).FirstOrDefaultAsync();
+            return await _context.MaQRs.Where(x => x.MaSo == maso)
+                .Include(x=>x.KySoDeXuat)
+                .FirstOrDefaultAsync();
         }
         public async Task<string> AddMaQRAsync(PostQR postMaQR)
         {
@@ -54,9 +60,9 @@ namespace Digital_Signatues.Services
                 {
                     Ma_DeXuat = postMaQR.Ma_DeXuat,
                     MaSo = maso,
-                    NoiDung = "https://localhost:44388/" + maso,
+                    NoiDung = "https://www.chukysoflames.com/FILE-DA-KY/" + maso,
                     NgayTao=System.DateTime.Now,
-                    MucDo=1,
+                    MucDo=postMaQR.MucDo,
                     Ma_NguoiTao=postMaQR.Ma_NguoiTao
                 };
                 await _context.MaQRs.AddAsync(add);
@@ -95,7 +101,7 @@ namespace Digital_Signatues.Services
                 string masoQR=await AddMaQRAsync(qr);
                 var qrcode = await _context.MaQRs.Where(x => x.MaSo == masoQR).FirstOrDefaultAsync();
                 string name = Path.GetFileNameWithoutExtension(Path.Combine(qr.inputFile));
-                string outputFile = Path.Combine("FileDeXuat",name+"_QR.pdf");
+                string outputFile = Path.Combine("wwwroot\\FileDeXuat",name+"_QR.pdf");
                 QRCodeGenerator _qrcode = new QRCodeGenerator();
                 QRCodeData _qrcodedata = _qrcode.CreateQrCode(qrcode.NoiDung, QRCodeGenerator.ECCLevel.Q);
                 QRCode qRCode = new QRCode(_qrcodedata);
@@ -116,9 +122,10 @@ namespace Digital_Signatues.Services
                 pdfContentByte.AddImage(PatientSign);
                 stamper.Close();
                 reader.Close();
-                dexuat.inputFile = outputFile;
+                dexuat.inputFile = "FileDeXuat\\"+ name + "_QR.pdf";
                 _context.kySoDeXuats.Update(dexuat);
                 await _context.SaveChangesAsync();
+                
                 ret = true;
             }
             catch { ret = false; }
