@@ -105,7 +105,7 @@ namespace Digital_Signatues.Services
                 QRCodeGenerator _qrcode = new QRCodeGenerator();
                 QRCodeData _qrcodedata = _qrcode.CreateQrCode(qrcode.NoiDung, QRCodeGenerator.ECCLevel.Q);
                 QRCode qRCode = new QRCode(_qrcodedata);
-                System.Drawing.Bitmap qrcodeImage = qRCode.GetGraphic(3, System.Drawing.Color.Black, System.Drawing.Color.White, false);
+                System.Drawing.Bitmap qrcodeImage = qRCode.GetGraphic(2, System.Drawing.Color.Black, System.Drawing.Color.White, false);
                 byte[] imgQR;
                 using (MemoryStream ms = new MemoryStream())
                 {
@@ -113,7 +113,7 @@ namespace Digital_Signatues.Services
                     imgQR = ms.ToArray();
                 }
                 PdfReader.unethicalreading = true;
-                PdfReader reader = new PdfReader(qr.inputFile);
+                PdfReader reader = new PdfReader(Path.Combine("wwwroot",qr.inputFile));
                 var output = new FileStream(outputFile, FileMode.Create, FileAccess.Write);
                 var stamper = new PdfStamper(reader, output);
                 var pdfContentByte = stamper.GetOverContent(qr.Page);
