@@ -15,5 +15,7 @@ namespace Digital_Signatues.Models.ViewPost
         public string inputFile { get; set; }
         [Required]
         public int MucDo { get; set; }
+        [Required]
+        public int Page { get; set; }
     }
 }

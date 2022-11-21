@@ -116,7 +116,7 @@ namespace Digital_Signatues.Services
                 PdfReader reader = new PdfReader(qr.inputFile);
                 var output = new FileStream(outputFile, FileMode.Create, FileAccess.Write);
                 var stamper = new PdfStamper(reader, output);
-                var pdfContentByte = stamper.GetOverContent(1);
+                var pdfContentByte = stamper.GetOverContent(qr.Page);
                 iTextSharp.text.Image PatientSign = iTextSharp.text.Image.GetInstance(imgQR); // image from database
                 PatientSign.SetAbsolutePosition(qr.Left, qr.Top);
                 pdfContentByte.AddImage(PatientSign);

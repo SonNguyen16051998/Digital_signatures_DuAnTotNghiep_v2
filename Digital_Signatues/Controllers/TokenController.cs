@@ -20,8 +20,10 @@ namespace Digital_Signatues.Controllers
         private IConfiguration _config;
         private readonly INguoiDung _nguoiDung;
         private readonly ILog _log;
-        public TokenController(IConfiguration config, INguoiDung nguoiDung, ILog log)
+        private readonly INguoiDung_Role _nguoidung_role;
+        public TokenController(IConfiguration config, INguoiDung nguoiDung, ILog log,INguoiDung_Role nguoiDung_Role)
         {
+            _nguoidung_role = nguoiDung_Role;
             _log = log;
             _config = config;
             _nguoiDung = nguoiDung;
@@ -39,6 +41,7 @@ namespace Digital_Signatues.Controllers
                 var user = await _nguoiDung.LoginAsync(login);
                 if (user != null)
                 {
+                    var nguoidung_quyen = await _nguoidung_role.GetNguoiDung_QuyensAsync(user.Ma_NguoiDung);
                     var Claims = new[]
                     {
                         new Claim(JwtRegisteredClaimNames.Sub,_config["Jwt:Subject"]),
