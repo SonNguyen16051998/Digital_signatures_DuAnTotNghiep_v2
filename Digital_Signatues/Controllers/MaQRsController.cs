@@ -14,7 +14,6 @@ namespace Digital_Signatues.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
     public class MaQRsController : Controller
     {
         private readonly ILog _log;
@@ -46,7 +45,7 @@ namespace Digital_Signatues.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetQRCodeAsync(string id)
         {
-            return Ok(new
+            return Ok(new   
             {
                 retCode = 1,
                 retText = "Lấy chi tiết QRCode thành công",
@@ -59,6 +58,7 @@ namespace Digital_Signatues.Controllers
         /// <param name="qrcode"></param>
         /// <returns></returns>
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> AddQRCode([FromBody] PostQR qrcode)
         {
 
@@ -97,6 +97,7 @@ namespace Digital_Signatues.Controllers
         /// <param name="qrcode"></param>
         /// <returns></returns>
         [HttpPut]
+        [Authorize]
         public async Task<IActionResult> PutQRCode([FromBody]PutQR qrcode)
         {
             if(ModelState.IsValid)
