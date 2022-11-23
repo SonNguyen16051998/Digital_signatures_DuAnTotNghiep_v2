@@ -25,6 +25,7 @@ namespace Digital_Signatues.Models
         public bool IsDaDuyet { get; set; }//đã ký xong hay chưa
         public int CurentOrder { get; set; }//bước duyệt hiện tại
         public string FileDaKy { get; set; }//file ky cuoi cung
+        public bool isQR { get; set; }//da gan ma QR
         public ICollection<KySoBuocDuyet> KySoBuocDuyets { get; set; }
         public NguoiDung NguoiDung { get; set;}
         public ICollection<Message> Messages { get; set; }

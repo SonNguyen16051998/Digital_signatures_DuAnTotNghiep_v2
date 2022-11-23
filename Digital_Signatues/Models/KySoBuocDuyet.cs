@@ -23,5 +23,6 @@ namespace Digital_Signatues.Models
         public bool IsTuChoi { get; set; }
         public NguoiDung NguoiDung { get; set; }
         public KySoDeXuat KySoDeXuat { get; set; }
+        public KySoVungKy KySoVungKy { get; set; }
     }
 }

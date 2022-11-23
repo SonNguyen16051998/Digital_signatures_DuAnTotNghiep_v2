@@ -61,6 +61,7 @@ namespace Digital_Signatues.Services
                     NgayDeXuat = System.DateTime.Now,
                     FileDaKy=null,
                     TrangThai = false,
+                    isQR=false,
                     CurentOrder = 0
                 };
                 await _context.kySoDeXuats.AddAsync(postdexuat);
