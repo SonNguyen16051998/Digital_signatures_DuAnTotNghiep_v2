@@ -8,7 +8,7 @@ namespace Digital_Signatues.Models
         [Key]
         [ForeignKey("KySoBuocDuyet")]
         public int Ma_BuocDuyet { get; set; }
-        [Column(TypeName ="nvarchar(5000)")]
+        [Column(TypeName ="nvarchar(4000)")]
         /*public string img_Sign { get; set; }
         public int page { get; set; }
         public int x { get; set; }

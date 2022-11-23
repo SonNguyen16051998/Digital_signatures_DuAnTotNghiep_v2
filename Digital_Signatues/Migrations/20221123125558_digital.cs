@@ -150,7 +150,8 @@ namespace Digital_Signatues.Migrations
                     TrangThai = table.Column<bool>(type: "bit", nullable: false),
                     IsDaDuyet = table.Column<bool>(type: "bit", nullable: false),
                     CurentOrder = table.Column<int>(type: "int", nullable: false),
-                    FileDaKy = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    FileDaKy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    isQR = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -409,6 +410,31 @@ namespace Digital_Signatues.Migrations
                         onDelete: ReferentialAction.NoAction);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "kySoVungKys",
+                columns: table => new
+                {
+                    Ma_BuocDuyet = table.Column<int>(type: "int", nullable: false),
+                    Json = table.Column<string>(type: "nvarchar(4000)", nullable: true),
+                    Ma_NguoiTao = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_kySoVungKys", x => x.Ma_BuocDuyet);
+                    table.ForeignKey(
+                        name: "FK_kySoVungKys_kySoBuocDuyets_Ma_BuocDuyet",
+                        column: x => x.Ma_BuocDuyet,
+                        principalTable: "kySoBuocDuyets",
+                        principalColumn: "Ma_BuocDuyet",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_kySoVungKys_NguoiDungs_Ma_NguoiTao",
+                        column: x => x.Ma_NguoiTao,
+                        principalTable: "NguoiDungs",
+                        principalColumn: "Ma_NguoiDung",
+                        onDelete: ReferentialAction.NoAction);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_kySoBuocDuyets_Ma_KySoDeXuat",
                 table: "kySoBuocDuyets",
@@ -423,6 +449,11 @@ namespace Digital_Signatues.Migrations
                 name: "IX_kySoDeXuats_Ma_NguoiDeXuat",
                 table: "kySoDeXuats",
                 column: "Ma_NguoiDeXuat");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_kySoVungKys_Ma_NguoiTao",
+                table: "kySoVungKys",
+                column: "Ma_NguoiTao");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Logs_Ma_NguoiThucHien",
@@ -484,10 +515,10 @@ namespace Digital_Signatues.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "kySoBuocDuyets");
+                name: "KySoThongSos");
 
             migrationBuilder.DropTable(
-                name: "KySoThongSos");
+                name: "kySoVungKys");
 
             migrationBuilder.DropTable(
                 name: "Logs");
@@ -517,7 +548,7 @@ namespace Digital_Signatues.Migrations
                 name: "VanBans");
 
             migrationBuilder.DropTable(
-                name: "kySoDeXuats");
+                name: "kySoBuocDuyets");
 
             migrationBuilder.DropTable(
                 name: "PhongBans");
@@ -527,6 +558,9 @@ namespace Digital_Signatues.Migrations
 
             migrationBuilder.DropTable(
                 name: "Roles");
+
+            migrationBuilder.DropTable(
+                name: "kySoDeXuats");
 
             migrationBuilder.DropTable(
                 name: "NguoiDungs");

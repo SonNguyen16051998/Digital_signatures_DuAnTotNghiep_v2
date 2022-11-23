@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Digital_Signatues.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20221119084638_digital")]
+    [Migration("20221123125558_digital")]
     partial class digital
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -127,6 +127,9 @@ namespace Digital_Signatues.Migrations
                     b.Property<string>("inputFile")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("isQR")
+                        .HasColumnType("bit");
+
                     b.HasKey("Ma_KySoDeXuat");
 
                     b.HasIndex("Ma_NguoiDeXuat");
@@ -200,6 +203,24 @@ namespace Digital_Signatues.Migrations
                     b.HasKey("Ma_NguoiDung");
 
                     b.ToTable("KySoThongSos");
+                });
+
+            modelBuilder.Entity("Digital_Signatues.Models.KySoVungKy", b =>
+                {
+                    b.Property<int>("Ma_BuocDuyet")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Json")
+                        .HasColumnType("nvarchar(5000)");
+
+                    b.Property<int>("Ma_NguoiTao")
+                        .HasColumnType("int");
+
+                    b.HasKey("Ma_BuocDuyet");
+
+                    b.HasIndex("Ma_NguoiTao");
+
+                    b.ToTable("kySoVungKys");
                 });
 
             modelBuilder.Entity("Digital_Signatues.Models.Log", b =>
@@ -573,6 +594,25 @@ namespace Digital_Signatues.Migrations
                     b.Navigation("NguoiDung");
                 });
 
+            modelBuilder.Entity("Digital_Signatues.Models.KySoVungKy", b =>
+                {
+                    b.HasOne("Digital_Signatues.Models.KySoBuocDuyet", "KySoBuocDuyet")
+                        .WithOne("KySoVungKy")
+                        .HasForeignKey("Digital_Signatues.Models.KySoVungKy", "Ma_BuocDuyet")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Digital_Signatues.Models.NguoiDung", "NguoiDung")
+                        .WithMany("kySoVungKys")
+                        .HasForeignKey("Ma_NguoiTao")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("KySoBuocDuyet");
+
+                    b.Navigation("NguoiDung");
+                });
+
             modelBuilder.Entity("Digital_Signatues.Models.Log", b =>
                 {
                     b.HasOne("Digital_Signatues.Models.NguoiDung", "NguoiDung")
@@ -725,6 +765,11 @@ namespace Digital_Signatues.Migrations
                     b.Navigation("NguoiDung");
                 });
 
+            modelBuilder.Entity("Digital_Signatues.Models.KySoBuocDuyet", b =>
+                {
+                    b.Navigation("KySoVungKy");
+                });
+
             modelBuilder.Entity("Digital_Signatues.Models.KySoDeXuat", b =>
                 {
                     b.Navigation("KySoBuocDuyets");
@@ -741,6 +786,8 @@ namespace Digital_Signatues.Migrations
                     b.Navigation("kySoDeXuats");
 
                     b.Navigation("KySoNguoiDung");
+
+                    b.Navigation("kySoVungKys");
 
                     b.Navigation("Logs");
 
