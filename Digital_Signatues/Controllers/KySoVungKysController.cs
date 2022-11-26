@@ -98,5 +98,20 @@ namespace Digital_Signatues.Controllers
                 data = false
             });
         }
+        /// <summary>
+        /// lấy danh sách vùng ký bằng mã đề xuất
+        /// </summary>
+        /// <param name="id">mã đề xuất</param>
+        /// <returns></returns>
+        [HttpGet("{id}"),ActionName("vungkydexuat")]
+        public async Task<IActionResult> GetVungKyByDeXuatAsync(int id)
+        {
+            return Ok(new
+            {
+                retCode = 1,
+                retText = "Lấy vùng ký thành công",
+                data = await _vungky.isVungKyByDeXuatAsync(id)
+            });
+        }
     }
 }

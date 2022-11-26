@@ -1,4 +1,5 @@
 ﻿using Digital_Signatues.Models;
+using Digital_Signatues.Models.ViewModel;
 using Digital_Signatues.Models.ViewPost;
 using Digital_Signatues.Models.ViewPut;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +17,7 @@ namespace Digital_Signatues.Services
         Task<bool> PostVungKyAsync(PostVungKy postVungKy);
         /*Task<int> PutVungKyAsync();*/
         Task<KySoVungKy> GetVungKyAsync(int ma_buocduyet);
+        Task<List<GetVungKy>> isVungKyByDeXuatAsync(int ma_dexuat);
     }
     public class VungKySvc:IVungKy
     {
@@ -53,7 +55,23 @@ namespace Digital_Signatues.Services
         }
         public async Task<KySoVungKy> GetVungKyAsync(int ma_buocduyet)
         {
-            return await _context.kySoVungKys.Where(x=>x.Ma_BuocDuyet==ma_buocduyet).FirstOrDefaultAsync();
+            return await _context.kySoVungKys.Where(x=>x.Ma_BuocDuyet==ma_buocduyet)
+                .Include(x=>x.KySoBuocDuyet)
+                .FirstOrDefaultAsync();
+        }
+        public async Task<List<GetVungKy>> isVungKyByDeXuatAsync(int ma_dexuat)
+        {
+            var listbuocduyet = await _context.kySoBuocDuyets.Where(x => x.Ma_KySoDeXuat == ma_dexuat).ToListAsync();
+            var vungky = new List<GetVungKy>();
+            foreach (var item in listbuocduyet)
+            {
+                var ksvungky=await _context.kySoVungKys.Where(x=>x.Ma_BuocDuyet==item.Ma_BuocDuyet).FirstOrDefaultAsync();
+                if(ksvungky!=null)
+                {
+                    vungky.Add(new GetVungKy { Ma_BuocDuyet=ksvungky.Ma_BuocDuyet,json=ksvungky.Json });
+                }
+            }
+            return vungky;
         }
     }
 }
