@@ -40,7 +40,7 @@ namespace Digital_Signatues.Services
                     {
                         Ma_BuocDuyet = item.Ma_BuocDuyet,
                         Json = item.Json,
-                        Ma_NguoiTao = item.Ma_NguoiTao
+                        Ma_NguoiTao = postVungKy.Ma_NguoiTao
                     };
                     await _context.AddAsync(add);
                     await _context.SaveChangesAsync();

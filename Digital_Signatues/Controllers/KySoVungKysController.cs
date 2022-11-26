@@ -71,6 +71,11 @@ namespace Digital_Signatues.Controllers
                 data = false
             });
         }
+        /// <summary>
+        /// chuẩn bị vùng ký
+        /// </summary>
+        /// <param name="post"></param>
+        /// <returns></returns>
         [HttpPost,ActionName("vungky")]
         public async Task<IActionResult> PostVungKyAsync([FromBody] PostVungKy post)
         {
