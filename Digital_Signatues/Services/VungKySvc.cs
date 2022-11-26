@@ -38,6 +38,12 @@ namespace Digital_Signatues.Services
             {
                 foreach (var item in postVungKy.VungKies)
                 {
+                    var check = await _context.kySoVungKys.Where(x => x.Ma_BuocDuyet == item.Ma_BuocDuyet).FirstOrDefaultAsync();
+                    if(check!=null)
+                    {
+                        _context.kySoVungKys.Remove(check);
+                        await _context.SaveChangesAsync();
+                    }
                     var add = new KySoVungKy()
                     {
                         Ma_BuocDuyet = item.Ma_BuocDuyet,
