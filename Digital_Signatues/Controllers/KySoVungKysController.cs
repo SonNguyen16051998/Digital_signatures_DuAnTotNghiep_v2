@@ -19,8 +19,10 @@ namespace Digital_Signatues.Controllers
     public class KySoVungKysController : Controller
     {
         private readonly IVungKy _vungky;
-        public KySoVungKysController(IVungKy vungky)
+        private readonly ILog _log;
+        public KySoVungKysController(IVungKy vungky,ILog log)
         {
+            _log=log;
             _vungky = vungky;
         }
         /// <summary>
@@ -83,7 +85,16 @@ namespace Digital_Signatues.Controllers
             {
                 if(await _vungky.PostVungKyAsync(post))
                 {
-                    return Ok(new
+                    /*var ma_user = User.FindFirstValue("Id");
+                    var postlog = new PostLog()
+                    {
+                        Ten_Log = "Gắn mã QR thành công",
+                        Ma_NguoiThucHien = int.Parse(ma_user),
+                        Ma_TaiKhoan = null,
+                        Ma_DeXuat = qrcode.Ma_DeXuat
+                    };
+                    if (await _log.PostLogAsync(postlog) > 0) { }*/
+                        return Ok(new
                     {
                         retCode = 1,
                         retText = "Thêm vùng ký thành công",

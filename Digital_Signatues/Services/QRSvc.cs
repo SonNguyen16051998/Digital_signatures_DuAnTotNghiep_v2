@@ -20,6 +20,7 @@ namespace Digital_Signatues.Services
         Task<string> AddMaQRAsync(PostQR postMaQR);
         Task<string> UpdateMaQRAsync(PutQR putMaQR);
         Task<bool> AddQRCodeToPdf(PostQR qr);
+        Task<bool> checkAccountAsync(string email);
     }
     public class QRSvc:IQR
     {
@@ -136,6 +137,11 @@ namespace Digital_Signatues.Services
             }
             catch { ret = false; }
             return ret;
+        }
+        public async Task<bool> checkAccountAsync(string email)
+        {
+            var check = await _context.NguoiDungs.Where(x => x.Email == email).FirstOrDefaultAsync();
+            return check == null ? false : true;
         }
     }
 }

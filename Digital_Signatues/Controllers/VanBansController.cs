@@ -55,6 +55,7 @@ namespace Digital_Signatues.Controllers
         /// <param name="postvanban"></param>
         /// <returns></returns>
         [HttpPost]
+        [Authorize(Policy = "vanban")]
         public async Task<IActionResult> PostVanBanAsync([FromBody] PostVanBan postvanban)
         {
             if (ModelState.IsValid)
@@ -83,6 +84,7 @@ namespace Digital_Signatues.Controllers
         /// <param name="putVanBan"></param>
         /// <returns></returns>
         [HttpPut]
+        [Authorize(Policy = "vanban")]
         public async Task<IActionResult> PutVanBanAsync([FromBody] PutVanBan putVanBan)
         {
             if (ModelState.IsValid)
@@ -111,6 +113,7 @@ namespace Digital_Signatues.Controllers
         /// <param name="id">mã văn bản</param>
         /// <returns></returns>
         [HttpDelete("{id}")]
+        [Authorize(Policy = "vanban")]
         public async Task<IActionResult> DeleteVanBanAsync(int id)
         {
             if (await _vanban.DeleteVanBanAsync(id))

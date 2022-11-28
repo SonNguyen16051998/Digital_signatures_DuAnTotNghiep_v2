@@ -9,7 +9,7 @@ namespace Digital_Signatues.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
-    [Authorize]
+    [Authorize(Policy = "hethong")]
     public class Role_QuyensController : Controller
     {
         private readonly IRole_Quyen _role_Quyen;

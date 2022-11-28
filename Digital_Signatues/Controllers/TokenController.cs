@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -42,20 +43,22 @@ namespace Digital_Signatues.Controllers
                 if (user != null)
                 {
                     var nguoidung_quyen = await _nguoidung_role.GetNguoiDung_QuyensAsync(user.Ma_NguoiDung);
-                    var Claims = new[]
+                    var Claims = new List<Claim>();
+                    Claims.Add(new Claim(JwtRegisteredClaimNames.Sub, _config["Jwt:Subject"]));
+                    Claims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
+                    Claims.Add(new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()));
+                    Claims.Add(new Claim("Id", user.Ma_NguoiDung.ToString()));
+                    Claims.Add(new Claim("Name", user.HoTen));
+                    Claims.Add(new Claim("Email", user.Email));
+                    Claims.Add(new Claim("Address", user.DiaChi));
+                    foreach(var item in (await ClaimRole(user.Ma_NguoiDung)))
                     {
-                        new Claim(JwtRegisteredClaimNames.Sub,_config["Jwt:Subject"]),
-                        new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
-                        new Claim(JwtRegisteredClaimNames.Iat,DateTime.UtcNow.ToString()),
-                        new Claim("Id",user.Ma_NguoiDung.ToString()),
-                        new Claim("Name",user.HoTen),
-                        new Claim("Email",user.Email),
-                        new Claim("Address",user.DiaChi),
-                    };
+                        Claims.Add(item);
+                    }
                     var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
                     var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
                     var token = new JwtSecurityToken(_config["Jwt:Issuer"],
-                        _config["Jwt:Audience"], Claims, expires: DateTime.UtcNow.AddYears(1),
+                        _config["Jwt:Audience"], Claims.ToArray(), expires: DateTime.UtcNow.AddYears(1),
                         signingCredentials: signIn);
                     ViewToken viewToken = new ViewToken() { Token = new JwtSecurityTokenHandler().WriteToken(token), NguoiDung = user };
                     return Ok(new
@@ -128,6 +131,44 @@ namespace Digital_Signatues.Controllers
                 retText = "Lấy lịch sử đề xuất thành công",
                 data = await _log.GetAllLogDeXuatAsync(id)
             });
+        }
+
+        private async Task<List<Claim>> ClaimRole(int ma_nguoidung)
+        {
+            List<Claim> claim=new List<Claim>();
+            var ng_quyen=await _nguoidung_role.GetNguoiDung_QuyensAsync(ma_nguoidung);
+            foreach(var item in ng_quyen)
+            {
+                if(item.Ma_Quyen==1)
+                {
+                    claim.Add(new Claim(ClaimTypes.Role, "quantrihethong"));
+                }
+                else if(item.Ma_Quyen==2)
+                {
+                    claim.Add(new Claim(ClaimTypes.Role, "quantrikiso"));
+                }
+                else if (item.Ma_Quyen == 3)
+                {
+                    claim.Add(new Claim(ClaimTypes.Role, "dexuatkiso"));
+                }
+                else if (item.Ma_Quyen == 4)
+                {
+                    claim.Add(new Claim(ClaimTypes.Role, "duyetkiso"));
+                }
+                else if (item.Ma_Quyen == 5)
+                {
+                    claim.Add(new Claim(ClaimTypes.Role, "xemdanhsachkiso"));
+                }
+                else if (item.Ma_Quyen == 6)
+                {
+                    claim.Add(new Claim(ClaimTypes.Role, "quantrivanban"));
+                }
+                else if (item.Ma_Quyen == 8)
+                {
+                    claim.Add(new Claim(ClaimTypes.Role, "quantriqr"));
+                }
+            }
+            return claim;
         }
     }
 }

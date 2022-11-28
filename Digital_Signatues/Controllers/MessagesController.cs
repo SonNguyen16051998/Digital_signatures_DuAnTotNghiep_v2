@@ -19,8 +19,10 @@ namespace Digital_Signatues.Controllers
     {
         private readonly IMessage _message;
         private readonly ILog _log;
-        public MessagesController(IMessage message,ILog log)
+        private readonly IQR _qr;
+        public MessagesController(IMessage message,ILog log,IQR qr)
         {
+            _qr=qr;
             _log = log;
             _message = message;
         }
@@ -114,6 +116,31 @@ namespace Digital_Signatues.Controllers
                 retCode = 0,
                 retText = "Xóa message thất bại",
                 data = await _message.GetMessagesAsync(id)
+            });
+        }
+        /// <summary>
+        /// kiểm tra tài khoản có hợp lệ hay không
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet,ActionName("checkaccount")]
+        public async Task<IActionResult> CheckAccount()
+        {
+            string email= User.FindFirstValue("Email");
+            bool role = User.IsInRole("quantrihethong");
+            if(await _qr.checkAccountAsync(email))
+            {
+                return Ok(new
+                {
+                    retCode = 1,
+                    retText = "Người dùng hợp lệ",
+                    data = role
+                });
+            }
+            return Ok(new
+            {
+                retCode = 0,
+                retText = "Người dùng không hợp lệ",
+                data = ""
             });
         }
     }

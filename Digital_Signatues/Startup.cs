@@ -116,6 +116,24 @@ namespace Digital_Signatues
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
             });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("hethong", policy =>
+                      policy.RequireRole("quantrihethong"));
+                options.AddPolicy("kiso", policy =>
+                      policy.RequireRole("quantrikiso"));
+                options.AddPolicy("dexuat", policy =>
+                      policy.RequireRole("dexuatkiso"));
+                options.AddPolicy("duyetkiso", policy =>
+                      policy.RequireRole("duyetkiso"));
+                options.AddPolicy("xemdanhsachkiso", policy =>
+                      policy.RequireRole("xemdanhsachkiso"));
+                options.AddPolicy("vanban", policy =>
+                      policy.RequireRole("quantrivanban"));
+                options.AddPolicy("qr", policy =>
+                      policy.RequireRole("quantriqr"));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

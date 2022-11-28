@@ -61,7 +61,7 @@ namespace Digital_Signatues.Controllers
         [Authorize]
         public async Task<IActionResult> AddQRCode([FromBody] PostQR qrcode)
         {
-
+            
             if (ModelState.IsValid)
             {
                 if (await _QR.AddQRCodeToPdf(qrcode))

@@ -83,6 +83,10 @@ namespace Digital_Signatues.Services
                 update.GhiChu = kySoDeXuat.GhiChu;
                 if(!string.IsNullOrEmpty(kySoDeXuat.inputFile))
                 {
+                    if (File.Exists(Path.Combine("wwwroot", update.inputFile)))
+                    {
+                        File.Delete(Path.Combine("wwwroot", update.inputFile));
+                    }
                     string namePdf = Path.GetFileNameWithoutExtension(kySoDeXuat.inputFile).Replace("%", "") + ".pdf";
                     string remoteUri = kySoDeXuat.inputFile;
                     string fileName = Path.Combine("wwwroot\\FileDeXuat", namePdf);
@@ -106,16 +110,20 @@ namespace Digital_Signatues.Services
             bool ret = false;
             try
             {
-                var delete = await _context.kySoDeXuats
-                .Where(x => x.Ma_KySoDeXuat == ma_dexuat).FirstOrDefaultAsync();
-                _context.kySoDeXuats.Remove(delete);
-                await _context.SaveChangesAsync();
                 var buocduyet = await _context.kySoBuocDuyets
                     .Where(x => x.Ma_KySoDeXuat == ma_dexuat).ToListAsync();
-                foreach(var item in buocduyet)
+                foreach (var item in buocduyet)
                 {
                     _context.kySoBuocDuyets.Remove(item);
                 }
+                await _context.SaveChangesAsync();
+                var delete = await _context.kySoDeXuats
+                .Where(x => x.Ma_KySoDeXuat == ma_dexuat).FirstOrDefaultAsync();
+                if(File.Exists(Path.Combine("wwwroot",delete.inputFile)))
+                {
+                    File.Delete(Path.Combine("wwwroot", delete.inputFile));
+                }
+                _context.kySoDeXuats.Remove(delete);
                 await _context.SaveChangesAsync();
                 ret = true;
             }

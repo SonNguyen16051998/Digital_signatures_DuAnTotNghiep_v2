@@ -15,7 +15,7 @@ namespace Digital_Signatues.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
-    [Authorize]
+    [Authorize(Policy = "hethong")]
     public class NguoiDungsController : Controller
     {
         private readonly ILog _log;

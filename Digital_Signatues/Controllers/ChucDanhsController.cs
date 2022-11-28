@@ -14,7 +14,7 @@ namespace Digital_Signatues.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
-    [Authorize]
+    [Authorize(Policy ="hethong")]
     public class ChucDanhsController : Controller
     {
         private readonly IChucDanh _chucDanh;

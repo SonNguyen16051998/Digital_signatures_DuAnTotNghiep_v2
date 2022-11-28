@@ -12,7 +12,7 @@ namespace Digital_Signatues.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
-    [Authorize]
+    [Authorize(Policy = "hethong")]
     public class NguoiDung_RolesController : Controller
     {
         private readonly INguoiDung_Role _nguoiDung_Role;
