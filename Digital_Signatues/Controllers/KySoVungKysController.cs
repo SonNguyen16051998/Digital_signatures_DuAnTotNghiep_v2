@@ -79,6 +79,7 @@ namespace Digital_Signatues.Controllers
         /// <param name="post"></param>
         /// <returns></returns>
         [HttpPost,ActionName("vungky")]
+        [Authorize(Policy = "dexuat")]
         public async Task<IActionResult> PostVungKyAsync([FromBody] PostVungKy post)
         {
             if(ModelState.IsValid)

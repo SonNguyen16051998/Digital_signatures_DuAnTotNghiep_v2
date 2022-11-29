@@ -280,6 +280,7 @@ namespace Digital_Signatues.Controllers
         /// <param name="signs"></param>
         /// <returns></returns>
         [HttpPost,ActionName("sign")]
+        [Authorize(Policy = "duyetkiso")]
         public async Task<IActionResult> SignBuocDuyet([FromBody] PostSignBuocDuyet signs)
         {
             if (ModelState.IsValid)

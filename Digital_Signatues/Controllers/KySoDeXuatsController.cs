@@ -72,6 +72,7 @@ namespace Digital_Signatues.Controllers
         /// <param name="dexuat"></param>
         /// <returns></returns>
         [HttpPost, ActionName("dexuat")]
+        [Authorize(Policy = "dexuat")]
         public async Task<IActionResult> PostDeXuatAsync([FromBody] PostKySoDeXuat dexuat)
         {
             if (ModelState.IsValid)
@@ -110,6 +111,7 @@ namespace Digital_Signatues.Controllers
         /// <param name="kySoDeXuat"></param>
         /// <returns></returns>
         [HttpPut, ActionName("dexuat")]
+        [Authorize(Policy = "dexuat")]
         public async Task<IActionResult> PutDeXuatAsync([FromBody] PutKySoDeXuat kySoDeXuat)
         {
             if (ModelState.IsValid)
@@ -160,6 +162,7 @@ namespace Digital_Signatues.Controllers
         /// <param name="id">mã đề xuất</param>
         /// <returns></returns>
         [HttpDelete("{id}"), ActionName("dexuat")]
+        [Authorize(Policy = "dexuat")]
         public async Task<IActionResult> DeleteDeXuatAsync(int id)
         {
             if(await _dexuat.CheckDeleteAsync(id))
@@ -187,6 +190,7 @@ namespace Digital_Signatues.Controllers
         /// <param name="id">mã đề xuất</param>
         /// <returns></returns>
         [HttpPut("{id}"),ActionName("chuyenduyet")]
+        [Authorize(Policy = "dexuat")]
         public async Task<IActionResult> ChuyenDuyetAsync(int id)
         {
             if(await _dexuat.ChuyenDuyetAsync(id))

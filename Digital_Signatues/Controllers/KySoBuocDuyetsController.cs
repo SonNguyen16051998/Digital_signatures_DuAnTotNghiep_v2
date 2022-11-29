@@ -58,6 +58,7 @@ namespace Digital_Signatues.Controllers
         /// <param name="buocDuyet"></param>
         /// <returns></returns>
         [HttpPost, ActionName("buocduyet")]
+        [Authorize(Policy ="dexuat")]
         public async Task<IActionResult> PostBuocDuyetAsync([FromBody] PostKySoBuocDuyet buocDuyet)
         {
             if (ModelState.IsValid)
@@ -105,6 +106,7 @@ namespace Digital_Signatues.Controllers
         /// <param name="buocDuyet"></param>
         /// <returns></returns>
         [HttpPut, ActionName("buocduyet")]
+        [Authorize(Policy = "dexuat")]
         public async Task<IActionResult> PutBuocDuyetAsync([FromBody] PutKySoBuocDuyet buocDuyet)
         {
             if (ModelState.IsValid)
@@ -153,6 +155,7 @@ namespace Digital_Signatues.Controllers
         /// <param name="id">mã bước duyệt</param>
         /// <returns></returns>
         [HttpDelete("{id}"), ActionName("buocduyet")]
+        [Authorize(Policy = "dexuat")]
         public async Task<IActionResult> DeleteBuocDuyetAsync(int id)
         {
             var buocduyet = await _buocduyet.GetBuocDuyetAsync(id);
@@ -191,6 +194,7 @@ namespace Digital_Signatues.Controllers
         /// <param name="id">mã bước duyệt</param>
         /// <returns></returns>
         [HttpPut("{id}"),ActionName("tuchoi")]
+        [Authorize(Policy = "duyetkiso")]
         public async Task<IActionResult> TuChoiDuyetAsync(int id)
         {
             if(await _buocduyet.TuChoiDuyetAsync(id))

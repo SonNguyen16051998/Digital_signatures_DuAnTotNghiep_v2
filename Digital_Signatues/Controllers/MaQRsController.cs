@@ -58,7 +58,7 @@ namespace Digital_Signatues.Controllers
         /// <param name="qrcode"></param>
         /// <returns></returns>
         [HttpPost]
-        [Authorize]
+        [Authorize(Policy = "qr1")]
         public async Task<IActionResult> AddQRCode([FromBody] PostQR qrcode)
         {
             
@@ -97,7 +97,7 @@ namespace Digital_Signatues.Controllers
         /// <param name="qrcode"></param>
         /// <returns></returns>
         [HttpPut]
-        [Authorize]
+        [Authorize(Policy = "qr1")]
         public async Task<IActionResult> PutQRCode([FromBody]PutQR qrcode)
         {
             if(ModelState.IsValid)

@@ -60,6 +60,7 @@ namespace Digital_Signatues.Controllers
         /// <param name="thongSo"></param>
         /// <returns></returns>
         [HttpPost, ActionName("thongso")]
+        [Authorize(Policy = "kiso")]
         public async Task<IActionResult> PostThongSoAsync([FromBody]PostKySoThongSo thongSo)
         {
             if(ModelState.IsValid)
@@ -313,6 +314,7 @@ namespace Digital_Signatues.Controllers
         /// <param name="id">mã người dùng</param>
         /// <returns></returns>
         [HttpDelete("{id}"),ActionName("thongso")]
+        [Authorize(Policy = "kiso")]
         public async Task<IActionResult> DeleteThongSoAsync(int id)
         {
             var data = await _thongso.GetThongSoNguoiDungAsync(id);

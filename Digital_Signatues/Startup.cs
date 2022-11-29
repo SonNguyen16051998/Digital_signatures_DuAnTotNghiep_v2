@@ -133,6 +133,8 @@ namespace Digital_Signatues
                       policy.RequireRole("quantrivanban"));
                 options.AddPolicy("qr", policy =>
                       policy.RequireRole("quantriqr"));
+                options.AddPolicy("qr1", policy =>
+                     policy.RequireRole("quantriqr","dexuatkiso"));
             });
         }
 
