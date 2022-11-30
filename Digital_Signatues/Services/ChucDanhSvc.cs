@@ -137,7 +137,7 @@ namespace Digital_Signatues.Services
         }
         public async Task<bool> isCheckName(string name)
         {
-            var check=await _context.ChucDanhs.Where(x=>x.Ten_ChucDanh==name).FirstOrDefaultAsync();
+            var check=await _context.ChucDanhs.Where(x=>x.Ten_ChucDanh==name && x.IsDeleted==false).FirstOrDefaultAsync();
             return check!=null? false:true;
         }
     }

@@ -145,7 +145,7 @@ namespace Digital_Signatues.Services
         }
         public async Task<bool> isCheckTen(string ten)
         {
-            var check=await _context.Roles.Where(x=>x.Ten_Role==ten).FirstOrDefaultAsync();
+            var check=await _context.Roles.Where(x=>x.Ten_Role==ten && x.IsDeleted == false).FirstOrDefaultAsync();
             return check != null ? false : true;
         }
     }
