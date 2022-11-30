@@ -85,6 +85,7 @@ namespace Digital_Signatues.Controllers
         /// <param name="id">id của người dùng</param>
         /// <returns></returns>
         [HttpGet("{id}"),ActionName("nguoidungquyen")]
+        [AllowAnonymous]
         public async Task<List<NguoiDung_Quyen>> GetNguoiDungQuyensAsync(int id)//id người dùng
         {
             return await _nguoiDung_Role.GetNguoiDung_QuyensAsync(id);
