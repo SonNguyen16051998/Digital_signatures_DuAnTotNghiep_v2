@@ -36,22 +36,25 @@ namespace Digital_Signatues.Services
             bool ret = false;
             try
             {
-                foreach (var item in postVungKy.VungKies)
+                var delete = await _context.kySoVungKys.Where(x => x.Ma_KySoDeXuat == postVungKy.Ma_DeXuat).ToListAsync();
+                foreach (var item in delete)
                 {
-                    var check = await _context.kySoVungKys.Where(x => x.Ma_BuocDuyet == item.Ma_BuocDuyet).FirstOrDefaultAsync();
-                    if(check!=null)
+                    _context.kySoVungKys.Remove(item);
+                    await _context.SaveChangesAsync();
+                }
+                if(postVungKy.VungKies.Count>0)
+                {
+                    foreach (var item in postVungKy.VungKies)
                     {
-                        _context.kySoVungKys.Remove(check);
+                        var add = new KySoVungKy()
+                        {
+                            Ma_BuocDuyet = item.Ma_BuocDuyet,
+                            Json = item.Json,
+                            Ma_NguoiTao = postVungKy.Ma_NguoiTao
+                        };
+                        await _context.AddAsync(add);
                         await _context.SaveChangesAsync();
                     }
-                    var add = new KySoVungKy()
-                    {
-                        Ma_BuocDuyet = item.Ma_BuocDuyet,
-                        Json = item.Json,
-                        Ma_NguoiTao = postVungKy.Ma_NguoiTao
-                    };
-                    await _context.AddAsync(add);
-                    await _context.SaveChangesAsync();
                 }
                 ret = true;
             }
@@ -67,15 +70,11 @@ namespace Digital_Signatues.Services
         }
         public async Task<List<GetVungKy>> isVungKyByDeXuatAsync(int ma_dexuat)
         {
-            var listbuocduyet = await _context.kySoBuocDuyets.Where(x => x.Ma_KySoDeXuat == ma_dexuat).ToListAsync();
+            var listvungky = await _context.kySoVungKys.Where(x => x.Ma_KySoDeXuat == ma_dexuat).ToListAsync();
             var vungky = new List<GetVungKy>();
-            foreach (var item in listbuocduyet)
+            foreach (var item in listvungky)
             {
-                var ksvungky=await _context.kySoVungKys.Where(x=>x.Ma_BuocDuyet==item.Ma_BuocDuyet).FirstOrDefaultAsync();
-                if(ksvungky!=null)
-                {
-                    vungky.Add(new GetVungKy { Ma_BuocDuyet=ksvungky.Ma_BuocDuyet,json=ksvungky.Json });
-                }
+                vungky.Add(new GetVungKy { Ma_BuocDuyet = item.Ma_BuocDuyet, json = item.Json });
             }
             return vungky;
         }

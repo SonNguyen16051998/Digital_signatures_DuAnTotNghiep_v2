@@ -14,5 +14,6 @@ namespace Digital_Signatues.Models.ViewPost
         public string Ten_FileGoc { get; set; }
         [Required]
         public int Ma_NguoiDeXuat { get; set; }
+        public bool isTaoVanBan { get; set; }
     }
 }

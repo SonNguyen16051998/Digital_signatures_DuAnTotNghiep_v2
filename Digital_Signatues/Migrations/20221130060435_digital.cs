@@ -151,7 +151,8 @@ namespace Digital_Signatues.Migrations
                     IsDaDuyet = table.Column<bool>(type: "bit", nullable: false),
                     CurentOrder = table.Column<int>(type: "int", nullable: false),
                     FileDaKy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    isQR = table.Column<bool>(type: "bit", nullable: false)
+                    isQR = table.Column<bool>(type: "bit", nullable: false),
+                    isTaoVanBan = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -416,7 +417,8 @@ namespace Digital_Signatues.Migrations
                 {
                     Ma_BuocDuyet = table.Column<int>(type: "int", nullable: false),
                     Json = table.Column<string>(type: "nvarchar(4000)", nullable: true),
-                    Ma_NguoiTao = table.Column<int>(type: "int", nullable: false)
+                    Ma_NguoiTao = table.Column<int>(type: "int", nullable: false),
+                    Ma_KySoDeXuat = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -427,6 +429,12 @@ namespace Digital_Signatues.Migrations
                         principalTable: "kySoBuocDuyets",
                         principalColumn: "Ma_BuocDuyet",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_kySoVungKys_kySoDeXuats_Ma_KySoDeXuat",
+                        column: x => x.Ma_KySoDeXuat,
+                        principalTable: "kySoDeXuats",
+                        principalColumn: "Ma_KySoDeXuat",
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
                         name: "FK_kySoVungKys_NguoiDungs_Ma_NguoiTao",
                         column: x => x.Ma_NguoiTao,
@@ -449,6 +457,11 @@ namespace Digital_Signatues.Migrations
                 name: "IX_kySoDeXuats_Ma_NguoiDeXuat",
                 table: "kySoDeXuats",
                 column: "Ma_NguoiDeXuat");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_kySoVungKys_Ma_KySoDeXuat",
+                table: "kySoVungKys",
+                column: "Ma_KySoDeXuat");
 
             migrationBuilder.CreateIndex(
                 name: "IX_kySoVungKys_Ma_NguoiTao",

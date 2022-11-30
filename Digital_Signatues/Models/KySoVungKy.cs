@@ -16,7 +16,10 @@ namespace Digital_Signatues.Models
         public string Json { get; set; }
         [ForeignKey("NguoiDung")]
         public int Ma_NguoiTao { get; set; }
+        [ForeignKey("KySoDeXuat")]
+        public int Ma_KySoDeXuat { get; set; }
         public KySoBuocDuyet KySoBuocDuyet { set; get; }
         public NguoiDung NguoiDung { get; set; }
+        public KySoDeXuat KySoDeXuat { get; set; }
     }
 }

@@ -50,6 +50,19 @@ namespace Digital_Signatues.Services
                 {
                     kysodexuat.FileDaKy = filedaky;
                     kysodexuat.IsDaDuyet = true;
+                    if(kysodexuat.isTaoVanBan)
+                    {
+                        VanBan add = new VanBan()
+                        {
+                            ChuDe = "Văn bản xác nhận từ ban lãnh đạo",
+                            LoaiVanBan = kysodexuat.LoaiVanBan,
+                            NgayTao = System.DateTime.Now,
+                            File = filedaky,
+                            Ten_FileGoc = kysodexuat.Ten_FileGoc,
+                            Ma_NguoiTao = kysodexuat.Ma_NguoiDeXuat
+                        };
+                        await _context.VanBans.AddAsync(add);
+                    }
                 }
                 _context.kySoDeXuats.Update(kysodexuat);
                 await _context.SaveChangesAsync();

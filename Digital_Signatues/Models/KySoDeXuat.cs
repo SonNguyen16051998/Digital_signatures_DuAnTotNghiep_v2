@@ -26,9 +26,11 @@ namespace Digital_Signatues.Models
         public int CurentOrder { get; set; }//bước duyệt hiện tại
         public string FileDaKy { get; set; }//file ky cuoi cung
         public bool isQR { get; set; }//da gan ma QR
+        public bool isTaoVanBan { get; set; }//sau khi kys xong tu dong tao van ban 
         public ICollection<KySoBuocDuyet> KySoBuocDuyets { get; set; }
         public NguoiDung NguoiDung { get; set;}
         public ICollection<Message> Messages { get; set; }
         public MaQR MaQR { get; set; }
+        public ICollection<KySoVungKy> KySoVungKys { get; set; }
     }
 }

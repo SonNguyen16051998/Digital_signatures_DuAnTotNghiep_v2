@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Digital_Signatues.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20221123125558_digital")]
+    [Migration("20221130060435_digital")]
     partial class digital
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -130,6 +130,9 @@ namespace Digital_Signatues.Migrations
                     b.Property<bool>("isQR")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("isTaoVanBan")
+                        .HasColumnType("bit");
+
                     b.HasKey("Ma_KySoDeXuat");
 
                     b.HasIndex("Ma_NguoiDeXuat");
@@ -211,12 +214,17 @@ namespace Digital_Signatues.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Json")
-                        .HasColumnType("nvarchar(5000)");
+                        .HasColumnType("nvarchar(4000)");
+
+                    b.Property<int>("Ma_KySoDeXuat")
+                        .HasColumnType("int");
 
                     b.Property<int>("Ma_NguoiTao")
                         .HasColumnType("int");
 
                     b.HasKey("Ma_BuocDuyet");
+
+                    b.HasIndex("Ma_KySoDeXuat");
 
                     b.HasIndex("Ma_NguoiTao");
 
@@ -602,6 +610,12 @@ namespace Digital_Signatues.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Digital_Signatues.Models.KySoDeXuat", "KySoDeXuat")
+                        .WithMany("KySoVungKys")
+                        .HasForeignKey("Ma_KySoDeXuat")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Digital_Signatues.Models.NguoiDung", "NguoiDung")
                         .WithMany("kySoVungKys")
                         .HasForeignKey("Ma_NguoiTao")
@@ -609,6 +623,8 @@ namespace Digital_Signatues.Migrations
                         .IsRequired();
 
                     b.Navigation("KySoBuocDuyet");
+
+                    b.Navigation("KySoDeXuat");
 
                     b.Navigation("NguoiDung");
                 });
@@ -773,6 +789,8 @@ namespace Digital_Signatues.Migrations
             modelBuilder.Entity("Digital_Signatues.Models.KySoDeXuat", b =>
                 {
                     b.Navigation("KySoBuocDuyets");
+
+                    b.Navigation("KySoVungKys");
 
                     b.Navigation("MaQR");
 

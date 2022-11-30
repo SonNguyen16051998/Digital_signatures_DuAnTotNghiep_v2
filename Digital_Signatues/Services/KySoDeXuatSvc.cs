@@ -62,6 +62,7 @@ namespace Digital_Signatues.Services
                     FileDaKy=null,
                     TrangThai = false,
                     isQR=false,
+                    isTaoVanBan=kySoDeXuat.isTaoVanBan,
                     CurentOrder = 0
                 };
                 await _context.kySoDeXuats.AddAsync(postdexuat);
@@ -81,6 +82,7 @@ namespace Digital_Signatues.Services
                 update.Ten_DeXuat = kySoDeXuat.Ten_DeXuat;
                 update.LoaiVanBan = kySoDeXuat.LoaiVanBan;
                 update.GhiChu = kySoDeXuat.GhiChu;
+                update.isTaoVanBan = kySoDeXuat.isTaoVanBan;
                 if(!string.IsNullOrEmpty(kySoDeXuat.inputFile))
                 {
                     if (File.Exists(Path.Combine("wwwroot", update.inputFile)))

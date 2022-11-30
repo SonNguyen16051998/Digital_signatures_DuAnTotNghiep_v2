@@ -7,6 +7,7 @@
         public string LoaiVanBan { get; set; }
         public string GhiChu { get; set; }
         public string inputFile { get; set; }
-        public string Ten_FileGoc { get; set; } 
+        public string Ten_FileGoc { get; set; }
+        public bool isTaoVanBan { get; set; }
     }
 }
