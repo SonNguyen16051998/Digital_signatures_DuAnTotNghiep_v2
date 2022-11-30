@@ -228,7 +228,8 @@ namespace Digital_Signatues.Services
         {
             List<NguoiDung> nguoiDungs=new List<NguoiDung>();
             nguoiDungs = await _context.NguoiDungs
-                            .OrderBy(x=>x.ChucDanh.Order)
+                            .OrderBy(x=>x.ChucDanh.Order==0)
+                            .ThenBy(x=>x.ChucDanh.Order)
                             .Include(x=>x.ChucDanh)
                             .Include(x=>x.NguoiDung_PhongBan)
                             .ToListAsync();
