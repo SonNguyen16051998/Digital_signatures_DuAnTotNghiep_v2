@@ -15,7 +15,7 @@ namespace Digital_Signatues.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
-    [Authorize(Policy = "hethong")]
+    [Authorize]
     public class NguoiDungsController : Controller
     {
         private readonly ILog _log;
@@ -30,6 +30,7 @@ namespace Digital_Signatues.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet,ActionName("nguoidung")]
+        [Authorize(Policy = "hethong")]
         public async Task<IActionResult> GetNguoiDungsAsync() //lấy toàn bộ danh sách người dùng
         {
             return Ok(new
@@ -60,6 +61,7 @@ namespace Digital_Signatues.Controllers
         /// <param name="nguoiDung"></param>
         /// <returns></returns>
         [HttpPost,ActionName("register")]
+        [Authorize(Policy = "hethong")]
         public async Task<IActionResult> PostNguoiDungAsync([FromBody]PostNguoiDung nguoiDung)
         {
             
