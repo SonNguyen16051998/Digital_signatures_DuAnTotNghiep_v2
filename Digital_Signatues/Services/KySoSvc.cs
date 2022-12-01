@@ -54,14 +54,15 @@ namespace Digital_Signatues.Services
                     {
                         VanBan add = new VanBan()
                         {
-                            ChuDe = "Văn bản xác nhận từ ban lãnh đạo",
-                            LoaiVanBan = kysodexuat.LoaiVanBan,
+                            ChuDe = kysodexuat.Ten_DeXuat + ": đã có xác nhận từ ban lãnh đạo",
+                            LoaiVanBan = string.IsNullOrEmpty(kysodexuat.LoaiVanBan) ? "Xác nhận":kysodexuat.LoaiVanBan,
                             NgayTao = System.DateTime.Now,
                             File = filedaky,
                             Ten_FileGoc = kysodexuat.Ten_FileGoc,
                             Ma_NguoiTao = kysodexuat.Ma_NguoiDeXuat
                         };
                         await _context.VanBans.AddAsync(add);
+                        await _context.SaveChangesAsync();
                     }
                 }
                 _context.kySoDeXuats.Update(kysodexuat);

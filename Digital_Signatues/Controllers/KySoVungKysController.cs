@@ -86,16 +86,16 @@ namespace Digital_Signatues.Controllers
             {
                 if(await _vungky.PostVungKyAsync(post))
                 {
-                    /*var ma_user = User.FindFirstValue("Id");
+                    var ma_user = User.FindFirstValue("Id");
                     var postlog = new PostLog()
                     {
-                        Ten_Log = "Gắn mã QR thành công",
+                        Ten_Log = "Đã chuẩn bị vùng ký",
                         Ma_NguoiThucHien = int.Parse(ma_user),
                         Ma_TaiKhoan = null,
-                        Ma_DeXuat = qrcode.Ma_DeXuat
+                        Ma_DeXuat = post.Ma_DeXuat
                     };
-                    if (await _log.PostLogAsync(postlog) > 0) { }*/
-                        return Ok(new
+                    if (await _log.PostLogAsync(postlog) > 0) { }
+                    return Ok(new
                     {
                         retCode = 1,
                         retText = "Thêm vùng ký thành công",
