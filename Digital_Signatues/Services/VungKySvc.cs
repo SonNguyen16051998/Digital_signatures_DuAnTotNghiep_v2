@@ -48,6 +48,7 @@ namespace Digital_Signatues.Services
                     {
                         var add = new KySoVungKy()
                         {
+                            Ma_KySoDeXuat=postVungKy.Ma_DeXuat,
                             Ma_BuocDuyet = item.Ma_BuocDuyet,
                             Json = item.Json,
                             Ma_NguoiTao = postVungKy.Ma_NguoiTao
