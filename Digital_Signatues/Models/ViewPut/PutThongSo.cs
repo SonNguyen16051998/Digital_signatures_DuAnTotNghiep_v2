@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Digital_Signatues.Models.ViewPut
@@ -12,5 +13,7 @@ namespace Digital_Signatues.Models.ViewPut
         public string LyDoMacDinh { get; set; }
         public int Ma_NguoiCapNhatCuoi { get; set; }
         public bool TrangThai { get; set; }
+        [Column(TypeName = "date")]
+        public DateTime NgayChuKyHetHan { get; set; }
     }
 }

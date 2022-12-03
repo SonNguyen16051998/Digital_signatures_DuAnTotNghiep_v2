@@ -145,6 +145,7 @@ namespace Digital_Signatues.Services
                 capnhatthongso.Ma_NguoiCapNhatCuoi = PutThongSo.Ma_NguoiCapNhatCuoi;
                 capnhatthongso.NgayCapNhatCuoi = System.DateTime.Now;
                 capnhatthongso.TrangThai = PutThongSo.TrangThai;
+                capnhatthongso.NgayChuKyHetHan = PutThongSo.NgayChuKyHetHan;
                 _context.KySoThongSos.Update(capnhatthongso);
                 await _context.SaveChangesAsync();
                 ret = PutThongSo.Ma_NguoiDung;
