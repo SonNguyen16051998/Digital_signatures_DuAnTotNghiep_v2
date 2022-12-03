@@ -302,14 +302,17 @@ namespace Digital_Signatues.Services
             List<KySoThongSo> ret = new List<KySoThongSo>();
             foreach (var item in thongso)
             {
-                if (item.NguoiDung.IsThongSo == true)
+                if(System.DateTime.Compare(System.DateTime.Now,item.NgayChuKyHetHan)<0)
                 {
-                    var ng_duyet = await _context.NguoiDung_Quyens
-                   .Where(x => x.Ma_NguoiDung == item.Ma_NguoiDung && x.Ma_Quyen == 4)
-                   .FirstOrDefaultAsync();
-                    if (ng_duyet != null)
+                    if (item.NguoiDung.IsThongSo == true)
                     {
-                        ret.Add(item);
+                        var ng_duyet = await _context.NguoiDung_Quyens
+                       .Where(x => x.Ma_NguoiDung == item.Ma_NguoiDung && x.Ma_Quyen == 4)
+                       .FirstOrDefaultAsync();
+                        if (ng_duyet != null)
+                        {
+                            ret.Add(item);
+                        }
                     }
                 }
             }
