@@ -28,10 +28,12 @@ namespace Digital_Signatues.Controllers
         private readonly IHostingEnvironment _environment;
         private readonly Services.ILog _log;
         private readonly IKySoBuocDuyet _buocduyet;
+        private readonly IKySoDeXuat _dexuat;
         public KySosController(
             IKySo kyso, IHostingEnvironment environment, IKySoThongSo thongso, 
-            Services.ILog log, IKySoBuocDuyet buocduyet)
+            Services.ILog log, IKySoBuocDuyet buocduyet, IKySoDeXuat dexuat)
         {
+            _dexuat = dexuat;
             _buocduyet=buocduyet;
             _log = log;
             _kyso = kyso;
@@ -422,7 +424,8 @@ namespace Digital_Signatues.Controllers
                     }
                 }
                 string fileReturn = Path.Combine("Filedaky", fileName);
-                if (await _kyso.Sign(signs.Ma_BuocDuyet, fileReturn))
+                int isSign = await _kyso.Sign(signs.Ma_BuocDuyet, fileReturn);
+                if (isSign>0)
                 {
                     var id = User.FindFirstValue("Id");
                     var buoc = await _buocduyet.GetBuocDuyetAsync(signs.Ma_BuocDuyet);
@@ -435,11 +438,24 @@ namespace Digital_Signatues.Controllers
                     };
                     if (await _log.PostLogAsync(postlog) > 0)
                     { }
+                    var dexuatreturn = await _dexuat.GetDeXuatAsync(buoc.Ma_KySoDeXuat);
+                    int newoder = -1;
+                    if(!dexuatreturn.IsDaDuyet)
+                    {
+                        newoder = dexuatreturn.CurentOrder;
+                    }
+                    var returnKyso = new ReturnKySo()
+                    {
+                        Ma_DeXuat=buoc.Ma_KySoDeXuat,
+                        OldOrder= isSign,
+                        NewOrder= newoder,
+                        FileDaKy=fileReturn
+                    };
                     return Ok(new
                     {
                         retCode = 1,
                         retText = "Ký thành công",
-                        data = fileReturn
+                        data = returnKyso
                     });
                 }
                 else

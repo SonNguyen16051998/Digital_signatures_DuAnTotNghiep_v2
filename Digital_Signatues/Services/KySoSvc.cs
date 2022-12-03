@@ -9,7 +9,7 @@ namespace Digital_Signatues.Services
 {
     public interface IKySo
     {
-        Task<bool> Sign(int ma_buocduyet,string filedaky);
+        Task<int> Sign(int ma_buocduyet,string filedaky);
         Task<bool> CheckPassCode(CheckPasscode checkPasscode);
         Task<int> GetIndexBuocDuyet(int ma_buocduyet);
         Task<List<KySoBuocDuyet>> GetBuocDuyetHienTai();
@@ -22,9 +22,9 @@ namespace Digital_Signatues.Services
         {
             _context = context;
         }
-        public async Task<bool> Sign(int ma_buocduyet,string filedaky)
+        public async Task<int> Sign(int ma_buocduyet,string filedaky)
         {
-            bool ret = false;
+            int ret = -1;
             try
             {
                 var buocduyet = await _context.kySoBuocDuyets
@@ -42,6 +42,7 @@ namespace Digital_Signatues.Services
                 var buocduyettieptheo = toanbobuocduyet.Skip(index+1).Take(1).FirstOrDefault();
                 var kysodexuat = await _context.kySoDeXuats
                     .Where(x => x.Ma_KySoDeXuat == buocduyet.Ma_KySoDeXuat).FirstOrDefaultAsync();
+                ret = kysodexuat.CurentOrder;
                 if (toanbobuocduyet.Count != index + 1)
                 {
                     kysodexuat.CurentOrder = buocduyettieptheo.Order;
@@ -67,8 +68,6 @@ namespace Digital_Signatues.Services
                 }
                 _context.kySoDeXuats.Update(kysodexuat);
                 await _context.SaveChangesAsync();
-                
-                ret=true;
             }
             catch { }
             return ret;
