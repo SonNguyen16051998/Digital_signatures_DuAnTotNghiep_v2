@@ -1,4 +1,5 @@
 ﻿using Digital_Signatues.Models;
+using Digital_Signatues.Models.ViewModel;
 using Digital_Signatues.Models.ViewPost;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -13,6 +14,7 @@ namespace Digital_Signatues.Services
         Task<List<Log>> GetAllLogAsync();
         Task<List<Log>> GetAllLogThongSoAsync(int ma_taikhoan);
         Task<List<Log>> GetAllLogDeXuatAsync(int ma_dexuat);
+        Task<GetTrangChu> GetValueTrangChuAsync(int ma_nguoidung);
     }
     public class LogSvc:ILog
     {
@@ -60,6 +62,31 @@ namespace Digital_Signatues.Services
                 .OrderByDescending(x => x.ThoiGianThucHien)
                 .Include(x => x.NguoiDung)
                 .ToListAsync();
+        }
+        public async Task<GetTrangChu> GetValueTrangChuAsync(int ma_nguoidung)
+        {
+            var trangchu=new GetTrangChu();
+            var vanban = await _context.VanBans.OrderByDescending(x => x.NgayTao).ToListAsync();
+            var dexuat = await _context.kySoDeXuats
+                .Where(x => x.TrangThai == true && x.Ma_NguoiDeXuat == ma_nguoidung && x.IsDaDuyet == false)
+                .Include(x => x.KySoBuocDuyets)
+                .ToListAsync();
+            List<KySoDeXuat> danhsachchoduyet = new List<KySoDeXuat>();
+            foreach (var item in dexuat)
+            {
+                if (item.KySoBuocDuyets.Count > 0)
+                {
+                    var tuchoi = await _context.kySoBuocDuyets
+                    .Where(x => x.Ma_KySoDeXuat == item.Ma_KySoDeXuat && x.IsTuChoi == true).FirstOrDefaultAsync();
+                    if (tuchoi == null)
+                    {
+                        danhsachchoduyet.Add(item);
+                    }
+                }
+            }
+            trangchu.ListVanBan = vanban;
+            trangchu.ListDeXuatChoDuyet = danhsachchoduyet;
+            return trangchu;
         }
     }
 }

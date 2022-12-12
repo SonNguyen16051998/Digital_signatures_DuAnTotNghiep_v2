@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Digital_Signatues.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20221130060435_digital")]
+    [Migration("20221212073913_digital")]
     partial class digital
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -549,6 +549,12 @@ namespace Digital_Signatues.Migrations
 
                     b.Property<DateTime>("NgayTao")
                         .HasColumnType("date");
+
+                    b.Property<DateTime>("Ngay_HieuLuc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("NguoiKy")
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("Ten_FileGoc")
                         .IsRequired()

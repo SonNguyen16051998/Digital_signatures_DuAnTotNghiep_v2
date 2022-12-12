@@ -71,7 +71,9 @@ namespace Digital_Signatues.Services
                     NgayTao=System.DateTime.Now,
                     File=file,
                     Ten_FileGoc=postvanban.Ten_FileGoc,
-                    Ma_NguoiTao=postvanban.Ma_NguoiTao 
+                    Ma_NguoiTao=postvanban.Ma_NguoiTao,
+                    NguoiKy=postvanban.NguoiKy,
+                    Ngay_HieuLuc=postvanban.Ngay_HieuLuc
                 };
                 await _context.VanBans.AddAsync(add);
                 await _context.SaveChangesAsync();
@@ -116,6 +118,8 @@ namespace Digital_Signatues.Services
                     update.File=file;
                     update.Ten_FileGoc = tengoc;
                     update.Ma_NguoiTao = putVanBan.Ma_NguoiTao;
+                    update.NguoiKy = putVanBan.NguoiKy;
+                    update.Ngay_HieuLuc = putVanBan.Ngay_HieuLuc;
                     _context.VanBans.Update(update);
                     await _context.SaveChangesAsync();
                     ret = putVanBan.Ma_VanBan;

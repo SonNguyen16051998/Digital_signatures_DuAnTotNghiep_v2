@@ -548,6 +548,12 @@ namespace Digital_Signatues.Migrations
                     b.Property<DateTime>("NgayTao")
                         .HasColumnType("date");
 
+                    b.Property<DateTime>("Ngay_HieuLuc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("NguoiKy")
+                        .HasColumnType("nvarchar(255)");
+
                     b.Property<string>("Ten_FileGoc")
                         .IsRequired()
                         .HasColumnType("nvarchar(255)");

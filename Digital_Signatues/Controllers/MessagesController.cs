@@ -143,5 +143,24 @@ namespace Digital_Signatues.Controllers
                 data = ""
             });
         }
+        [HttpGet("{id}"),ActionName("trangchu")]
+        public async Task<IActionResult> TrangChu(int id)
+        {
+            if (id>0)
+            {
+                return Ok(new
+                {
+                    retCode = 1,
+                    retText = "Lấy dữ liệu thành công",
+                    data = await _log.GetValueTrangChuAsync(id)
+                });
+            }
+            return Ok(new
+            {
+                retCode = 0,
+                retText = "Người dùng không hợp lệ",
+                data = ""
+            });
+        }
     }
 }

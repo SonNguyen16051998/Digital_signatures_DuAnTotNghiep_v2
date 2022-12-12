@@ -51,7 +51,7 @@ namespace Digital_Signatues.Services
                 {
                     kysodexuat.FileDaKy = filedaky;
                     kysodexuat.IsDaDuyet = true;
-                    if(kysodexuat.isTaoVanBan)
+                    /*if(kysodexuat.isTaoVanBan)
                     {
                         VanBan add = new VanBan()
                         {
@@ -64,7 +64,7 @@ namespace Digital_Signatues.Services
                         };
                         await _context.VanBans.AddAsync(add);
                         await _context.SaveChangesAsync();
-                    }
+                    }*/
                 }
                 _context.kySoDeXuats.Update(kysodexuat);
                 await _context.SaveChangesAsync();

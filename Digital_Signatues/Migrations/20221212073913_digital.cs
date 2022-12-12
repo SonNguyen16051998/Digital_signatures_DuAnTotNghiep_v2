@@ -309,7 +309,9 @@ namespace Digital_Signatues.Migrations
                     NgayTao = table.Column<DateTime>(type: "date", nullable: false),
                     File = table.Column<string>(type: "nvarchar(255)", nullable: false),
                     Ten_FileGoc = table.Column<string>(type: "nvarchar(255)", nullable: false),
-                    Ma_NguoiTao = table.Column<int>(type: "int", nullable: false)
+                    Ma_NguoiTao = table.Column<int>(type: "int", nullable: false),
+                    NguoiKy = table.Column<string>(type: "nvarchar(255)", nullable: true),
+                    Ngay_HieuLuc = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
