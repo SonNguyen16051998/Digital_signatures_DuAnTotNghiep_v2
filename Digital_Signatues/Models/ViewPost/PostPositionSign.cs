@@ -5,9 +5,7 @@ namespace Digital_Signatues.Models.ViewPost
 {
     public class PostPositionSign
     {
-        [Column(TypeName = "nvarchar(1000)")]
         public string imgSign { get; set; }
-        [Column(TypeName = "nvarchar(1000)")]
         public string textSign { get; set; }
         [Required]
         public int pageSign { get; set; }

@@ -14,10 +14,8 @@ namespace Digital_Signatues.Models.ViewPost
         public string Hinh3 { get; set; }
         public string LyDoMacDinh { get; set; }
         [Required]
-        [Column(TypeName = "nvarchar(55)")]
         public string PassCode { get; set; }
         [Required]
-        [Column(TypeName = "nvarchar(55)")]
         [Compare("PassCode", ErrorMessage = "Mật khẩu không trùng khớp!!!")]
         public string RetypePasscode { get; set; }
         public int Ma_NguoiCapNhatCuoi { get; set; }

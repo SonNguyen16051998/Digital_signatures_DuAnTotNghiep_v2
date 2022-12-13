@@ -7,7 +7,7 @@ namespace Digital_Signatues.Models.ViewPut
     {
         [Key]
         public int Ma_Quyen { get; set; }
-        [Required, Column(TypeName = "nvarchar(255)")]
+        [Required]
         public string Ten_Quyen { get; set; }
     }
 }
