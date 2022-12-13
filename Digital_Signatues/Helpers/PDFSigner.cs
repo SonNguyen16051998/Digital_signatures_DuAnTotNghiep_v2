@@ -145,7 +145,7 @@ namespace Digital_Signatues.Helpers
             cb.SetColorFill(BaseColor.BLUE);
             cb.SetFontAndSize(baseFont, 12);
             cb.BeginText();
-            cb.ShowTextAligned(PdfContentByte.ALIGN_CENTER, text, rectangle.Width, rectangle.Height - 5, 0);
+            cb.ShowTextAligned(PdfContentByte.ALIGN_CENTER, text, rectangle.Width + 13, rectangle.Height + 2, 0);
             cb.EndText();
 
             // Close the layer
