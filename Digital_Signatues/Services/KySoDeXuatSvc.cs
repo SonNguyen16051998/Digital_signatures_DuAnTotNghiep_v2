@@ -25,6 +25,7 @@ namespace Digital_Signatues.Services
         Task<List<KySoDeXuat>> GetKySoChoDuyetAsync(int ma_nguoidung);
         Task<List<KySoDeXuat>> GetKySoDaDuyetAsync(int ma_nguoidung);
         Task<List<KySoDeXuat>> GetKySoTuChoiAsync(int ma_nguoidung);
+        Task<int> TaoVanBanAsync(PostVanBan postVanBan);
     }
     public class KySoDeXuatSvc:IKySoDeXuat
     {
@@ -222,6 +223,32 @@ namespace Digital_Signatues.Services
                 }
             }
             return danhsachtuchoi;
+        }
+
+        public async Task<int> TaoVanBanAsync(PostVanBan postvanban)
+        {
+            int ret = 0;
+            try
+            {
+                VanBan add = new VanBan()
+                {
+                    ChuDe = postvanban.ChuDe,
+                    LoaiVanBan = postvanban.LoaiVanBan,
+                    NgayTao = System.DateTime.Now,
+                    File = postvanban.File,
+                    Ten_FileGoc = postvanban.Ten_FileGoc,
+                    Ma_NguoiTao = postvanban.Ma_NguoiTao,
+                    NguoiKy = postvanban.NguoiKy,
+                    Ngay_HieuLuc = postvanban.Ngay_HieuLuc
+                };
+                await _context.VanBans.AddAsync(add);
+                await _context.SaveChangesAsync();
+                ret = add.Ma_VanBan;
+            }
+            catch
+            {
+            }
+            return ret;
         }
     }
 }

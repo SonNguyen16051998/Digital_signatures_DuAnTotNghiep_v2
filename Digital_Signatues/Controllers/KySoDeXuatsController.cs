@@ -17,8 +17,10 @@ namespace Digital_Signatues.Controllers
     {
         private readonly IKySoDeXuat _dexuat;
         private readonly ILog _log;
-        public KySoDeXuatsController(IKySoDeXuat dexuat,ILog log)
+        private readonly IVanBan _vanban;
+        public KySoDeXuatsController(IKySoDeXuat dexuat,ILog log,IVanBan vanban)
         {
+            _vanban = vanban;
             _log=log;
             _dexuat = dexuat;
         }
@@ -277,6 +279,35 @@ namespace Digital_Signatues.Controllers
                 retCode = 1,
                 retText = "Lấy danh sách ký số từ chối thành công",
                 data = await _dexuat.GetKySoTuChoiAsync(id)
+            });
+        }
+        /// <summary>
+        /// Tạo văn bản từ đề xuất đã duyệt
+        /// </summary>
+        /// <param name="postvanban"></param>
+        /// <returns></returns>
+        [HttpPost, ActionName("taovanban")]
+        [Authorize(Policy = "dexuat")]
+        public async Task<IActionResult> PostTaoVanBanAsync([FromBody] PostVanBan postvanban)
+        {
+            if (ModelState.IsValid)
+            {
+                int id_vanban = await _dexuat.TaoVanBanAsync(postvanban);
+                if (id_vanban > 0)
+                {
+                    return Ok(new
+                    {
+                        retCode = 1,
+                        retText = "Tạo văn bản thành công",
+                        data = await _vanban.GetVanBanAsync(id_vanban)
+                    });
+                }
+            }
+            return Ok(new
+            {
+                retCode = 0,
+                retText = "Tạo văn bản thất bại",
+                data = ""
             });
         }
     }

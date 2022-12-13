@@ -28,11 +28,15 @@ namespace Digital_Signatues.Services
 
         public async Task<List<VanBan>> GetVanBansAsync()
         {
-            return await _context.VanBans.OrderByDescending(x=>x.NgayTao).ToListAsync();
+            return await _context.VanBans.OrderByDescending(x=>x.NgayTao)
+                .Include(x=>x.NguoiDung)
+                .ToListAsync();
         }
         public async Task<VanBan> GetVanBanAsync(int ma_vanban)
         {
-            return await _context.VanBans.Where(x => x.Ma_VanBan == ma_vanban).FirstOrDefaultAsync();
+            return await _context.VanBans.Where(x => x.Ma_VanBan == ma_vanban)
+                .Include(x => x.NguoiDung)
+                .FirstOrDefaultAsync();
         }
         public async Task<bool> DeleteVanBanAsync(int ma_vanban)
         {
