@@ -154,7 +154,7 @@ namespace Digital_Signatues.Services
             }
             else if(doc)
             {
-                exten = ".doc";
+                exten = ".docx";
             }
             else if(png)
             {
@@ -162,11 +162,11 @@ namespace Digital_Signatues.Services
             }
             else if(jpeg)
             {
-                exten = ".jpeg";
+                exten = ".png";
             }
             else
             {
-                exten = ".jpg";
+                exten = ".png";
             }
             return exten;
         }

@@ -22,7 +22,6 @@ namespace Digital_Signatues.Models.ViewPut
         [Required, Display(Name = "Giới tính")]
         public bool GioiTinh { get; set; }
         public int Ma_ChucDanh { get; set; }
-        [StringLength(255)]
         [Display(Name = "Hình ảnh")]
         public string Avatar { get; set; }
         public bool Block { get; set; }
