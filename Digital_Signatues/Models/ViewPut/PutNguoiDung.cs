@@ -9,19 +9,15 @@ namespace Digital_Signatues.Models.ViewPut
         [Key]
         public int Ma_NguoiDung { get; set; }
         [Required]
-        [Display(Name = "Họ tên")]
         public string HoTen { get; set; }
         [Required]
         [DataType(DataType.PhoneNumber)]
-        [Display(Name = "Số điện thoại")]
         public string Sdt { get; set; }
         [Required]
-        [Display(Name = "Địa chỉ")]
         public string DiaChi { get; set; }
-        [Required, Display(Name = "Giới tính")]
+        [Required]
         public bool GioiTinh { get; set; }
         public int Ma_ChucDanh { get; set; }
-        [Display(Name = "Hình ảnh")]
         public string Avatar { get; set; }
         public bool Block { get; set; }
     }

@@ -11,7 +11,7 @@ namespace Digital_Signatues.Models
         [Key]
         public int Ma_NguoiDung { get; set; }
         [Required(ErrorMessage = "Email không được để trống!!!")]
-        [Column(TypeName = "varchar(40)")]
+        [Column(TypeName = "varchar(100)")]
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
         [Required]
@@ -27,7 +27,7 @@ namespace Digital_Signatues.Models
         public string DiaChi { get; set; }
         [Required, Display(Name = "Giới tính")]
         public bool GioiTinh { get; set; }
-        [StringLength(255)]
+        [StringLength(4000)]
         [Display(Name = "Hình ảnh")]
         public string Avatar { get; set; }
         /*[NotMapped]

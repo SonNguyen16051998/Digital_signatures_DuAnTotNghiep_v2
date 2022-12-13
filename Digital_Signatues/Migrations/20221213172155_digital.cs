@@ -87,12 +87,12 @@ namespace Digital_Signatues.Migrations
                 {
                     Ma_NguoiDung = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Email = table.Column<string>(type: "varchar(40)", nullable: false),
+                    Email = table.Column<string>(type: "varchar(100)", nullable: false),
                     HoTen = table.Column<string>(type: "nvarchar(100)", nullable: false),
                     Sdt = table.Column<string>(type: "varchar(15)", nullable: false),
                     DiaChi = table.Column<string>(type: "nvarchar(255)", nullable: false),
                     GioiTinh = table.Column<bool>(type: "bit", nullable: false),
-                    Avatar = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    Avatar = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: true),
                     Ma_ChucDanh = table.Column<int>(type: "int", nullable: false),
                     PassWord = table.Column<string>(type: "varchar(50)", nullable: false),
                     Block = table.Column<bool>(type: "bit", nullable: false),

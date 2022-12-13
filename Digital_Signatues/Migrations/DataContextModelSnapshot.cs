@@ -329,8 +329,8 @@ namespace Digital_Signatues.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Avatar")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasMaxLength(4000)
+                        .HasColumnType("nvarchar(4000)");
 
                     b.Property<bool>("Block")
                         .HasColumnType("bit");
@@ -341,7 +341,7 @@ namespace Digital_Signatues.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("varchar(40)");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<bool>("GioiTinh")
                         .HasColumnType("bit");
