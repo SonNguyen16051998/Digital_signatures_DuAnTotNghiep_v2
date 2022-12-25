@@ -65,14 +65,14 @@ namespace Digital_Signatues.Helpers
                             //var image = document.Render(i, 870, 1126, 300, 300, PdfiumViewer.PdfRenderFlags.Annotations);
                             var image = document.Render(i, widthImg, heightImg, 300, 300, PdfiumViewer.PdfRenderFlags.Annotations);
                             /*image.Save(outputImagesPath + (i + 1) + @".config", ImageFormat.Png);*/
-                            image.Save(outputImagesPath + (i + 1) + ".png", ImageFormat.Png);
+                            image.Save(outputImagesPath + "_" + (i + 1) + ".png", ImageFormat.Png);
                             string nameImg = "ImgChuKy\\" + name + "_" + (i + 1) + ".png";
                             img.Add(nameImg);
                         }
                         else
                         {
                             var image = document.Render(i, heightImg, widthImg, 300, 300, PdfiumViewer.PdfRenderFlags.Annotations);
-                            image.Save(outputImagesPath + (i + 1) + @".png", ImageFormat.Png);
+                            image.Save(outputImagesPath + "_" + (i + 1) + ".png", ImageFormat.Png);
                             string nameImg = "ImgChuKy\\" + name + "_" + (i + 1) + ".png";
                             img.Add(nameImg);
                         }
