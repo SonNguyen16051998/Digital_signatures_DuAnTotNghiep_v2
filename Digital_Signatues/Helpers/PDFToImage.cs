@@ -29,7 +29,7 @@ namespace Digital_Signatues.Helpers
                     int widthImg = 827;
                     int heightImg = 1170;
                     string name = Path.GetFileNameWithoutExtension(inputPDFFile);
-                    string outputImagesPath = Path.Combine("wwwroot,ImgChuKy" + name);
+                    string outputImagesPath = Path.Combine("ImgChuKy",name);
                     for (int i = 0; i < document.PageCount; i++)
                     {
                         bool flagIsPortrait = CheckPageOrient(inputPDFFile, (i + 1), out rectangle);
