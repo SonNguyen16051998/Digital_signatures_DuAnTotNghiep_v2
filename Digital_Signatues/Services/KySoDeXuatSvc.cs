@@ -256,18 +256,27 @@ namespace Digital_Signatues.Services
             List<string> imgky = new List<string>();
             var dexuat=await _context.kySoDeXuats.Where(x=>x.Ma_KySoDeXuat==ma_dexuat).FirstOrDefaultAsync();
             var listBuocduyet = await _context.kySoBuocDuyets.Where(x => x.Ma_KySoDeXuat == ma_dexuat).ToListAsync();
-            var buocduyethientai=await _context.kySoBuocDuyets
-                .Where(x=>x.Ma_KySoDeXuat==ma_dexuat && x.Order== dexuat.CurentOrder).FirstOrDefaultAsync();
-            int indexbuocduyethientai = listBuocduyet.IndexOf(buocduyethientai);
-            if (indexbuocduyethientai == 0)
+            if(listBuocduyet.Count==0)
             {
-                return imgky = null;
+                return imgky=null;
             }
             else
             {
-                var buocduyettruoc = listBuocduyet[indexbuocduyethientai - 1];
-                return Helpers.PDFToImage.PdfToJpg(Path.Combine("wwwroot", buocduyettruoc.FileDaKy));
+                var buocduyethientai = await _context.kySoBuocDuyets
+                                .Where(x => x.Ma_KySoDeXuat == ma_dexuat && x.Order == dexuat.CurentOrder).FirstOrDefaultAsync();
+                int indexbuocduyethientai = listBuocduyet.IndexOf(buocduyethientai);
+                if (indexbuocduyethientai == 0)
+                {
+                    return imgky = null;
+                }
+                else
+                {
+                    var buocduyettruoc = listBuocduyet[indexbuocduyethientai - 1];
+                    imgky = Helpers.PDFToImage.PdfToJpg(Path.Combine("wwwroot", buocduyettruoc.FileDaKy));
+                    return imgky;
+                }
             }
+            
         }
     }
 }
