@@ -481,6 +481,7 @@ namespace Digital_Signatues.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet,ActionName("buocduyet")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetBuocDuyetHienTai()
         {
             return Ok(new

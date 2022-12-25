@@ -2,6 +2,7 @@
 using Digital_Signatues.Models.ViewModel;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,6 +15,7 @@ namespace Digital_Signatues.Services
         Task<int> GetIndexBuocDuyet(int ma_buocduyet);
         Task<List<KySoBuocDuyet>> GetBuocDuyetHienTai();
         Task<List<KySoBuocDuyet>> GetDaDuyet();
+        
     }
     public class KySoSvc:IKySo 
     {
@@ -125,5 +127,6 @@ namespace Digital_Signatues.Services
                 .Include(x => x.NguoiDung)
                 .ToListAsync();
         }
+       
     }
 }

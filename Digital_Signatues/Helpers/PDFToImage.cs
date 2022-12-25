@@ -4,6 +4,7 @@ using System;
 using System.IO;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Collections.Generic;
 
 namespace Digital_Signatues.Helpers
 {
@@ -17,17 +18,18 @@ namespace Digital_Signatues.Helpers
     }
     public class PDFToImage
     {
-        public static void PdfToJpg(string inputPDFFile, string outputImagesPath)
+        public static List<string> PdfToJpg(string inputPDFFile)
         {
+            List<string> img = new List<string>();
             try
-            {
+            { 
                 using (var document = PdfiumViewer.PdfDocument.Load(inputPDFFile))
                 {
                     iTextSharp.text.Rectangle rectangle;
                     int widthImg = 827;
                     int heightImg = 1170;
                     string name = Path.GetFileNameWithoutExtension(inputPDFFile);
-                    outputImagesPath = outputImagesPath + name;
+                    string outputImagesPath = Path.Combine("wwwroot,ImgChuKy" + name);
                     for (int i = 0; i < document.PageCount; i++)
                     {
                         bool flagIsPortrait = CheckPageOrient(inputPDFFile, (i + 1), out rectangle);
@@ -63,12 +65,14 @@ namespace Digital_Signatues.Helpers
                             //var image = document.Render(i, 870, 1126, 300, 300, PdfiumViewer.PdfRenderFlags.Annotations);
                             var image = document.Render(i, widthImg, heightImg, 300, 300, PdfiumViewer.PdfRenderFlags.Annotations);
                             /*image.Save(outputImagesPath + (i + 1) + @".config", ImageFormat.Png);*/
-                            image.Save(outputImagesPath + (i + 1) + @".config", ImageFormat.Png);
+                            image.Save(outputImagesPath + (i + 1) + ".png", ImageFormat.Png);
+                            img.Add(outputImagesPath + (i + 1) + ".png");
                         }
                         else
                         {
                             var image = document.Render(i, heightImg, widthImg, 300, 300, PdfiumViewer.PdfRenderFlags.Annotations);
-                            image.Save(outputImagesPath + (i + 1) + @".config", ImageFormat.Png);
+                            image.Save(outputImagesPath + (i + 1) + @".png", ImageFormat.Png);
+                            img.Add(outputImagesPath + (i + 1) + ".png");
                         }
                     }
                 }
@@ -76,6 +80,7 @@ namespace Digital_Signatues.Helpers
             catch (Exception ex)
             {
             }
+            return img;
         }
         public static bool CheckPageOrient(string inputPDFFile, int page, out iTextSharp.text.Rectangle rectangle)
         {

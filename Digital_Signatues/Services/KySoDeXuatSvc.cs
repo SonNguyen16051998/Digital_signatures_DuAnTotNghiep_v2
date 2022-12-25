@@ -26,6 +26,7 @@ namespace Digital_Signatues.Services
         Task<List<KySoDeXuat>> GetKySoDaDuyetAsync(int ma_nguoidung);
         Task<List<KySoDeXuat>> GetKySoTuChoiAsync(int ma_nguoidung);
         Task<int> TaoVanBanAsync(PostVanBan postVanBan);
+        Task<List<string>> GetAllImgKy(int ma_dexuat);
     }
     public class KySoDeXuatSvc:IKySoDeXuat
     {
@@ -249,6 +250,24 @@ namespace Digital_Signatues.Services
             {
             }
             return ret;
+        }
+        public async Task<List<string>> GetAllImgKy(int ma_dexuat)
+        {
+            List<string> imgky = new List<string>();
+            var dexuat=await _context.kySoDeXuats.Where(x=>x.Ma_KySoDeXuat==ma_dexuat).FirstOrDefaultAsync();
+            var listBuocduyet = await _context.kySoBuocDuyets.Where(x => x.Ma_KySoDeXuat == ma_dexuat).ToListAsync();
+            var buocduyethientai=await _context.kySoBuocDuyets
+                .Where(x=>x.Ma_KySoDeXuat==ma_dexuat && x.Order== dexuat.CurentOrder).FirstOrDefaultAsync();
+            int indexbuocduyethientai = listBuocduyet.IndexOf(buocduyethientai);
+            if (indexbuocduyethientai == 0)
+            {
+                return imgky = null;
+            }
+            else
+            {
+                var buocduyettruoc = listBuocduyet[indexbuocduyethientai - 1];
+                return Helpers.PDFToImage.PdfToJpg(Path.Combine("wwwroot", buocduyettruoc.FileDaKy));
+            }
         }
     }
 }

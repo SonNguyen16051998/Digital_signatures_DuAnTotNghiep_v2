@@ -46,11 +46,16 @@ namespace Digital_Signatues.Controllers
         [HttpGet("{id}"), ActionName("dexuat")]
         public async Task<IActionResult> GetDexuatAsync(int id)
         {
+            var valueReturn = new
+            {
+                chitiet = await _dexuat.GetDeXuatAsync(id),
+                listImg=await _dexuat.GetAllImgKy(id),
+            };
             return Ok(new
             {
                 retCode = 1,
                 retText = "Lấy ký số đề xuất thành công",
-                data = await _dexuat.GetDeXuatAsync(id)
+                data = valueReturn
             });
         }
         /// <summary>
@@ -242,6 +247,7 @@ namespace Digital_Signatues.Controllers
         /// <param name="id">mã người dùng</param>
         /// <returns></returns>
         [HttpGet("{id}"), ActionName("choduyet")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetChoDuyetAsync(int id)
         {
             return Ok(new
