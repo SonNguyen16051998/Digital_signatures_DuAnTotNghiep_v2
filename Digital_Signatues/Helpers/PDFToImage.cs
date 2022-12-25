@@ -29,7 +29,7 @@ namespace Digital_Signatues.Helpers
                     int widthImg = 827;
                     int heightImg = 1170;
                     string name = Path.GetFileNameWithoutExtension(inputPDFFile);
-                    string outputImagesPath = Path.Combine("ImgChuKy",name);
+                    string outputImagesPath = Path.Combine("wwwroot\\ImgChuKy",name);
                     for (int i = 0; i < document.PageCount; i++)
                     {
                         bool flagIsPortrait = CheckPageOrient(inputPDFFile, (i + 1), out rectangle);
@@ -66,13 +66,15 @@ namespace Digital_Signatues.Helpers
                             var image = document.Render(i, widthImg, heightImg, 300, 300, PdfiumViewer.PdfRenderFlags.Annotations);
                             /*image.Save(outputImagesPath + (i + 1) + @".config", ImageFormat.Png);*/
                             image.Save(outputImagesPath + (i + 1) + ".png", ImageFormat.Png);
-                            img.Add(outputImagesPath + (i + 1) + ".png");
+                            string nameImg = "ImgChuKy\\" + name + "_" + (i + 1) + ".png";
+                            img.Add(nameImg);
                         }
                         else
                         {
                             var image = document.Render(i, heightImg, widthImg, 300, 300, PdfiumViewer.PdfRenderFlags.Annotations);
                             image.Save(outputImagesPath + (i + 1) + @".png", ImageFormat.Png);
-                            img.Add(outputImagesPath + (i + 1) + ".png");
+                            string nameImg = "ImgChuKy\\" + name + "_" + (i + 1) + ".png";
+                            img.Add(nameImg);
                         }
                     }
                 }
